@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kam Team · Sign in</title>
+<meta name="theme-color" content="#111111">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23111'/%3E%3Cg transform='translate(18.4 7) scale(.0365)'%3E%3Cpolygon fill='%23fff' points='374,0 748,403 628,515 374,242 120,515 0,403'/%3E%3Cpolygon fill='%23fff' points='120,583 374,856 628,583 748,695 374,1098 0,695'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<script>try{if(JSON.parse(localStorage.getItem("kamteam.theme"))==="light")document.documentElement.dataset.theme="light";}catch(e){}</script>
+<style>
+:root{
+  --bg:#111111; --panel:#181818; --panel-2:#1F1F1F; --line:#2C2C2C; --line-2:#3A3A3A;
+  --ink:#F4F4F2; --muted:#9C9C98; --primary:#FFFFFF; --on-primary:#111111;
+  --danger:#FF6B57; --ok:#5BD69A; --shadow:0 10px 30px rgba(0,0,0,.45);
+  --font:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+:root[data-theme="light"]{
+  --bg:#F2F2F0; --panel:#FFFFFF; --panel-2:#F6F6F4; --line:#E1E1DD; --line-2:#CFCFCA;
+  --ink:#111111; --muted:#62625E; --primary:#111111; --on-primary:#FFFFFF;
+  --danger:#C23A28; --ok:#1E8556; --shadow:0 10px 30px rgba(0,0,0,.14);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{min-height:100vh;min-height:100dvh}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font);display:flex;align-items:center;justify-content:center;padding:32px 16px}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.card{width:100%;max-width:400px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:28px 24px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.mark{width:22px;height:32px;flex:none;color:var(--ink)}
+.word{font-weight:800;font-variation-settings:"wdth" 125;letter-spacing:.16em;font-size:17px;line-height:1}
+.word small{display:block;font-weight:500;font-variation-settings:"wdth" 100;letter-spacing:0;font-size:12.5px;color:var(--muted);margin-top:4px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;margin-bottom:20px}
+.tabs button{border:0;background:transparent;padding:7px 10px;border-radius:6px;font-weight:600;font-size:14px;cursor:pointer;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--primary);color:var(--on-primary)}
+h1{font-size:20px;font-weight:700;font-variation-settings:"wdth" 112;margin:0 0 4px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+form{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:4px}
+label{font-size:13px;color:var(--muted);font-weight:500}
+.pw{position:relative}
+input{width:100%;padding:10px 12px;border:1px solid var(--line-2);border-radius:6px;background:var(--panel-2)}
+.pw input{padding-right:64px}
+.show{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--muted);font-size:12.5px;font-weight:600;cursor:pointer;padding:4px 6px}
+.hint{font-size:12.5px;color:var(--muted)}
+.err{color:var(--danger);font-size:13.5px;min-height:0}
+.err:empty{display:none}
+.submit{margin-top:4px;padding:10px 14px;border-radius:6px;border:1px solid var(--primary);background:var(--primary);color:var(--on-primary);font-weight:700;cursor:pointer}
+.submit:disabled{opacity:.5;cursor:default}
+.foot{margin-top:18px;font-size:13px;color:var(--muted);text-align:center}
+.foot button{border:0;background:none;padding:0;color:var(--ink);font-weight:600;text-decoration:underline;cursor:pointer}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="kam" viewBox="0 0 748 1098"><polygon fill="currentColor" points="374,0 748,403 628,515 374,242 120,515 0,403"/><polygon fill="currentColor" points="120,583 374,856 628,583 748,695 374,1098 0,695"/></symbol>
+</svg>
+<main class="card">
+  <div class="brand">
+    <svg class="mark" aria-hidden="true"><use href="#kam"/></svg>
+    <div class="word">KAM TEAM<small>Real Estate Agent Lead Generator</small></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" id="tLogin" aria-selected="true">Sign in</button>
+    <button type="button" role="tab" id="tSignup" aria-selected="false">Create account</button>
+  </div>
+
+  <section id="login">
+    <h1>Welcome back</h1>
+    <p class="sub">Sign in to open the lead generator.</p>
+    <form id="fLogin" novalidate>
+      <div class="field"><label for="lEmail">Email</label><input type="email" id="lEmail" autocomplete="username" required></div>
+      <div class="field"><label for="lPass">Password</label>
+        <div class="pw"><input type="password" id="lPass" autocomplete="current-password" required><button type="button" class="show" data-for="lPass">Show</button></div>
+      </div>
+      <div class="err" id="lErr" role="alert"></div>
+      <button class="submit" type="submit">Sign in</button>
+    </form>
+    <p class="foot">New to Kam Team? <button type="button" data-go="signup">Create an account</button></p>
+  </section>
+
+  <section id="signup" class="hidden">
+    <h1>Create your account</h1>
+    <p class="sub">Use the email your team admin approved, then choose a password.</p>
+    <form id="fSignup" novalidate>
+      <div class="field"><label for="sName">Full name</label><input type="text" id="sName" autocomplete="name" maxlength="100"></div>
+      <div class="field"><label for="sEmail">Email</label><input type="email" id="sEmail" autocomplete="username" required></div>
+      <div class="field"><label for="sPass">Create password</label>
+        <div class="pw"><input type="password" id="sPass" autocomplete="new-password" minlength="8" required><button type="button" class="show" data-for="sPass">Show</button></div>
+        <span class="hint">At least 8 characters.</span>
+      </div>
+      <div class="field"><label for="sPass2">Confirm password</label>
+        <div class="pw"><input type="password" id="sPass2" autocomplete="new-password" required><button type="button" class="show" data-for="sPass2">Show</button></div>
+      </div>
+      <div class="err" id="sErr" role="alert"></div>
+      <button class="submit" type="submit">Create account</button>
+    </form>
+    <p class="foot">Already have an account? <button type="button" data-go="login">Sign in</button></p>
+  </section>
+</main>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+
+function show(mode){
+  const signup=mode==="signup";
+  $("login").classList.toggle("hidden",signup); $("signup").classList.toggle("hidden",!signup);
+  $("tLogin").setAttribute("aria-selected",!signup); $("tSignup").setAttribute("aria-selected",signup);
+  $("lErr").textContent=""; $("sErr").textContent="";
+  history.replaceState(null,"",signup?"#signup":location.pathname);
+  (signup?$("sName"):$("lEmail")).focus();
+}
+$("tLogin").onclick=()=>show("login"); $("tSignup").onclick=()=>show("signup");
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>show(b.dataset.go));
+document.querySelectorAll(".show").forEach(b=>b.onclick=()=>{const i=$(b.dataset.for);const vis=i.type==="password";i.type=vis?"text":"password";b.textContent=vis?"Hide":"Show";});
+
+async function post(url,body,errEl,btn){
+  errEl.textContent=""; btn.disabled=true;
+  try{
+    const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),credentials:"same-origin"});
+    const j=await r.json().catch(()=>({}));
+    if(r.ok&&j.ok){ location.replace("/"); return; }
+    errEl.textContent=j.error||"Something went wrong. Try again.";
+  }catch(e){ errEl.textContent="Couldn't reach the server. Check your connection."; }
+  btn.disabled=false;
+}
+
+$("fLogin").addEventListener("submit",e=>{
+  e.preventDefault();
+  const email=$("lEmail").value.trim(), password=$("lPass").value;
+  if(!email||!password){ $("lErr").textContent="Enter your email and password."; return; }
+  post("/auth/login",{email,password},$("lErr"),e.submitter||e.target.querySelector(".submit"));
+});
+
+$("fSignup").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("sName").value.trim(), email=$("sEmail").value.trim(), password=$("sPass").value;
+  if(!email){ $("sErr").textContent="Enter your email."; return; }
+  if(password.length<8){ $("sErr").textContent="Password must be at least 8 characters."; return; }
+  if(password!==$("sPass2").value){ $("sErr").textContent="The two passwords don't match."; return; }
+  post("/auth/signup",{name,email,password},$("sErr"),e.submitter||e.target.querySelector(".submit"));
+});
+
+show(location.hash==="#signup"?"signup":"login");
+})();
+</script>
+</body>
+</html>
