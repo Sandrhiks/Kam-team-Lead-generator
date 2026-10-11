@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kam Team · Lead Generator</title>
+<meta name="description" content="Kam Team real estate lead generator: find sellers, buyers, probate and inherited properties on a live satellite map.">
+<meta name="theme-color" content="#111111">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23111'/%3E%3Cg transform='translate(18.4 7) scale(.0365)'%3E%3Cpolygon fill='%23fff' points='374,0 748,403 628,515 374,242 120,515 0,403'/%3E%3Cpolygon fill='%23fff' points='120,583 374,856 628,583 748,695 374,1098 0,695'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<style>
+/* Kam Team brand: monochrome, taken from the double-chevron mark */
+:root{
+  --bg:#111111; --panel:#181818; --panel-2:#1F1F1F; --line:#2C2C2C; --line-2:#3A3A3A;
+  --ink:#F4F4F2; --muted:#9C9C98; --invert:#111111; --primary:#FFFFFF; --on-primary:#111111;
+  --danger:#FF6B57; --ok:#5BD69A; --shadow:0 10px 30px rgba(0,0,0,.45);
+  --font:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="light"]{
+  --bg:#F2F2F0; --panel:#FFFFFF; --panel-2:#F6F6F4; --line:#E1E1DD; --line-2:#CFCFCA;
+  --ink:#111111; --muted:#62625E; --invert:#FFFFFF; --primary:#111111; --on-primary:#FFFFFF;
+  --danger:#C23A28; --ok:#1E8556; --shadow:0 10px 30px rgba(0,0,0,.14);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font);font-variation-settings:"wdth" 100}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.hidden{display:none!important}
+.app{height:100%;overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-height:0}
+
+/* Header */
+.top{display:flex;align-items:center;gap:14px;padding:10px 18px;background:#111;color:#fff;border-bottom:1px solid #262626}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{width:22px;height:32px;flex:none}
+.word{font-weight:800;font-variation-settings:"wdth" 125;letter-spacing:.16em;font-size:17px;line-height:1}
+.word small{display:block;font-weight:500;font-variation-settings:"wdth" 100;letter-spacing:0;font-size:12.5px;color:#A5A5A1;margin-top:4px}
+.sep{width:1px;height:30px;background:#333}
+.top .grow{flex:1}
+.top .btn{background:transparent;border-color:#3A3A3A;color:#fff}
+.top .btn.primary{background:#fff;color:#111;border-color:#fff}
+.stat{font-size:12.5px;color:#A5A5A1;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.stat i{width:7px;height:7px;transform:rotate(45deg);background:#5BD69A;display:inline-block}
+.stat.off i{background:#777}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 12px;border-radius:6px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);cursor:pointer;font-weight:600;font-size:14px;line-height:1.2;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--danger)}
+.btn.sm{padding:4px 9px;font-size:13px}
+.btn.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.btn[aria-disabled="true"],.btn:disabled{opacity:.4;pointer-events:none}
+.only-m{display:none!important}
+
+.shell{display:grid;grid-template-columns:288px minmax(0,1fr);min-height:0}
+
+/* Rail */
+.rail{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:20px}
+.rail h2{font-size:13px;font-weight:700;font-variation-settings:"wdth" 112;letter-spacing:.04em;margin:0 0 8px;color:var(--ink)}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label,.lbl{font-size:13px;color:var(--muted);font-weight:500}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=search],input[type=url],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--line-2);border-radius:6px;background:var(--panel-2)}
+textarea{resize:vertical;min-height:70px}
+.types{display:flex;flex-direction:column;gap:1px}
+.type-row{display:flex;align-items:center;gap:10px;padding:5px 6px;border-radius:5px;cursor:pointer;user-select:none;font-size:14px}
+.type-row:hover{background:var(--panel-2)}
+.type-row input{margin:0;accent-color:var(--primary)}
+.dia{width:10px;height:10px;transform:rotate(45deg);flex:none;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+.type-row .n{margin-left:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.check{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.check input{accent-color:var(--primary)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:3px 10px;border-radius:4px;border:1px solid var(--line-2);background:transparent;cursor:pointer;font-size:13px}
+.chip.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.rail .row{display:flex;flex-wrap:wrap;gap:8px}
+.note{font-size:12.5px;color:var(--muted);line-height:1.45;margin:8px 0 0}
+
+/* Main */
+.main{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;min-height:0;min-width:0}
+.main>*{min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--panel);border-bottom:1px solid var(--line)}
+.kpi{padding:10px 18px;border:0;border-right:1px solid var(--line);background:none;text-align:left;cursor:pointer}
+.kpi:last-child{border-right:0}
+.kpi:hover{background:var(--panel-2)}
+.kpi b{display:block;font-size:26px;line-height:1.15;font-weight:800;font-variation-settings:"wdth" 118;font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+
+.mapwrap{position:relative;min-height:0;overflow:hidden;overflow:clip;background:#0B0B0B}
+#map{position:absolute;inset:0;background:#0B0B0B}
+#map.adding,#map.adding .leaflet-interactive{cursor:crosshair}
+.leaflet-container{font-family:var(--font)}
+.leaflet-control-attribution{font-size:10.5px;background:rgba(17,17,17,.7)!important;color:#ccc}
+.leaflet-control-attribution a{color:#fff}
+
+/* Overlays on map */
+.ov{position:absolute;z-index:500}
+.search{left:14px;top:14px;width:min(380px,calc(100% - 140px))}
+.search .box{display:flex;background:var(--panel);border:1px solid var(--line-2);border-radius:8px;box-shadow:var(--shadow);overflow:hidden}
+.search input{border:0;background:transparent;padding:10px 12px}
+.search input:focus{outline:none}
+.search .box:focus-within{border-color:var(--ink)}
+.search button{border:0;border-left:1px solid var(--line);background:transparent;padding:0 14px;cursor:pointer;font-weight:600}
+.results{margin-top:6px;background:var(--panel);border:1px solid var(--line-2);border-radius:8px;box-shadow:var(--shadow);overflow:hidden;max-height:300px;overflow-y:auto}
+.results button{display:block;width:100%;text-align:left;padding:9px 12px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer;font-size:14px}
+.results button:hover{background:var(--panel-2)}
+.results .empty{padding:10px 12px;color:var(--muted);font-size:14px}
+.ctl{right:14px;top:14px;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.seg{display:flex;background:var(--panel);border:1px solid var(--line-2);border-radius:8px;box-shadow:var(--shadow);overflow:hidden}
+.seg button{border:0;background:transparent;padding:7px 11px;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--on-primary)}
+.stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.stack .btn{box-shadow:var(--shadow)}
+.sq{width:38px;height:38px;padding:0;font-size:18px}
+.where{left:14px;bottom:26px;background:rgba(17,17,17,.82);color:#fff;border-radius:6px;padding:6px 10px;font-size:13px;backdrop-filter:blur(4px);display:flex;gap:10px;align-items:center}
+.where button{background:#fff;color:#111;border:0;border-radius:4px;padding:2px 8px;font-size:12.5px;font-weight:600;cursor:pointer}
+.banner{left:50%;top:70px;transform:translateX(-50%);background:var(--primary);color:var(--on-primary);padding:8px 10px 8px 14px;border-radius:8px;box-shadow:var(--shadow);font-size:14px;font-weight:600;display:none;align-items:center;gap:10px}
+.banner.show{display:flex}
+.banner .btn{background:transparent;color:inherit;border-color:currentColor}
+.legend{right:14px;bottom:26px;background:var(--panel);border:1px solid var(--line-2);border-radius:8px;padding:8px 12px;font-size:12.5px;box-shadow:var(--shadow);max-width:220px}
+.legend .keybtn{border:0;background:none;padding:0;font-weight:700;cursor:pointer;width:100%;text-align:left;font-size:12.5px}
+.legend ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:3px}
+.legend li{display:flex;align-items:center;gap:8px}
+.legend.closed ul{display:none}
+.loading{left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(17,17,17,.85);color:#fff;padding:10px 16px;border-radius:8px;font-size:14px}
+
+/* Markers: diamonds from the logo's silhouette */
+.pin-ico{background:none;border:0}
+.dm{display:block;width:var(--s);height:var(--s);background:var(--c);transform:rotate(45deg);border:2px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.6);transition:transform .15s}
+.pin-ico:hover .dm{transform:rotate(45deg) scale(1.2)}
+.pin-ico.sel .dm{border-color:#111;outline:2px solid #fff;transform:rotate(45deg) scale(1.3)}
+.cl-ico{background:none;border:0}
+.cl{display:flex;align-items:center;justify-content:center;width:var(--s);height:var(--s);background:#111;color:#fff;border:2px solid #fff;transform:rotate(45deg);box-shadow:0 2px 10px rgba(0,0,0,.6)}
+.cl span{transform:rotate(-45deg);font-weight:800;font-size:13px;font-variation-settings:"wdth" 112}
+.cand{width:26px;height:38px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--panel);color:var(--ink);border-radius:8px}
+.leaflet-popup-content{margin:12px 14px;font-size:14px}
+.leaflet-popup-content p{margin:0 0 8px}
+
+/* Table */
+.tablepanel{border-top:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;min-height:0}
+.tbar{display:flex;align-items:center;gap:10px;padding:8px 14px;flex-wrap:wrap}
+.tbar h2{font-size:15px;font-weight:800;font-variation-settings:"wdth" 118;margin:0;letter-spacing:.02em}
+.tbar .count{color:var(--muted);font-size:13px}
+.tbar .grow{flex:1}
+.tscroll{overflow:auto;height:30vh;border-top:1px solid var(--line)}
+.tablepanel.collapsed .tscroll{display:none}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:900px}
+th{position:sticky;top:0;background:var(--panel);text-align:left;font-weight:600;font-size:12.5px;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;z-index:1}
+th[aria-sort]{color:var(--ink)}
+td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr.row{cursor:pointer}
+tr.row:hover td{background:var(--panel-2)}
+tr.row.sel td{background:var(--panel-2);box-shadow:inset 0 0 0 0 transparent}
+tr.row.sel td:first-child{box-shadow:inset 3px 0 0 var(--ink)}
+.score{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;border-radius:4px;font-weight:700;font-variant-numeric:tabular-nums;font-size:13px;border:1px solid var(--line-2)}
+.score.hot{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.score.warm{border-color:var(--ink)}
+.tag{display:inline-flex;align-items:center;gap:8px}
+.pill{font-size:12.5px;padding:1px 8px;border-radius:4px;border:1px solid var(--line-2)}
+.muted{color:var(--muted)}
+.dnc{color:var(--danger);font-weight:600;font-size:12px}
+.emptyst{padding:30px 20px;text-align:center;color:var(--muted)}
+.emptyst h3{color:var(--ink);font-size:20px;font-weight:800;font-variation-settings:"wdth" 115;margin:0 0 6px}
+.emptyst .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+
+/* Drawer */
+.drawer{position:absolute;top:0;right:0;bottom:0;width:min(410px,100%);background:var(--panel);border-left:1px solid var(--line);box-shadow:var(--shadow);transform:translateX(105%);transition:transform .25s ease;z-index:700;display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.mapwrap.dopen .ctl,.mapwrap.dopen .legend{right:calc(min(410px,100%) + 14px)}
+.dhead{padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+.dhead h3{font-size:22px;font-weight:800;font-variation-settings:"wdth" 108;line-height:1.2;margin:6px 0}
+.dhead .x{float:right}
+.dbody{overflow-y:auto;padding:14px 18px 26px;display:flex;flex-direction:column;gap:16px}
+.dbody>*{flex-shrink:0}
+
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.acts2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:14px;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;word-break:break-word}
+.warn{border-left:3px solid var(--danger);background:color-mix(in srgb,var(--danger) 10%,transparent);padding:8px 10px;font-size:13.5px}
+.okm{border-left:3px solid var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent);padding:8px 10px;font-size:13.5px}
+.sect{font-size:13px;font-weight:700;letter-spacing:.04em;font-variation-settings:"wdth" 112;margin:0 0 6px}
+.activity{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+.activity li{border-left:2px solid var(--line-2);padding-left:10px}
+.activity time{display:block;color:var(--muted);font-size:12px}
+
+/* Dialogs */
+dialog{border:1px solid var(--line-2);border-radius:10px;padding:0;width:min(660px,calc(100% - 24px));background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.dh{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dh h3{font-size:20px;font-weight:800;font-variation-settings:"wdth" 112;margin:0}
+.db{padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;max-height:68vh;overflow-y:auto}
+.db .full{grid-column:1/-1}
+.db h4{grid-column:1/-1;margin:6px 0 -4px;font-size:13px;letter-spacing:.04em;font-variation-settings:"wdth" 112}
+.df{padding:12px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.err{color:var(--danger);font-size:12.5px}
+.inline{display:flex;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--primary);color:var(--on-primary);padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;opacity:0;transition:all .2s;z-index:3000;pointer-events:none;max-width:90vw;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.scrim{display:none}
+
+.tabs{display:flex;gap:4px;margin-top:12px}
+.tabs button{flex:1;border:1px solid var(--line-2);background:transparent;padding:6px 6px;border-radius:5px;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink)}
+.tabs button[aria-selected="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.rlist{display:flex;flex-direction:column;gap:10px}
+.res{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;font-size:14px;transition:border-color .2s}
+.res.hl{border-color:var(--ink)}
+.rhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#fff;color:#111;font-weight:800;font-size:12px;border:2px solid #111;box-shadow:0 1px 6px rgba(0,0,0,.6);flex:none}
+.res-ico{background:none;border:0}
+.gpin{transform:translateY(50%)}
+.gpin2{transform:translateY(50%)}
+.cap{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.thumb{width:100%;max-height:220px;object-fit:cover;border-radius:6px}
+.sv{width:100%;aspect-ratio:16/10;background:#000;border-radius:8px;overflow:hidden}
+.inline.wrap{flex-wrap:wrap}
+a.chip{text-decoration:none;color:inherit}
+.engine{font-size:11.5px;color:#A5A5A1;border:1px solid #333;border-radius:4px;padding:1px 6px;white-space:nowrap}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:fixed;top:0;left:0;bottom:0;width:min(320px,88vw);z-index:2000;transform:translateX(-105%);transition:transform .25s;box-shadow:var(--shadow);padding-top:calc(16px + env(safe-area-inset-top,0px))}
+  .rail.open{transform:none}
+  .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1900}
+  .only-m{display:inline-flex!important}
+  .hide-m{display:none!important}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .kpi{padding:8px 10px}
+  .kpi b{font-size:19px}
+  .kpi span{font-size:11.5px;line-height:1.2;display:block}
+  .main{grid-template-rows:auto minmax(380px,1fr) auto;overflow-y:auto}
+  .drawer{position:fixed;z-index:2100;width:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .search{width:calc(100% - 20px);left:10px;top:58px}
+  .ctl{top:10px;right:10px;left:10px;flex-direction:row;justify-content:space-between;align-items:flex-start}
+  .ctl .stack{flex-direction:row;flex-wrap:nowrap;justify-content:flex-end}
+  .ctl [data-hm]{display:none}
+  .seg button{padding:7px 9px;font-size:12.5px}
+  .legend{display:none}
+  .banner{top:112px;width:max-content;max-width:calc(100% - 28px)}
+  .db{grid-template-columns:1fr}
+  .top{padding:10px 12px;gap:10px}
+  .word small,.sep,.stat{display:none}
+  .tscroll{height:42vh}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="kam" viewBox="0 0 748 1098">
+    <polygon points="374,0 748,403 628,515 374,242 120,515 0,403" fill="currentColor"/>
+    <polygon points="120,583 374,856 628,583 748,695 374,1098 0,695" fill="currentColor"/>
+  </symbol>
+</svg>
+<div class="app">
+  <header class="top">
+    <button class="btn only-m" id="bFilters" aria-label="Open filters">☰</button>
+    <div class="brand">
+      <svg class="mark" style="color:#fff"><use href="#kam"/></svg>
+      <div class="word">KAM TEAM<small>Real Estate Agent Lead Generator</small></div>
+    </div>
+    <div class="grow"></div>
+    <div class="stat" id="ghlStat" title="GoHighLevel connection"><i></i><span id="ghlText">GHL not connected</span></div>
+    <span class="sep"></span>
+    <span class="engine hide-m" id="engineTag">Map</span>
+    <button class="btn" id="bFind" aria-label="Find leads">⌕<span class="hide-m">&nbsp;Find leads</span></button>
+    <button class="btn" id="bSettings" aria-label="Settings">⚙<span class="hide-m">&nbsp;Settings</span></button>
+    <button class="btn" id="bTheme" aria-label="Switch light or dark theme">◐</button>
+    <button class="btn primary" id="bNew">＋<span class="hide-m">&nbsp;New lead</span></button>
+  </header>
+
+  <div class="shell">
+    <aside class="rail" id="rail" aria-label="Filters">
+      <div class="field"><label for="q">Search leads</label><input type="search" id="q" placeholder="Name, address, phone, email, case #"></div>
+      <div><h2>Lead type</h2><div class="types" id="types"></div></div>
+      <div class="field"><label for="fState">State</label><select id="fState"><option value="">All 50 states</option></select></div>
+      <div class="field"><label for="fCounty">County</label><select id="fCounty"><option value="">All counties</option></select></div>
+      <div><h2>Pipeline status</h2><div class="chips" id="chips"></div></div>
+      <label class="check"><input type="checkbox" id="fHot"> Hot leads only (score 70+)</label>
+      <label class="check"><input type="checkbox" id="fReach"> Has phone or email</label>
+      <label class="check"><input type="checkbox" id="fGhl"> Not yet sent to GHL</label>
+      <div>
+        <h2>Bring in leads</h2>
+        <div class="row">
+          <button class="btn sm" id="bImport">Import CSV</button>
+          <button class="btn sm" id="bTemplate">CSV template</button>
+          <button class="btn sm" id="bExport">Export CSV</button>
+        </div>
+        <input type="file" id="fileCsv" accept=".csv,text/csv" class="hidden">
+        <p class="note">Load probate filings, notices of default, expired listings, FSBO and absentee-owner lists from county records or a licensed data provider. Scrub phones against the Do Not Call registry before dialing.</p>
+      </div>
+      <div>
+        <h2>Backup</h2>
+        <div class="row">
+          <button class="btn sm" id="bBackup">Download backup</button>
+          <button class="btn sm" id="bRestore">Restore backup</button>
+        </div>
+        <input type="file" id="fileJson" accept=".json,application/json" class="hidden">
+        <p class="note">Leads are saved in this browser. Download a backup weekly, or turn on GHL sync in Settings so every lead also lands in your CRM.</p>
+      </div>
+      <button class="btn" id="bClear">Reset filters</button>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <main class="main">
+      <div class="kpis" id="kpis">
+        <button class="kpi" data-k="all"><b id="kTotal">0</b><span>Leads in view</span></button>
+        <button class="kpi" data-k="hot"><b id="kHot">0</b><span>Hot leads</span></button>
+        <button class="kpi" data-k="ca"><b id="kCA">0</b><span>California</span></button>
+        <button class="kpi" data-k="estate"><b id="kEstate">0</b><span>Probate &amp; inherited</span></button>
+      </div>
+
+      <div class="mapwrap" id="mapwrap">
+        <div id="map" aria-label="Satellite map of leads"></div>
+
+        <div class="ov search" id="searchBox">
+          <form class="box" id="searchForm" role="search">
+            <input type="search" id="addr" placeholder="Fly to an address, city or ZIP" autocomplete="off" aria-label="Search address">
+            <button type="submit">Go</button>
+          </form>
+          <div class="results hidden" id="results"></div>
+        </div>
+
+        <div class="ov ctl">
+          <div class="seg" role="group" aria-label="Map style">
+            <button data-base="hybrid" aria-pressed="true">Hybrid</button>
+            <button data-base="sat" aria-pressed="false">Satellite</button>
+            <button data-base="streets" aria-pressed="false">Streets</button>
+          </div>
+          <div class="stack">
+            <button class="btn sq" id="zIn" data-hm aria-label="Zoom in">+</button>
+            <button class="btn sq" id="zOut" data-hm aria-label="Zoom out">−</button>
+            <button class="btn sm" id="bLocate" aria-label="My location">◎<span class="hide-m">&nbsp;My location</span></button>
+            <button class="btn sm" id="zUS" data-hm>USA</button>
+            <button class="btn sm" id="zCA" data-hm>California</button>
+            <button class="btn sm" id="bBounds" data-hm aria-pressed="true">Boundaries</button>
+            <button class="btn sm primary" id="bDrop" aria-pressed="false">Drop pin</button>
+          </div>
+        </div>
+
+        <div class="ov banner" id="banner">Click the rooftop of the property <button class="btn sm" id="bCancelDrop">Cancel</button></div>
+        <div class="ov where hidden" id="where"><span id="whereText"></span><button id="whereBtn">Filter here</button></div>
+        <div class="ov legend closed" id="legend"></div>
+        <div class="ov loading hidden" id="loading">Loading…</div>
+
+        <aside class="drawer" id="drawer" aria-label="Lead details"></aside>
+        <aside class="drawer" id="prospect" aria-label="Find leads">
+          <div class="dhead"><button class="btn sm x" id="pClose">Close</button><h3>Find leads</h3>
+            <div class="tabs" role="tablist"><button data-tab="google" role="tab" aria-selected="true">Google listings</button><button data-tab="ig" role="tab" aria-selected="false">Instagram</button><button data-tab="li" role="tab" aria-selected="false">LinkedIn</button></div></div>
+          <div class="dbody" id="pBody"></div>
+        </aside>
+      </div>
+
+      <section class="tablepanel" id="tablepanel">
+        <div class="tbar">
+          <h2>LEADS</h2><span class="count" id="tCount"></span>
+          <span class="grow"></span>
+          <button class="btn sm" id="bSync">Send new to GHL</button>
+          <button class="btn sm" id="bSample">Load sample leads</button>
+          <button class="btn sm" id="bToggle" aria-expanded="true">Hide list</button>
+        </div>
+        <div class="tscroll" id="tscroll"></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog" id="leadForm" novalidate>
+    <div class="dh"><h3 id="dlgTitle">New lead</h3><button class="btn sm" value="cancel" formnovalidate>Close</button></div>
+    <div class="db">
+      <div class="field full"><label for="f_name">Contact or owner name *</label><input type="text" id="f_name" placeholder="e.g. Estate of Jordan Lee, c/o administrator"><div class="err" id="e_name"></div></div>
+      <div class="field"><label for="f_type">Lead type *</label><select id="f_type"></select></div>
+      <div class="field"><label for="f_status">Status</label><select id="f_status"></select></div>
+      <div class="field"><label for="f_phone">Phone</label><input type="tel" id="f_phone" placeholder="(555) 555-0100"><div class="err" id="e_phone"></div></div>
+      <div class="field"><label for="f_email">Email</label><input type="email" id="f_email" placeholder="name@example.com"><div class="err" id="e_email"></div></div>
+      <div class="field full"><label for="f_address">Property address</label><input type="text" id="f_address" placeholder="Street address"></div>
+      <div class="field"><label for="f_city">City</label><input type="text" id="f_city"></div>
+      <div class="field"><label for="f_zip">ZIP</label><input type="text" id="f_zip" inputmode="numeric"></div>
+      <div class="field"><label for="f_state">State *</label><select id="f_state"></select><div class="err" id="e_state"></div></div>
+      <div class="field"><label for="f_county">County</label><select id="f_county"><option value="">—</option></select></div>
+      <div class="field"><label for="f_lat">Latitude</label><input type="number" step="any" id="f_lat" placeholder="Set by pin or address"></div>
+      <div class="field"><label for="f_lng">Longitude</label><input type="number" step="any" id="f_lng" placeholder="Set by pin or address"></div>
+      <div class="field full"><button type="button" class="btn sm" id="bGeocode" style="align-self:flex-start">Find this address on the map</button><div class="err" id="e_geo"></div></div>
+      <div class="field"><label for="f_value">Est. value ($)</label><input type="number" id="f_value" min="0" step="1000"></div>
+      <div class="field"><label for="f_equity">Est. equity (%)</label><input type="number" id="f_equity" min="0" max="100"></div>
+      <div class="field"><label for="f_source">Source</label><select id="f_source"></select></div>
+      <div class="field"><label for="f_case">Case / record #</label><input type="text" id="f_case" placeholder="Probate case, APN, MLS #"></div>
+      <div class="field"><label for="f_website">Website</label><input type="url" id="f_website" placeholder="https://"></div>
+      <div class="field"><label for="f_social">Profile or listing link</label><input type="url" id="f_social" placeholder="Instagram, LinkedIn or Google Maps link"></div>
+      <div class="field"><label for="f_dnc">Do Not Call check</label><select id="f_dnc"><option value="unchecked">Not checked yet</option><option value="clear">Checked: not on DNC</option><option value="listed">On DNC list</option></select></div>
+      <div class="field" style="justify-content:flex-end"><label class="check"><input type="checkbox" id="f_consent"> Gave consent to be contacted</label></div>
+      <div class="field full"><label for="f_notes">Notes</label><textarea id="f_notes" placeholder="Motivation, timeline, heirs, attorney, property condition seen on satellite…"></textarea></div>
+    </div>
+    <div class="df"><button class="btn" value="cancel" formnovalidate>Cancel</button><button class="btn primary" value="save">Save lead</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlgSet">
+  <form method="dialog" id="setForm">
+    <div class="dh"><h3>Settings</h3><button class="btn sm" value="cancel">Close</button></div>
+    <div class="db">
+      <h4>Your signature (used in email templates)</h4>
+      <div class="field"><label for="s_agent">Agent name</label><input type="text" id="s_agent"></div>
+      <div class="field"><label for="s_dre">DRE license #</label><input type="text" id="s_dre"></div>
+      <div class="field"><label for="s_phone">Phone</label><input type="tel" id="s_phone"></div>
+      <div class="field"><label for="s_brokerage">Brokerage</label><input type="text" id="s_brokerage"></div>
+      <div class="field full"><label for="s_address">Office mailing address (required in marketing emails)</label><input type="text" id="s_address"></div>
+      <h4>GoHighLevel sync</h4>
+      <div class="field full"><label for="s_ghl">Relay URL</label><input type="text" id="s_ghl" autocomplete="off" spellcheck="false" placeholder="/api/ghl"><div class="note" style="margin:0">Use <b>/api/ghl</b> when this page runs on the Kam Team server, so your real GHL webhook URL stays private on the server. A raw https GHL webhook URL also works, but anyone using this browser can see it.</div></div>
+      <div class="field full"><label for="s_ghlkey">Relay API key (only if the server sets API_KEY)</label><input type="password" id="s_ghlkey" autocomplete="off"></div>
+      <label class="check full"><input type="checkbox" id="s_auto"> Send every new or updated lead to GHL automatically</label>
+      <div class="field full"><button type="button" class="btn sm" id="bTestGhl" style="align-self:flex-start">Send a test lead</button><div class="note" id="ghlTestMsg" style="margin:0"></div></div>
+      <h4>Google Maps (optional)</h4>
+      <div class="field full"><label for="s_gkey">Google Maps Platform API key</label><input type="text" id="s_gkey" autocomplete="off" spellcheck="false" placeholder="AIza…"><div class="note" style="margin:0">Turns on Google satellite, Street View inside each lead, Google address search and Google business listings. The page reloads after you save.</div></div>
+      <div class="field full"><label for="s_gmapid">Google Map ID (optional)</label><input type="text" id="s_gmapid" autocomplete="off" placeholder="Leave blank to use Google's demo map ID"></div>
+      <h4>Instagram (optional)</h4>
+      <div class="field"><label for="s_iguser">Instagram business account ID</label><input type="text" id="s_iguser" autocomplete="off" placeholder="1784…"></div>
+      <div class="field"><label for="s_igtoken">Access token</label><input type="password" id="s_igtoken" autocomplete="off"></div>
+      <div class="note full" style="margin:0">Needed only to pull hashtag posts into the app. Without it, the Instagram tab opens hashtags on Instagram instead.</div>
+      <h4>Satellite imagery (standard map)</h4>
+      <div class="field full"><label for="s_tiles">Custom satellite tile URL (optional)</label><input type="url" id="s_tiles" placeholder="https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=YOUR_KEY"><div class="note" style="margin:0">Leave blank to use Esri World Imagery. Paste a MapTiler or Mapbox satellite URL with your key for production use.</div></div>
+    </div>
+    <div class="df"><button class="btn" value="cancel">Cancel</button><button class="btn primary" value="save" id="bSaveSet">Save settings</button></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------------- Reference data ---------------- */
+const STATES=[["01","Alabama","AL"],["02","Alaska","AK"],["04","Arizona","AZ"],["05","Arkansas","AR"],["06","California","CA"],["08","Colorado","CO"],["09","Connecticut","CT"],["10","Delaware","DE"],["12","Florida","FL"],["13","Georgia","GA"],["15","Hawaii","HI"],["16","Idaho","ID"],["17","Illinois","IL"],["18","Indiana","IN"],["19","Iowa","IA"],["20","Kansas","KS"],["21","Kentucky","KY"],["22","Louisiana","LA"],["23","Maine","ME"],["24","Maryland","MD"],["25","Massachusetts","MA"],["26","Michigan","MI"],["27","Minnesota","MN"],["28","Mississippi","MS"],["29","Missouri","MO"],["30","Montana","MT"],["31","Nebraska","NE"],["32","Nevada","NV"],["33","New Hampshire","NH"],["34","New Jersey","NJ"],["35","New Mexico","NM"],["36","New York","NY"],["37","North Carolina","NC"],["38","North Dakota","ND"],["39","Ohio","OH"],["40","Oklahoma","OK"],["41","Oregon","OR"],["42","Pennsylvania","PA"],["44","Rhode Island","RI"],["45","South Carolina","SC"],["46","South Dakota","SD"],["47","Tennessee","TN"],["48","Texas","TX"],["49","Utah","UT"],["50","Vermont","VT"],["51","Virginia","VA"],["53","Washington","WA"],["54","West Virginia","WV"],["55","Wisconsin","WI"],["56","Wyoming","WY"]];
+const CENTER={"01":[32.776,-86.83],"02":[63.924,-152.379],"04":[34.275,-111.66],"05":[34.894,-92.443],"06":[37.184,-119.473],"08":[38.997,-105.548],"09":[41.621,-72.727],"10":[38.992,-75.5],"12":[28.607,-82.455],"13":[32.638,-83.436],"15":[20.253,-156.337],"16":[44.35,-114.613],"17":[40.042,-89.197],"18":[39.895,-86.282],"19":[42.075,-93.496],"20":[38.494,-98.379],"21":[37.535,-85.302],"22":[31.041,-91.96],"23":[45.348,-69.236],"24":[39.032,-76.758],"25":[42.254,-71.792],"26":[44.32,-85.378],"27":[46.281,-94.305],"28":[32.734,-89.668],"29":[38.357,-92.458],"30":[47.052,-109.633],"31":[41.538,-99.795],"32":[39.329,-116.631],"33":[43.68,-71.58],"34":[40.179,-74.663],"35":[34.407,-106.112],"36":[42.937,-75.507],"37":[35.552,-79.355],"38":[47.451,-100.466],"39":[40.289,-82.795],"40":[35.588,-97.493],"41":[43.935,-120.562],"42":[40.878,-77.8],"44":[41.676,-71.552],"45":[33.906,-80.89],"46":[44.445,-100.227],"47":[35.858,-86.35],"48":[31.463,-99.32],"49":[39.306,-111.67],"50":[44.068,-72.667],"51":[37.521,-78.818],"53":[47.384,-120.457],"54":[38.64,-80.625],"55":[44.626,-89.993],"56":[42.996,-107.551]};
+const BY_FIPS={},BY_ABBR={},BY_NAME={};
+STATES.forEach(([f,n,a])=>{const o={fips:f,name:n,abbr:a};BY_FIPS[f]=o;BY_ABBR[a]=o;BY_NAME[n.toLowerCase()]=o;});
+const TYPES={
+  seller:{label:"Seller",color:"#F2B33D",base:22},
+  partner:{label:"Referral partner",color:"#5FE3D0",base:20},
+  buyer:{label:"Buyer",color:"#3DB8F2",base:16},
+  probate:{label:"Probate",color:"#A879FF",base:32},
+  inherited:{label:"Inherited / Will",color:"#FF5C8A",base:30},
+  preforeclosure:{label:"Pre-foreclosure",color:"#FF7A2F",base:32},
+  expired:{label:"Expired listing",color:"#9FB3C8",base:24},
+  fsbo:{label:"For sale by owner",color:"#3DDC84",base:22},
+  absentee:{label:"Absentee owner",color:"#E8E35A",base:18}
+};
+const STATUSES=["New","Contacted","Appointment","Under contract","Closed","Not interested"];
+const SOURCES=["County probate filing","Recorder: notice of default","MLS expired listing","FSBO listing","Assessor: absentee owner","Driving for dollars (satellite)","Google listing","OpenStreetMap listing","Instagram","LinkedIn","Website inquiry","Open house","Referral","Data provider import","Other"];
+
+/* ---------------- Helpers ---------------- */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>"L"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const money=v=>v?"$"+Number(v).toLocaleString("en-US"):"—";
+const fdate=t=>t?new Date(t).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2800);}
+function normPhone(p){if(!p)return"";const d=String(p).replace(/\D/g,"");const n=d.length===11&&d[0]==="1"?d.slice(1):d;return n.length===10?`(${n.slice(0,3)}) ${n.slice(3,6)}-${n.slice(6)}`:String(p).trim();}
+const phoneOk=p=>{const d=String(p).replace(/\D/g,"");return d.length===10||(d.length===11&&d[0]==="1");};
+const emailOk=e=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){toast("This browser blocked saving. Download a backup now.");return false;}}};
+function download(name,text,mime){const b=new Blob([text],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800);}
+
+function score(l){
+  let s=(TYPES[l.type]||TYPES.seller).base;
+  s+=Math.min(30,Math.round((Number(l.equity)||0)*0.3));
+  if(l.phone)s+=10; if(l.email)s+=6;
+  const age=(Date.now()-(l.created||Date.now()))/864e5; if(age<=7)s+=10; else if(age<=30)s+=5;
+  if(l.status==="Appointment")s+=12; if(l.status==="Contacted")s+=4;
+  if(l.status==="Not interested"||l.status==="Closed")s=Math.min(s,20);
+  if(l.dnc==="listed"&&!l.consent)s-=8;
+  return Math.max(0,Math.min(100,s));
+}
+
+/* ---------------- State ---------------- */
+const KEY="kamteam.leads.v2", SKEY="kamteam.settings.v1";
+const S={leads:new Map(),sel:null,adding:false,sort:{k:"score",dir:-1},editId:null,
+  f:{q:"",types:new Set(Object.keys(TYPES)),state:"",county:"",statuses:new Set(),hot:false,reach:false,ghl:false},
+  set:Object.assign({agent:"",dre:"",phone:"",brokerage:"",address:"",ghl:"",auto:false,ghlKey:"",tiles:"",gkey:"",gmapId:"",igUser:"",igToken:""},store.get(SKEY,{}))};
+(store.get(KEY,[])||[]).forEach(l=>S.leads.set(l.id,l));
+const persist=()=>store.set(KEY,[...S.leads.values()]);
+
+/* ---------------- Geography (boundaries load in background) ---------------- */
+const GEO={ready:false,states:[],counties:{},stateFeat:{}};
+const geoReady=fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json").then(r=>r.json()).then(T=>{
+  GEO.states=topojson.feature(T,T.objects.states).features.filter(f=>BY_FIPS[f.id]);
+  GEO.states.forEach(f=>GEO.stateFeat[f.id]=f);
+  topojson.feature(T,T.objects.counties).features.forEach(c=>{const s=String(c.id).slice(0,2);if(!BY_FIPS[s])return;(GEO.counties[s]=GEO.counties[s]||[]).push(c);});
+  Object.values(GEO.counties).forEach(a=>a.sort((x,y)=>x.properties.name.localeCompare(y.properties.name)));
+  GEO.ready=true; afterGeo(); syncFilterInputs();
+}).catch(()=>{ toast("County boundaries couldn't load. Pins and search still work."); });
+function stateAt(lat,lng){ if(!GEO.ready)return null; const p=[lng,lat]; return GEO.states.find(f=>d3.geoContains(f,p))||null; }
+function countyAt(fips,lat,lng){ const p=[lng,lat]; return (GEO.counties[fips]||[]).find(c=>d3.geoContains(c,p))||null; }
+function countyFeat(abbr,name){ const s=BY_ABBR[abbr]; if(!s||!name||!GEO.ready)return null; const n=name.toLowerCase().replace(/\s+(county|parish|borough)$/,"").trim(); return (GEO.counties[s.fips]||[]).find(c=>c.properties.name.toLowerCase()===n)||null; }
+function approxPoint(abbr,county){
+  const s=BY_ABBR[abbr]; if(!s) return null;
+  const c=countyFeat(abbr,county);
+  if(c){ const cen=d3.geoCentroid(c); for(let i=0;i<15;i++){const p=[cen[0]+(Math.random()-.5)*.1,cen[1]+(Math.random()-.5)*.1]; if(d3.geoContains(c,p))return [p[1],p[0]];} return [cen[1],cen[0]]; }
+  const ce=CENTER[s.fips]; return [ce[0]+(Math.random()-.5)*.6,ce[1]+(Math.random()-.5)*.6];
+}
+
+/* ---------------- Map engines ----------------
+   One interface, two engines: Google Maps (when a key is set in Settings) or Leaflet + Esri imagery. */
+let E=null, baseMode=store.get("kamteam.base","hybrid"), showBounds=store.get("kamteam.bounds",true);
+const pinHTML=l=>{const s=Math.round(12+score(l)/9);return `<span class="dm" style="--c:${(TYPES[l.type]||TYPES.seller).color};--s:${s}px"></span>`;};
+const LOGO_PIN=`<svg class="cand" viewBox="0 0 748 1098"><polygon points="374,0 748,403 628,515 374,242 120,515 0,403" fill="#fff" stroke="#111" stroke-width="30"/><polygon points="120,583 374,856 628,583 748,695 374,1098 0,695" fill="#fff" stroke="#111" stroke-width="30"/></svg>`;
+function loadScript(src,cbName){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.async=true;if(cbName)window[cbName]=()=>res();else s.onload=()=>res();s.onerror=()=>rej(new Error("couldn't download "+src.split("?")[0]));document.head.appendChild(s);});}
+const timeout=(p,ms,msg)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error(msg)),ms))]);
+
+function makeLeaflet(){
+  const map=L.map("map",{zoomControl:false,minZoom:3,maxZoom:20,worldCopyJump:true}).setView([39.5,-98.5],4);
+  const ESRI="https://server.arcgisonline.com/ArcGIS/rest/services/";
+  const ATTR='Imagery © <a href="https://www.esri.com">Esri</a>, Maxar, Earthstar Geographics · Search © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+  const t=(u,o)=>L.tileLayer(u,Object.assign({maxZoom:20,maxNativeZoom:19},o||{}));
+  const base=L.layerGroup().addTo(map);
+  const cluster=L.markerClusterGroup({showCoverageOnHover:false,maxClusterRadius:46,disableClusteringAtZoom:15,
+    iconCreateFunction:c=>{const n=c.getChildCount(),s=n<10?30:n<100?36:44;return L.divIcon({className:"cl-ico",html:`<div class="cl" style="--s:${s}px"><span>${n}</span></div>`,iconSize:[s*1.42,s*1.42]});}});
+  map.addLayer(cluster);
+  const res=L.layerGroup().addTo(map), cr=L.canvas({padding:.3});
+  let st=null,co=null,hi=null,cand=null;
+  return {kind:"leaflet",
+    setBase(mode){ base.clearLayers(); const custom=(S.set.tiles||"").trim();
+      if(mode==="streets") base.addLayer(t(ESRI+"World_Street_Map/MapServer/tile/{z}/{y}/{x}",{attribution:"Map © Esri, HERE, Garmin, USGS"}));
+      else { base.addLayer(custom?t(custom,{attribution:"Satellite imagery provider"}):t(ESRI+"World_Imagery/MapServer/tile/{z}/{y}/{x}",{attribution:ATTR}));
+        if(mode==="hybrid"){ base.addLayer(t(ESRI+"Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",{opacity:.9})); base.addLayer(t(ESRI+"Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}")); } } },
+    fly(lat,lng,z){ map.flyTo([lat,lng],z,{duration:1}); },
+    fitFeature(f){ if(f) map.flyToBounds(L.geoJSON(f).getBounds(),{padding:[30,30],duration:.8}); },
+    center(){ const c=map.getCenter(); return {lat:c.lat,lng:c.lng}; },
+    zoom(){ return map.getZoom(); },
+    zoomBy(d){ d>0?map.zoomIn():map.zoomOut(); },
+    bounds(){ const b=map.getBounds(); return {s:b.getSouth(),w:b.getWest(),n:b.getNorth(),e:b.getEast()}; },
+    onClick(cb){ map.on("click",e=>cb(e.latlng.lat,e.latlng.lng)); },
+    onMove(cb){ map.on("moveend",cb); },
+    setPins(list){ cluster.clearLayers(); const arr=[];
+      list.forEach(l=>{ if(!isFinite(l.lat)||!isFinite(l.lng)) return; const s=Math.round(12+score(l)/9);
+        const m=L.marker([l.lat,l.lng],{icon:L.divIcon({className:"pin-ico"+(l.id===S.sel?" sel":""),html:pinHTML(l),iconSize:[s*1.5,s*1.5],iconAnchor:[s*.75,s*.75]}),title:l.name,riseOnHover:true});
+        m.on("click",()=>{ if(!S.adding) selectLead(l.id,false); });
+        m.bindTooltip(`<b>${esc(l.name)}</b><br>${esc(TYPES[l.type].label)} · score ${score(l)}`,{direction:"top",offset:[0,-8]});
+        arr.push(m); });
+      cluster.addLayers(arr); },
+    buildBounds(states,counties){
+      st=L.geoJSON({type:"FeatureCollection",features:states},{renderer:cr,interactive:false,style:{color:"#fff",weight:1.2,opacity:.65,fill:false}});
+      co=L.geoJSON({type:"FeatureCollection",features:counties},{renderer:cr,interactive:false,style:{color:"#fff",weight:.6,opacity:.4,fill:false,dashArray:"3 3"}}); },
+    applyBounds(on){ if(!st) return; on?st.addTo(map):st.remove(); (on&&map.getZoom()>=7)?co.addTo(map):co.remove(); },
+    highlight(f){ if(hi){hi.remove();hi=null;} if(f) hi=L.geoJSON(f,{renderer:cr,interactive:false,style:{color:"#fff",weight:3,opacity:1,fill:true,fillColor:"#fff",fillOpacity:.06}}).addTo(map); },
+    candidate(lat,lng,el){ this.clearCandidate(); cand=L.marker([lat,lng],{icon:L.divIcon({className:"",html:LOGO_PIN,iconSize:[26,38],iconAnchor:[13,38]}),zIndexOffset:1000}).addTo(map); cand.bindPopup(el,{offset:[0,-30]}).openPopup(); },
+    clearCandidate(){ if(cand){cand.remove();cand=null;} },
+    focusLead(lat,lng,off){ const z=Math.max(map.getZoom(),18); const pt=map.project([lat,lng],z).add([off,0]); map.flyTo(map.unproject(pt,z),z,{duration:1}); },
+    resize(){ map.invalidateSize(); },
+    results(items,onPick){ res.clearLayers(); items.forEach((it,i)=>{ if(!isFinite(it.lat)) return; const m=L.marker([it.lat,it.lng],{icon:L.divIcon({className:"res-ico",html:`<span class="rn">${i+1}</span>`,iconSize:[26,26],iconAnchor:[13,13]}),zIndexOffset:900}); m.on("click",()=>onPick(i)); res.addLayer(m); });
+      const pts=items.filter(i=>isFinite(i.lat)).map(i=>[i.lat,i.lng]); if(pts.length>1) map.flyToBounds(pts,{padding:[60,60],maxZoom:15,duration:.8}); else if(pts.length) map.flyTo(pts[0],15); },
+    async streetView(){ return false; },
+    async search(q){ const r=await geocodeOSM(q); return r.map(it=>Object.assign({lat:+it.lat,lng:+it.lon,label:it.display_name.replace(/, United States$/,""),exact:!!(it.address&&it.address.house_number)},addrParts(it.address))); },
+    async reverse(lat,lng){ return addrParts((await reverseOSM(lat,lng)).address); }
+  };
+}
+
+async function makeGoogle(key){
+  window.gm_authFailure=()=>{ store.set("kamteam.gfail",key); toast("Google rejected the Maps API key. Switching to the standard satellite map; fix the key in Settings."); setTimeout(()=>location.reload(),2500); };
+  await timeout(loadScript(`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=weekly&libraries=places,marker,geometry&loading=async&callback=__kamGm`,"__kamGm"),15000,"Google Maps took too long to load");
+  await timeout(loadScript("https://cdn.jsdelivr.net/npm/@googlemaps/markerclusterer@2/dist/index.umd.min.js"),10000,"marker clustering didn't load");
+  const g=google.maps, AM=g.marker.AdvancedMarkerElement;
+  const gm=new g.Map($("map"),{center:{lat:39.5,lng:-98.5},zoom:4,minZoom:3,mapId:S.set.gmapId||"DEMO_MAP_ID",mapTypeId:"hybrid",disableDefaultUI:true,
+    streetViewControl:true,streetViewControlOptions:{position:g.ControlPosition.RIGHT_BOTTOM},rotateControl:true,gestureHandling:"greedy",clickableIcons:false,tilt:0});
+  const mkDiv=(cls,html)=>{const d=document.createElement("div");d.className=cls;d.innerHTML=html;return d;};
+  const clusterer=new markerClusterer.MarkerClusterer({map:gm,markers:[],renderer:{render:({count,position})=>{const s=count<10?30:count<100?36:44;return new AM({position,content:mkDiv("gpin",`<div class="cl" style="--s:${s}px"><span>${count}</span></div>`),zIndex:1000+count});}}});
+  const data=()=>new g.Data({map:null});
+  const dS=data(),dC=data(),dH=data();
+  dS.setStyle({strokeColor:"#fff",strokeWeight:1.2,strokeOpacity:.65,fillOpacity:0,clickable:false});
+  dC.setStyle({strokeColor:"#fff",strokeWeight:.6,strokeOpacity:.4,fillOpacity:0,clickable:false});
+  dH.setStyle({strokeColor:"#fff",strokeWeight:3,strokeOpacity:1,fillColor:"#fff",fillOpacity:.06,clickable:false});
+  let cand=null,iw=null,res=[],hasBounds=false;
+  const comps=(c)=>{const get=t=>(c||[]).find(x=>x.types.includes(t));const v=(t,s)=>{const x=get(t);return x?(s?x.shortText:x.longText):"";};return {street:[v("street_number"),v("route")].filter(Boolean).join(" "),city:v("locality")||v("sublocality")||v("postal_town"),zip:v("postal_code"),state:v("administrative_area_level_1",true),county:v("administrative_area_level_2").replace(/\s+County$/,"")};};
+  const PF=["id","displayName","formattedAddress","location","addressComponents","nationalPhoneNumber","websiteURI","rating","userRatingCount","googleMapsURI","businessStatus","primaryTypeDisplayName"];
+  return {kind:"google",
+    setBase(mode){ gm.setMapTypeId({hybrid:"hybrid",sat:"satellite",streets:"roadmap"}[mode]||"hybrid"); },
+    fly(lat,lng,z){ gm.panTo({lat,lng}); gm.setZoom(z); },
+    fitFeature(f){ if(!f) return; const [[w,s],[e,n]]=d3.geoBounds(f); gm.fitBounds({west:w,south:s,east:e,north:n},30); },
+    center(){ const c=gm.getCenter(); return {lat:c.lat(),lng:c.lng()}; },
+    zoom(){ return gm.getZoom(); },
+    zoomBy(d){ gm.setZoom(gm.getZoom()+d); },
+    bounds(){ const b=gm.getBounds(); if(!b) return null; const ne=b.getNorthEast(),sw=b.getSouthWest(); return {s:sw.lat(),w:sw.lng(),n:ne.lat(),e:ne.lng()}; },
+    onClick(cb){ gm.addListener("click",e=>{ if(e.latLng) cb(e.latLng.lat(),e.latLng.lng()); }); },
+    onMove(cb){ gm.addListener("idle",cb); },
+    setPins(list){ clusterer.clearMarkers(); const ms=[];
+      list.forEach(l=>{ if(!isFinite(l.lat)||!isFinite(l.lng)) return;
+        const m=new AM({position:{lat:l.lat,lng:l.lng},content:mkDiv("gpin pin-ico"+(l.id===S.sel?" sel":""),pinHTML(l)),title:`${l.name} · ${TYPES[l.type].label} · score ${score(l)}`,gmpClickable:true});
+        m.addListener("click",()=>{ if(!S.adding) selectLead(l.id,false); }); ms.push(m); });
+      clusterer.addMarkers(ms); },
+    buildBounds(states,counties){ dS.addGeoJson({type:"FeatureCollection",features:states}); dC.addGeoJson({type:"FeatureCollection",features:counties}); hasBounds=true; },
+    applyBounds(on){ if(!hasBounds) return; const want=on?gm:null, wantC=on&&gm.getZoom()>=7?gm:null; if(dS.getMap()!==want) dS.setMap(want); if(dC.getMap()!==wantC) dC.setMap(wantC); },
+    highlight(f){ dH.forEach(x=>dH.remove(x)); if(f){ dH.addGeoJson(f); dH.setMap(gm);} else dH.setMap(null); },
+    candidate(lat,lng,el){ this.clearCandidate(); cand=new AM({position:{lat,lng},map:gm,content:mkDiv("",LOGO_PIN),zIndex:2000}); iw=new g.InfoWindow({content:el,headerDisabled:true}); iw.open({anchor:cand,map:gm}); },
+    clearCandidate(){ if(iw){iw.close();iw=null;} if(cand){cand.map=null;cand=null;} },
+    focusLead(lat,lng,off){ gm.setZoom(Math.max(gm.getZoom(),19)); gm.panTo({lat,lng}); if(off) setTimeout(()=>gm.panBy(off,0),350); },
+    resize(){},
+    results(items,onPick){ res.forEach(m=>m.map=null); res=[]; const b=new g.LatLngBounds(); let n=0;
+      items.forEach((it,i)=>{ if(!isFinite(it.lat)) return; const m=new AM({position:{lat:it.lat,lng:it.lng},map:gm,content:mkDiv("gpin2",`<span class="rn">${i+1}</span>`),title:it.name,zIndex:1500,gmpClickable:true}); m.addListener("click",()=>onPick(i)); res.push(m); b.extend({lat:it.lat,lng:it.lng}); n++; });
+      if(n>1) gm.fitBounds(b,60); else if(n) { gm.panTo(b.getCenter()); gm.setZoom(15);} },
+    async streetView(div,lat,lng){ try{ const {data}=await new g.StreetViewService().getPanorama({location:{lat,lng},radius:80,source:g.StreetViewSource.OUTDOOR});
+        const heading=g.geometry.spherical.computeHeading(data.location.latLng,new g.LatLng(lat,lng));
+        new g.StreetViewPanorama(div,{pano:data.location.pano,pov:{heading,pitch:4},zoom:0,addressControl:false,fullscreenControl:true,motionTracking:false,panControl:false,zoomControl:true});
+        return true; }catch(e){ return false; } },
+    async places(q){ const {Place}=await g.importLibrary("places");
+      const {places}=await Place.searchText({textQuery:q,fields:PF,locationBias:gm.getBounds(),maxResultCount:20,region:"us",language:"en"});
+      return (places||[]).map(p=>Object.assign({id:"g-"+p.id,placeId:p.id,name:p.displayName||"",address:(p.formattedAddress||"").replace(/, USA$/,""),lat:p.location.lat(),lng:p.location.lng(),phone:p.nationalPhoneNumber||"",website:p.websiteURI||"",rating:p.rating,reviews:p.userRatingCount,url:p.googleMapsURI||"",closed:p.businessStatus&&p.businessStatus!=="OPERATIONAL",kind:p.primaryTypeDisplayName||""},comps(p.addressComponents))); },
+    async search(q){ const {Place}=await g.importLibrary("places");
+      const {places}=await Place.searchText({textQuery:q,fields:["id","displayName","formattedAddress","location","addressComponents","types"],locationBias:gm.getBounds(),maxResultCount:6,region:"us",language:"en"});
+      return (places||[]).map(p=>Object.assign({lat:p.location.lat(),lng:p.location.lng(),label:((p.displayName&&!(p.formattedAddress||"").startsWith(p.displayName))?p.displayName+" · ":"")+(p.formattedAddress||"").replace(/, USA$/,""),exact:(p.types||[]).includes("street_address")||(p.types||[]).includes("premise")},comps(p.addressComponents))); },
+    async reverse(lat,lng){ try{ const {results}=await new g.Geocoder().geocode({location:{lat,lng}}); if(results&&results[0]){ const c=comps((results[0].address_components||[]).map(a=>({longText:a.long_name,shortText:a.short_name,types:a.types}))); return c; } }catch(e){} return addrParts((await reverseOSM(lat,lng)).address); }
+  };
+}
+
+/* Engine-independent map helpers used by the rest of the app */
+function setBase(mode){ baseMode=mode; store.set("kamteam.base",mode); E.setBase(mode); document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.base===mode)); }
+function applyBounds(){ $("bBounds").setAttribute("aria-pressed",showBounds); $("bBounds").classList.toggle("on",showBounds); if(E) E.applyBounds(showBounds); }
+function highlight(){ if(!E) return; if(!GEO.ready||!S.f.state){ E.highlight(null); return; } E.highlight(S.f.county?countyFeat(S.f.state,S.f.county):GEO.stateFeat[BY_ABBR[S.f.state].fips]); }
+function fitFeature(f){ if(E&&f) E.fitFeature(f); }
+function goState(abbr){ if(!E) return; if(!abbr){ E.fly(39.5,-98.5,4); return; } const s=BY_ABBR[abbr]; GEO.ready?E.fitFeature(GEO.stateFeat[s.fips]):E.fly(CENTER[s.fips][0],CENTER[s.fips][1],6); }
+function renderPins(list){ if(E) E.setPins(list); }
+function afterGeo(){ if(!E||!GEO.ready) return; E.buildBounds(GEO.states,Object.values(GEO.counties).flat()); applyBounds(); highlight(); syncFilterInputs(); onMove(); }
+
+async function handleMapClick(lat,lng){
+  if(!S.adding) return;
+  setAdding(false);
+  const st=stateAt(lat,lng), co=st?countyAt(st.id,lat,lng):null;
+  openForm(null,{lat:+lat.toFixed(6),lng:+lng.toFixed(6),state:st?BY_FIPS[st.id].abbr:"",county:co?co.properties.name:"",source:"Driving for dollars (satellite)"});
+  $("e_geo").textContent="Looking up the address for this pin…";
+  try{ const p=await E.reverse(lat,lng); fillFromParts(p);
+    $("e_geo").textContent=p.street?"Address filled from the pin. Check the house number before saving.":"No street address found here. Type it in if you know it.";
+  }catch(e){ $("e_geo").textContent="Address lookup isn't available right now. Type the address in."; }
+}
+function fillFromParts(p){
+  if(!$("f_address").value&&p.street) $("f_address").value=p.street;
+  if(!$("f_city").value) $("f_city").value=p.city||"";
+  if(!$("f_zip").value) $("f_zip").value=p.zip||"";
+  if(!$("f_state").value&&p.state&&BY_ABBR[p.state]){ $("f_state").value=p.state; fillCounties($("f_county"),p.state,p.county); }
+  if(!$("f_county").value&&p.county) fillCounties($("f_county"),$("f_state").value,p.county);
+}
+function setAdding(on){ if(on&&S.sel) closeDrawer(); S.adding=on; $("map").classList.toggle("adding",on); $("banner").classList.toggle("show",on); $("bDrop").setAttribute("aria-pressed",on);
+  if(on&&E.zoom()<15) toast("Tip: zoom in close so you can see the rooftop."); }
+$("bDrop").onclick=()=>setAdding(!S.adding);
+$("bCancelDrop").onclick=e=>{e.stopPropagation();setAdding(false);};
+$("zIn").onclick=()=>E.zoomBy(1); $("zOut").onclick=()=>E.zoomBy(-1);
+$("zUS").onclick=()=>pickState("",true); $("zCA").onclick=()=>pickState("CA",true);
+$("bBounds").onclick=()=>{showBounds=!showBounds;store.set("kamteam.bounds",showBounds);applyBounds();};
+document.querySelector(".seg").addEventListener("click",e=>{const b=e.target.closest("button[data-base]"); if(b) setBase(b.dataset.base);});
+$("bLocate").onclick=()=>{ if(!navigator.geolocation){toast("This browser can't share your location.");return;}
+  navigator.geolocation.getCurrentPosition(p=>E.fly(p.coords.latitude,p.coords.longitude,17),
+  err=>toast(err.code===1?"Location permission was denied. Allow it in your browser's site settings.":"Couldn't get your location. The site must be on https."),{enableHighAccuracy:true,timeout:10000}); };
+
+let whereCounty=null;
+function onMove(){
+  applyBounds();
+  const w=$("where");
+  if(!E||!GEO.ready||E.zoom()<8){ w.classList.add("hidden"); whereCounty=null; return; }
+  const c=E.center(); const st=stateAt(c.lat,c.lng); const co=st?countyAt(st.id,c.lat,c.lng):null;
+  if(!st){ w.classList.add("hidden"); whereCounty=null; return; }
+  whereCounty={state:BY_FIPS[st.id].abbr,county:co?co.properties.name:""};
+  $("whereText").textContent=(co?co.properties.name+" County, ":"")+BY_FIPS[st.id].name;
+  w.classList.remove("hidden");
+}
+$("whereBtn").onclick=()=>{ if(!whereCounty)return; S.f.state=whereCounty.state; S.f.county=whereCounty.county; syncFilterInputs(); highlight(); render(); };
+
+/* ---------------- Address search ---------------- */
+const NOM="https://nominatim.openstreetmap.org/";
+async function geocodeOSM(q){ const r=await fetch(NOM+"search?format=jsonv2&addressdetails=1&countrycodes=us&limit=6&q="+encodeURIComponent(q),{headers:{"Accept-Language":"en-US"}}); if(!r.ok) throw new Error("Search service returned "+r.status); return r.json(); }
+async function reverseOSM(lat,lng){ const r=await fetch(`${NOM}reverse?format=jsonv2&addressdetails=1&zoom=18&lat=${lat}&lon=${lng}`,{headers:{"Accept-Language":"en-US"}}); if(!r.ok) throw new Error(); return r.json(); }
+function addrParts(a){ a=a||{}; const street=[a.house_number,a.road].filter(Boolean).join(" "); const city=a.city||a.town||a.village||a.hamlet||a.suburb||""; const st=a["ISO3166-2-lvl4"]?a["ISO3166-2-lvl4"].split("-")[1]:(BY_NAME[(a.state||"").toLowerCase()]||{}).abbr||""; return {street,city,zip:(a.postcode||"").slice(0,5),state:st,county:(a.county||"").replace(/\s+County$/,"")}; }
+function showCandidate(it){
+  const div=document.createElement("div");
+  div.innerHTML=`<p><b>${esc(it.street||it.label.split(",")[0])}</b><br><span class="muted">${esc([it.city,it.state,it.zip].filter(Boolean).join(", "))}</span></p><div class="inline"><button class="btn sm primary" data-a="add">Add lead here</button><button class="btn sm" data-a="x">Dismiss</button></div>`;
+  div.onclick=ev=>{ const a=ev.target.dataset.a; if(a==="add"){ const st=stateAt(it.lat,it.lng),co=st?countyAt(st.id,it.lat,it.lng):null; E.clearCandidate();
+      openForm(null,{lat:+it.lat.toFixed(6),lng:+it.lng.toFixed(6),address:it.street,city:it.city,zip:it.zip,state:st?BY_FIPS[st.id].abbr:it.state,county:co?co.properties.name:it.county}); }
+    if(a==="x") E.clearCandidate(); };
+  E.fly(it.lat,it.lng,it.exact?19:Math.max(13,E.zoom()));
+  setTimeout(()=>E.candidate(it.lat,it.lng,div),E.kind==="google"?50:900);
+}
+$("searchForm").addEventListener("submit",async e=>{
+  e.preventDefault(); const q=$("addr").value.trim(); const box=$("results"); if(!q){box.classList.add("hidden");return;}
+  box.classList.remove("hidden"); box.innerHTML=`<div class="empty">Searching…</div>`;
+  try{ const r=await E.search(q);
+    if(!r.length){ box.innerHTML=`<div class="empty">No US match for “${esc(q)}”. Try adding the city and state.</div>`; return; }
+    box.innerHTML=r.map((it,i)=>`<button data-i="${i}">${esc(it.label)}</button>`).join("");
+    box.onclick=ev=>{ const b=ev.target.closest("button[data-i]"); if(!b)return; box.classList.add("hidden"); showCandidate(r[+b.dataset.i]); };
+  }catch(err){ box.innerHTML=`<div class="empty">Address search isn't reachable right now. Check your connection and try again.</div>`; }
+});
+document.addEventListener("click",e=>{ if(!e.target.closest("#searchBox")) $("results").classList.add("hidden"); });
+
+/* ---------------- Find leads: Google listings, Instagram, LinkedIn ---------------- */
+const PRESETS=[
+  {label:"Probate attorneys",g:"probate attorney",osm:['nwr["office"="lawyer"]']},
+  {label:"Estate planning attorneys",g:"estate planning attorney",osm:['nwr["office"="lawyer"]']},
+  {label:"Estate sale companies",g:"estate sale company",osm:['nwr["name"~"estate sale|estate liquidat|auction",i]']},
+  {label:"Senior living",g:"assisted living facility",osm:['nwr["social_facility"~"assisted_living|nursing_home"]','nwr["amenity"="nursing_home"]','nwr["healthcare"="nursing_home"]']},
+  {label:"Property managers",g:"property management company",osm:['nwr["office"="property_management"]']},
+  {label:"We buy houses",g:"we buy houses",osm:['nwr["name"~"buy houses|home buyers|cash for houses",i]']},
+  {label:"Divorce attorneys",g:"divorce attorney",osm:['nwr["office"="lawyer"]']},
+  {label:"Home builders",g:"home builder",osm:['nwr["office"="construction_company"]','nwr["craft"="builder"]']},
+  {label:"Mortgage lenders",g:"mortgage lender",osm:['nwr["office"="financial"]','nwr["amenity"="bank"]']},
+  {label:"Moving companies",g:"moving company",osm:['nwr["office"="moving_company"]']}
+];
+const IG_TAGS=["fsbo","forsalebyowner","probate","inheritedhome","estatesale","relocating","househunting","firsttimehomebuyer"];
+const LI_PEOPLE=["executor","estate administrator","trustee","relocating","probate attorney","estate planning attorney","financial advisor","CPA"];
+const LI_POSTS=["selling my house","relocating to","moving to","buying our first home"];
+const P={tab:"google",items:[],busy:false,msg:"",preset:null,ig:{posts:[],biz:null,tag:"",msg:""}};
+
+function areaLabel(){ if(whereCounty) return (whereCounty.county?whereCounty.county+" County, ":"")+whereCounty.state; if(S.f.county) return S.f.county+" County, "+S.f.state; if(S.f.state) return BY_ABBR[S.f.state].name; return ""; }
+function openProspect(tab){ if(tab) P.tab=tab; closeDrawer(); $("prospect").classList.add("open"); $("mapwrap").classList.add("dopen"); renderProspect(); }
+function closeProspect(){ $("prospect").classList.remove("open"); if(E) E.results([],()=>{}); P.items=[]; $("mapwrap").classList.toggle("dopen",!!S.sel); }
+$("bFind").onclick=()=>$("prospect").classList.contains("open")?closeProspect():openProspect();
+$("pClose").onclick=closeProspect;
+document.querySelector("#prospect .tabs").addEventListener("click",e=>{const b=e.target.closest("button[data-tab]"); if(!b)return; P.tab=b.dataset.tab; renderProspect();});
+
+async function osmBusinesses(preset,text){
+  const b=E.bounds(); if(!b||E.zoom()<11) throw new Error("Zoom in to a city or neighborhood first, then search this area.");
+  const bb=`${b.s.toFixed(4)},${b.w.toFixed(4)},${b.n.toFixed(4)},${b.e.toFixed(4)}`;
+  const sels=preset?preset.osm:[`nwr["name"~"${text.replace(/["\\]/g,"")}",i]`];
+  const q=`[out:json][timeout:25];(${sels.map(s=>s+`(${bb});`).join("")});out center tags 40;`;
+  const r=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"data="+encodeURIComponent(q)});
+  if(!r.ok) throw new Error(`OpenStreetMap search is busy (error ${r.status}). Try again in a minute.`);
+  const j=await r.json();
+  return (j.elements||[]).filter(e=>e.tags&&e.tags.name).map(e=>{const t=e.tags,lat=e.lat!=null?e.lat:e.center&&e.center.lat,lng=e.lon!=null?e.lon:e.center&&e.center.lon,street=[t["addr:housenumber"],t["addr:street"]].filter(Boolean).join(" ");
+    return {id:`osm-${e.type}-${e.id}`,name:t.name,street,city:t["addr:city"]||"",state:(t["addr:state"]||"").toUpperCase().slice(0,2),zip:(t["addr:postcode"]||"").slice(0,5),county:"",address:[street,t["addr:city"],t["addr:state"],t["addr:postcode"]].filter(Boolean).join(", "),lat,lng,
+      phone:t.phone||t["contact:phone"]||"",website:t.website||t["contact:website"]||"",email:t.email||t["contact:email"]||"",kind:(t.office||t.amenity||t.healthcare||t.craft||t.shop||"").replace(/_/g," "),url:`https://www.openstreetmap.org/${e.type}/${e.id}`};});
+}
+async function runListingSearch(preset,text){
+  if(P.busy) return; P.busy=true; P.preset=preset?preset.label:null; P.msg="Searching this map area…"; P.items=[]; renderProspect();
+  try{
+    let items;
+    if(E.kind==="google"){ const area=areaLabel(); items=await E.places((preset?preset.g:text)+(area?` near ${area}`:"")); }
+    else items=await osmBusinesses(preset,text);
+    P.items=items.slice(0,40);
+    P.msg=items.length?`${items.length} ${E.kind==="google"?"Google":"OpenStreetMap"} listing${items.length>1?"s":""} in this area.`:"No listings here. Zoom out a little or try another category.";
+    E.results(P.items,i=>{ const el=document.querySelector(`#pBody [data-ri="${i}"]`); if(el){ el.scrollIntoView({behavior:"smooth",block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),1600);} });
+  }catch(e){ P.msg=e.message||"Search failed. Try again."; }
+  P.busy=false; renderProspect();
+}
+function saveListing(it){
+  const st=isFinite(it.lat)?stateAt(it.lat,it.lng):null, co=st?countyAt(st.id,it.lat,it.lng):null;
+  openForm(null,{name:it.name,type:"partner",phone:it.phone&&phoneOk(it.phone)?normPhone(it.phone):"",email:it.email||"",website:it.website||"",social:it.url||"",address:it.street||"",city:it.city||"",zip:it.zip||"",
+    state:st?BY_FIPS[st.id].abbr:(BY_ABBR[it.state]?it.state:""),county:co?co.properties.name:it.county||"",lat:isFinite(it.lat)?+it.lat.toFixed(6):"",lng:isFinite(it.lng)?+it.lng.toFixed(6):"",
+    source:it.placeId?"Google listing":"OpenStreetMap listing",placeId:it.placeId||"",notes:[it.kind,it.rating?`Google rating ${it.rating} (${it.reviews||0} reviews)`:"",`Found ${new Date().toLocaleDateString("en-US")}`].filter(Boolean).join(". ")+"."});
+}
+const igOn=()=>!!(S.set.igUser&&S.set.igToken);
+const GV="https://graph.facebook.com/v22.0/";
+async function igGet(path){ const r=await fetch(GV+path+(path.includes("?")?"&":"?")+"access_token="+encodeURIComponent(S.set.igToken)); const j=await r.json().catch(()=>({})); if(!r.ok||j.error) throw new Error((j.error&&j.error.message)||`Instagram returned ${r.status}`); return j; }
+function guessType(text){ const t=(text||"").toLowerCase(); if(/fsbo|by ?owner/.test(t))return"fsbo"; if(t.includes("probate"))return"probate"; if(/inherit|estate|passed away|late (mother|father)/.test(t))return"inherited"; if(/foreclos/.test(t))return"preforeclosure"; if(/house ?hunt|first ?time|looking for a home|buyer/.test(t))return"buyer"; return"seller"; }
+async function igHashtag(tag){
+  tag=tag.replace(/^#/,"").trim().toLowerCase(); if(!tag) return; P.ig.tag=tag; P.ig.msg="Loading recent posts…"; P.ig.posts=[]; renderProspect();
+  try{ const h=await igGet(`ig_hashtag_search?user_id=${S.set.igUser}&q=${encodeURIComponent(tag)}`); const id=h.data&&h.data[0]&&h.data[0].id; if(!id) throw new Error(`Instagram has no hashtag #${tag}.`);
+    const m=await igGet(`${id}/recent_media?user_id=${S.set.igUser}&fields=id,caption,permalink,timestamp,media_type,media_url,like_count,comments_count&limit=30`);
+    P.ig.posts=m.data||[]; P.ig.msg=P.ig.posts.length?`${P.ig.posts.length} public posts from the last 24 hours tagged #${tag}.`:`No public posts tagged #${tag} in the last 24 hours.`;
+  }catch(e){ P.ig.msg=e.message; }
+  renderProspect();
+}
+async function igBusiness(name){
+  name=name.replace(/^@/,"").trim(); if(!name) return; P.ig.msg="Looking up @"+name+"…"; P.ig.biz=null; renderProspect();
+  try{ const j=await igGet(`${S.set.igUser}?fields=business_discovery.username(${encodeURIComponent(name)}){username,name,biography,website,followers_count,media_count}`); P.ig.biz=j.business_discovery; P.ig.msg=""; }
+  catch(e){ P.ig.msg=/business|creator|not found|does not exist/i.test(e.message)?`@${name} isn't a public business or creator account, so Instagram won't share its profile.`:e.message; }
+  renderProspect();
+}
+const liUrl=(kind,kw)=>`https://www.linkedin.com/search/results/${kind}/?keywords=${encodeURIComponent(kw)}${kind==="content"?"&sortBy=%22date_posted%22":""}&origin=GLOBAL_SEARCH_HEADER`;
+function quickSave(src){ openForm(null,{source:src,state:whereCounty?whereCounty.state:S.f.state,county:whereCounty?whereCounty.county:S.f.county}); setTimeout(()=>$("f_social").focus(),80); }
+
+function renderProspect(){
+  document.querySelectorAll("#prospect .tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===P.tab));
+  const box=$("pBody"), area=areaLabel(), saved=new Set([...S.leads.values()].map(l=>l.placeId||l.social).filter(Boolean));
+  if(P.tab==="google"){
+    const g=E&&E.kind==="google";
+    box.innerHTML=`<p class="note" style="margin:0">${g?`Searches Google Business Profiles around the map${area?` (${esc(area)})`:""}. Save referral partners and businesses that send you sellers.`:`Showing free OpenStreetMap listings. Add a Google Maps key in Settings to search Google Business Profiles with phone numbers, websites and ratings.`}</p>
+      <div class="chips">${PRESETS.map((p,i)=>`<button class="chip${P.preset===p.label?" on":""}" data-p="${i}">${p.label}</button>`).join("")}</div>
+      <form class="inline" id="pForm"><input type="search" id="pQ" placeholder="${g?"Any business, e.g. probate attorney":"Business name contains…"}" aria-label="Search listings"><button class="btn primary" ${P.busy?"disabled":""}>Search area</button></form>
+      ${P.msg?`<p class="note" style="margin:0" role="status">${esc(P.msg)}</p>`:""}
+      <div class="rlist">${P.items.map((it,i)=>`<div class="res" data-ri="${i}">
+        <div class="rhead"><span class="rn">${i+1}</span><b>${esc(it.name)}</b></div>
+        <div class="muted">${esc([it.kind,it.rating?`★ ${it.rating} (${it.reviews||0})`:"",it.closed?"Closed":""].filter(Boolean).join(" · "))}</div>
+        ${it.address?`<div>${esc(it.address)}</div>`:""}
+        <div class="inline wrap">
+          ${it.phone?`<a class="btn sm" href="tel:${esc(it.phone.replace(/[^\d+]/g,""))}">☎ ${esc(it.phone)}</a>`:""}
+          ${it.email?`<a class="btn sm" href="mailto:${esc(it.email)}">✉ Email</a>`:""}
+          ${it.website?`<a class="btn sm" href="${esc(it.website)}" target="_blank" rel="noopener">Website</a>`:""}
+          ${it.url?`<a class="btn sm" href="${esc(it.url)}" target="_blank" rel="noopener">${it.placeId?"Google Maps":"OSM"}</a>`:""}
+          ${saved.has(it.placeId||it.url)?`<span class="pill">Saved</span>`:`<button class="btn sm primary" data-save="${i}">Save as lead</button>`}
+        </div></div>`).join("")}</div>
+      ${g&&P.items.length?`<p class="note">Google listing data is for contacting these businesses. Confirm details before you rely on them, and keep only what you need.</p>`:""}`;
+    box.querySelector(".chips").onclick=e=>{const b=e.target.closest("[data-p]"); if(b) runListingSearch(PRESETS[+b.dataset.p]);};
+    $("pForm").onsubmit=e=>{e.preventDefault(); const v=$("pQ").value.trim(); if(v) runListingSearch(null,v);};
+    box.querySelectorAll("[data-save]").forEach(b=>b.onclick=()=>saveListing(P.items[+b.dataset.save]));
+  }
+  if(P.tab==="ig"){
+    const loc=whereCounty&&whereCounty.county?whereCounty.county.toLowerCase().replace(/[^a-z]/g,"")+"realestate":"";
+    const tags=IG_TAGS.concat(loc?[loc]:[]);
+    box.innerHTML=igOn()?`
+      <p class="note" style="margin:0">Pull recent public posts for a hashtag, then open the post to comment or message the owner on Instagram.</p>
+      <div class="chips">${tags.map(t=>`<button class="chip${P.ig.tag===t?" on":""}" data-t="${t}">#${t}</button>`).join("")}</div>
+      <form class="inline" id="igForm"><input type="search" id="igQ" placeholder="Any hashtag" aria-label="Hashtag"><button class="btn primary">Get posts</button></form>
+      <form class="inline" id="igBizForm"><input type="search" id="igBizQ" placeholder="Business account, e.g. @estatesalesla" aria-label="Instagram business username"><button class="btn">Look up</button></form>
+      ${P.ig.msg?`<p class="note" style="margin:0" role="status">${esc(P.ig.msg)}</p>`:""}
+      ${P.ig.biz?`<div class="res"><div class="rhead"><b>${esc(P.ig.biz.name||P.ig.biz.username)}</b><span class="muted">@${esc(P.ig.biz.username)}</span></div><div class="muted">${(P.ig.biz.followers_count||0).toLocaleString()} followers · ${P.ig.biz.media_count||0} posts</div>${P.ig.biz.biography?`<div class="cap">${esc(P.ig.biz.biography)}</div>`:""}<div class="inline wrap">${P.ig.biz.website?`<a class="btn sm" href="${esc(P.ig.biz.website)}" target="_blank" rel="noopener">Website</a>`:""}<a class="btn sm" href="https://www.instagram.com/${esc(P.ig.biz.username)}/" target="_blank" rel="noopener">Open profile</a><button class="btn sm primary" id="igBizSave">Save as lead</button></div></div>`:""}
+      <div class="rlist">${P.ig.posts.map((p,i)=>`<div class="res">${p.media_type==="IMAGE"&&p.media_url?`<img class="thumb" src="${esc(p.media_url)}" alt="" loading="lazy">`:""}<div class="muted">${fdate(Date.parse(p.timestamp))} · ♥ ${p.like_count||0} · 💬 ${p.comments_count||0}</div><div class="cap">${esc(p.caption||"(no caption)")}</div><div class="inline wrap"><a class="btn sm" href="${esc(p.permalink)}" target="_blank" rel="noopener">Open post</a>${saved.has(p.permalink)?`<span class="pill">Saved</span>`:`<button class="btn sm primary" data-ig="${i}">Save as lead</button>`}</div></div>`).join("")}</div>
+      <p class="note">Instagram limits each account to 30 different hashtags per week. Posts show no owner name; open the post to see who it is.</p>`
+    :`<p class="note" style="margin:0">Browse hashtags on Instagram, then save the people who are clearly buying or selling. Connect Instagram in Settings to pull posts into this panel instead.</p>
+      <div class="chips">${tags.map(t=>`<a class="chip" href="https://www.instagram.com/explore/tags/${t}/" target="_blank" rel="noopener">#${t}</a>`).join("")}</div>
+      <button class="btn primary" id="igQuick">Save someone from Instagram</button>`;
+    if(igOn()){
+      box.querySelector(".chips").onclick=e=>{const b=e.target.closest("[data-t]"); if(b) igHashtag(b.dataset.t);};
+      $("igForm").onsubmit=e=>{e.preventDefault(); igHashtag($("igQ").value);};
+      $("igBizForm").onsubmit=e=>{e.preventDefault(); igBusiness($("igBizQ").value);};
+      if(P.ig.biz) $("igBizSave").onclick=()=>{const b=P.ig.biz; openForm(null,{name:b.name||b.username,type:"partner",website:b.website||"",social:`https://www.instagram.com/${b.username}/`,source:"Instagram",state:whereCounty?whereCounty.state:S.f.state,notes:(b.biography||"").slice(0,400)});};
+      box.querySelectorAll("[data-ig]").forEach(b=>b.onclick=()=>{const p=P.ig.posts[+b.dataset.ig]; openForm(null,{name:"",type:guessType((p.caption||"")+" "+P.ig.tag),social:p.permalink,source:"Instagram",state:whereCounty?whereCounty.state:S.f.state,county:whereCounty?whereCounty.county:"",notes:`#${P.ig.tag} post ${fdate(Date.parse(p.timestamp))}: ${(p.caption||"").slice(0,300)}`});});
+    } else $("igQuick").onclick=()=>quickSave("Instagram");
+  }
+  if(P.tab==="li"){
+    box.innerHTML=`<p class="note" style="margin:0">LinkedIn doesn't let apps pull profiles, so these searches open inside LinkedIn where you can connect and message. Save anyone worth following up here.</p>
+      <div class="field"><label for="liLoc">Area</label><input type="text" id="liLoc" value="${esc(area?area.replace(/, ([A-Z]{2})$/,(m,s)=>", "+(BY_ABBR[s]?BY_ABBR[s].name:s)):"")}" placeholder="e.g. Los Angeles County, California"></div>
+      <div><p class="sect">FIND PEOPLE</p><div class="chips" id="liP">${LI_PEOPLE.map(k=>`<button class="chip" data-k="${esc(k)}">${esc(k)}</button>`).join("")}</div></div>
+      <div><p class="sect">FIND RECENT POSTS</p><div class="chips" id="liC">${LI_POSTS.map(k=>`<button class="chip" data-k="${esc(k)}">“${esc(k)}”</button>`).join("")}</div></div>
+      <form class="inline" id="liForm"><input type="search" id="liQ" placeholder="Your own keywords" aria-label="LinkedIn keywords"><button class="btn">People</button><button class="btn" data-kind="content">Posts</button></form>
+      <button class="btn primary" id="liQuick">Save someone from LinkedIn</button>
+      <p class="note">Running LinkedIn ads? Send Lead Gen Form leads to GHL instead; the launch guide shows how.</p>`;
+    const go=(kind,kw)=>{const loc=$("liLoc").value.trim(); window.open(liUrl(kind,(kind==="content"?`"${kw}"`:kw)+(loc?" "+loc.split(",")[0]:"")),"_blank","noopener");};
+    $("liP").onclick=e=>{const b=e.target.closest("[data-k]"); if(b) go("people",b.dataset.k);};
+    $("liC").onclick=e=>{const b=e.target.closest("[data-k]"); if(b) go("content",b.dataset.k);};
+    $("liForm").onsubmit=e=>{e.preventDefault(); const v=$("liQ").value.trim(); if(v) go(e.submitter&&e.submitter.dataset.kind==="content"?"content":"people",v);};
+    $("liQuick").onclick=()=>quickSave("LinkedIn");
+  }
+}
+
+/* ---------------- Filters ---------------- */
+function filtered(){
+  const f=S.f,q=f.q.trim().toLowerCase(),out=[];
+  for(const l of S.leads.values()){
+    if(!f.types.has(l.type))continue;
+    if(f.state&&l.state!==f.state)continue;
+    if(f.county&&(l.county||"").toLowerCase()!==f.county.toLowerCase())continue;
+    if(f.statuses.size&&!f.statuses.has(l.status))continue;
+    if(f.hot&&score(l)<70)continue;
+    if(f.reach&&!l.phone&&!l.email)continue;
+    if(f.ghl&&l.ghl&&/^sent/.test(l.ghl.status))continue;
+    if(q){const h=[l.name,l.address,l.city,l.zip,l.phone,l.email,l.caseNo,l.county,l.notes].join(" ").toLowerCase(); if(!h.includes(q))continue;}
+    out.push(l);
+  }
+  return out;
+}
+function buildFilters(){
+  $("types").innerHTML=Object.entries(TYPES).map(([k,t])=>`<label class="type-row"><input type="checkbox" data-type="${k}" checked><span class="dia" style="background:${t.color}"></span>${t.label}<span class="n" id="tn_${k}">0</span></label>`).join("");
+  $("types").addEventListener("change",e=>{const k=e.target.dataset.type;if(!k)return;e.target.checked?S.f.types.add(k):S.f.types.delete(k);render();});
+  const so=STATES.map(([f,n,a])=>`<option value="${a}">${n}</option>`).join("");
+  $("fState").insertAdjacentHTML("beforeend",so); $("f_state").innerHTML=`<option value="">Choose a state</option>`+so;
+  $("f_type").innerHTML=Object.entries(TYPES).map(([k,t])=>`<option value="${k}">${t.label}</option>`).join("");
+  $("f_status").innerHTML=STATUSES.map(s=>`<option>${s}</option>`).join("");
+  $("f_source").innerHTML=SOURCES.map(s=>`<option>${s}</option>`).join("");
+  $("chips").innerHTML=STATUSES.map(s=>`<button class="chip" data-s="${s}" aria-pressed="false">${s}</button>`).join("");
+  $("chips").addEventListener("click",e=>{const s=e.target.dataset.s;if(!s)return;S.f.statuses.has(s)?S.f.statuses.delete(s):S.f.statuses.add(s);e.target.classList.toggle("on");e.target.setAttribute("aria-pressed",S.f.statuses.has(s));render();});
+  $("legend").innerHTML=`<button class="keybtn" id="keyBtn" aria-expanded="false">Map key ▸</button><ul>`+Object.values(TYPES).map(t=>`<li><span class="dia" style="background:${t.color}"></span>${t.label}</li>`).join("")+`<li class="muted" style="font-size:12px">Bigger diamond = higher score</li></ul>`;
+  $("keyBtn").onclick=e=>{const c=$("legend").classList.toggle("closed");e.target.textContent=c?"Map key ▸":"Map key ▾";e.target.setAttribute("aria-expanded",!c);};
+  let qt;$("q").addEventListener("input",e=>{clearTimeout(qt);qt=setTimeout(()=>{S.f.q=e.target.value;render();},150);});
+  $("fState").addEventListener("change",e=>pickState(e.target.value,true));
+  $("fCounty").addEventListener("change",e=>{S.f.county=e.target.value;const c=countyFeat(S.f.state,S.f.county);c?fitFeature(c):goState(S.f.state);highlight();render();});
+  $("fHot").onchange=e=>{S.f.hot=e.target.checked;render();};
+  $("fReach").onchange=e=>{S.f.reach=e.target.checked;render();};
+  $("fGhl").onchange=e=>{S.f.ghl=e.target.checked;render();};
+  $("bClear").onclick=clearFilters;
+}
+function fillCounties(sel,abbr,val){
+  const s=BY_ABBR[abbr]; const list=s&&GEO.ready?(GEO.counties[s.fips]||[]).map(c=>c.properties.name):[];
+  if(val&&!list.some(n=>n.toLowerCase()===String(val).toLowerCase())) list.unshift(val);
+  sel.innerHTML=`<option value="">${sel.id==="fCounty"?"All counties":"—"}</option>`+list.map(n=>`<option>${esc(n)}</option>`).join("");
+  const m=list.find(n=>n.toLowerCase()===String(val||"").toLowerCase()); sel.value=m||""; sel.disabled=!s;
+}
+function pickState(abbr,fly){ S.f.state=abbr||""; S.f.county=""; syncFilterInputs(); if(fly) goState(abbr); highlight(); render(); closeRail(); }
+function syncFilterInputs(){ $("fState").value=S.f.state; fillCounties($("fCounty"),S.f.state,S.f.county); }
+function clearFilters(){
+  S.f={q:"",types:new Set(Object.keys(TYPES)),state:"",county:"",statuses:new Set(),hot:false,reach:false,ghl:false};
+  $("q").value="";["fHot","fReach","fGhl"].forEach(i=>$(i).checked=false);
+  document.querySelectorAll("#types input").forEach(i=>i.checked=true);
+  document.querySelectorAll("#chips .chip").forEach(c=>{c.classList.remove("on");c.setAttribute("aria-pressed","false");});
+  syncFilterInputs(); highlight(); goState(""); render();
+}
+
+/* ---------------- KPIs + table ---------------- */
+function renderKpis(list){
+  $("kTotal").textContent=list.length; $("kHot").textContent=list.filter(l=>score(l)>=70).length;
+  const all=[...S.leads.values()];
+  $("kCA").textContent=all.filter(l=>l.state==="CA").length;
+  $("kEstate").textContent=list.filter(l=>l.type==="probate"||l.type==="inherited").length;
+  Object.keys(TYPES).forEach(k=>{const el=$("tn_"+k);if(el)el.textContent=all.filter(l=>l.type===k&&(!S.f.state||l.state===S.f.state)).length;});
+}
+$("kpis").addEventListener("click",e=>{const b=e.target.closest(".kpi");if(!b)return;const k=b.dataset.k;
+  if(k==="all")clearFilters();
+  if(k==="hot"){S.f.hot=!S.f.hot;$("fHot").checked=S.f.hot;render();}
+  if(k==="ca")pickState("CA",true);
+  if(k==="estate"){S.f.types=new Set(["probate","inherited"]);document.querySelectorAll("#types input").forEach(i=>i.checked=S.f.types.has(i.dataset.type));render();}
+});
+const COLS=[["score","Score"],["name","Name"],["type","Type"],["status","Status"],["contact","Contact"],["loc","Location"],["value","Est. value"],["source","Source"],["ghl","GHL"],["lastContact","Last contact"]];
+function sv(l,k){switch(k){case"score":return score(l);case"loc":return(l.state||"")+(l.county||"")+(l.city||"");case"contact":return(l.phone?2:0)+(l.email?1:0);case"value":return+l.value||0;case"lastContact":return l.lastContact||0;case"type":return TYPES[l.type].label;case"ghl":return l.ghl?l.ghl.at:0;default:return String(l[k]||"").toLowerCase();}}
+function renderTable(list){
+  $("tCount").textContent=`${list.length} of ${S.leads.size}`;
+  const box=$("tscroll");
+  if(!S.leads.size){box.innerHTML=`<div class="emptyst"><h3>No leads yet</h3><p>Search an address, drop a pin on a rooftop, or import a county list.</p><div class="row"><button class="btn primary" data-act="drop">Drop a pin</button><button class="btn" data-act="new">Add a lead</button><button class="btn" data-act="import">Import CSV</button><button class="btn" data-act="sample">Load sample leads</button></div></div>`;return;}
+  if(!list.length){box.innerHTML=`<div class="emptyst"><h3>No leads match these filters</h3><div class="row"><button class="btn" data-act="clear">Reset filters</button></div></div>`;return;}
+  const {k,dir}=S.sort; list.sort((a,b)=>{const x=sv(a,k),y=sv(b,k);return(x>y?1:x<y?-1:0)*dir;});
+  const head=COLS.map(([key,lab])=>`<th data-k="${key}" ${k===key?`aria-sort="${dir>0?"ascending":"descending"}"`:""}>${lab}${k===key?(dir>0?" ▲":" ▼"):""}</th>`).join("");
+  const rows=list.slice(0,800).map(l=>{const sc=score(l),t=TYPES[l.type];
+    return `<tr class="row${l.id===S.sel?" sel":""}" data-id="${l.id}" tabindex="0"><td><span class="score ${sc>=70?"hot":sc>=50?"warm":""}">${sc}</span></td><td>${esc(l.name)}</td><td><span class="tag"><span class="dia" style="background:${t.color}"></span>${t.label}</span></td><td><span class="pill">${esc(l.status||"New")}</span></td><td class="muted">${l.phone?"☎ ":""}${l.email?"✉ ":""}${l.dnc==="listed"?'<span class="dnc">DNC</span>':""}${!l.phone&&!l.email?"—":""}</td><td>${esc([l.city,l.county?l.county+" Co.":"",l.state].filter(Boolean).join(", "))}</td><td>${money(l.value)}</td><td class="muted">${esc(l.source||"")}</td><td class="muted">${l.ghl?esc(l.ghl.status):"—"}</td><td class="muted">${fdate(l.lastContact)}</td></tr>`;}).join("");
+  box.innerHTML=`<table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>${list.length>800?`<p class="note" style="padding:0 12px 10px">Showing the top 800. Narrow the filters to see the rest.</p>`:""}`;
+}
+$("tscroll").addEventListener("click",e=>{
+  const a=e.target.closest("[data-act]");if(a){({drop:()=>setAdding(true),new:()=>openForm(),import:()=>$("fileCsv").click(),sample:loadSamples,clear:clearFilters})[a.dataset.act]();return;}
+  const th=e.target.closest("th");if(th){const k=th.dataset.k;S.sort={k,dir:S.sort.k===k?-S.sort.dir:(["name","loc","type","status","source"].includes(k)?1:-1)};render();return;}
+  const tr=e.target.closest("tr.row");if(tr)selectLead(tr.dataset.id,true);
+});
+$("tscroll").addEventListener("keydown",e=>{if(e.key==="Enter"){const tr=e.target.closest("tr.row");if(tr)selectLead(tr.dataset.id,true);}});
+
+/* ---------------- Drawer ---------------- */
+function selectLead(id,fly){
+  const l=S.leads.get(id); if(!l)return; S.sel=id;
+  if($("prospect").classList.contains("open")) $("prospect").classList.remove("open");
+  if(fly&&isFinite(l.lat)) E.focusLead(l.lat,l.lng,innerWidth>900?205:0);
+  render(); $("drawer").classList.add("open"); svFor=null; renderSV();
+}
+function closeDrawer(){S.sel=null;$("drawer").classList.remove("open");render();}
+function signature(){ const s=S.set; return "\n\n"+["Warm regards,",s.agent||"Kam Team",s.brokerage?`${s.brokerage}`:"Kam Team Real Estate",s.dre?`DRE #${s.dre}`:"",s.phone,s.address].filter(Boolean).join("\n")+"\n\nIf you'd prefer not to hear from us, reply \"unsubscribe\" and we'll remove you right away."; }
+function emailTpl(l){
+  const first=(l.name||"").replace(/^estate of\s+/i,"").replace(/\(sample\)/,"").trim().split(/[ ,]/)[0]||"there";
+  const at=l.address?` at ${l.address}${l.city?", "+l.city:""}`:"";
+  const m={probate:[`Support with the property${at}`,`Hello ${first},\n\nI'm sorry for your loss. I work with families and estate administrators who need to sell or manage a property during probate. If it would help, I can share a no-obligation valuation and explain how court-supervised sales work in your county.`],
+    inherited:[`Your inherited property${at}`,`Hello ${first},\n\nInheriting a home comes with a lot of decisions. If you're weighing whether to keep, rent, or sell the property${at}, I'm happy to provide a free valuation and walk you through your options, with no pressure.`],
+    preforeclosure:[`Options for your property${at}`,`Hello ${first},\n\nIf things are difficult with your mortgage, you may have more options than you think, including a traditional sale before any deadline. I'd be glad to talk confidentially about your timeline.`],
+    expired:[`Your listing${at}`,`Hello ${first},\n\nI noticed your listing recently came off the market. If you still want to sell, I'd like to share what's moving in your area right now and a fresh marketing plan.`],
+    fsbo:[`Selling your home${at}`,`Hello ${first},\n\nI saw you're selling on your own. I'm happy to send a free list of recent comparable sales nearby, whether or not you ever work with an agent.`],
+    absentee:[`Your property${at}`,`Hello ${first},\n\nI help out-of-area owners with properties like yours. If you've considered selling, I can send a current valuation and handle everything locally.`],
+    buyer:[`Homes that fit your search`,`Hello ${first},\n\nThanks for your interest in buying. I'd love to learn your budget, timing, and must-haves so I can send listings that fit.`],
+    seller:[`Thinking about selling${at}?`,`Hello ${first},\n\nI'd be glad to prepare a free, no-obligation market analysis for your home and talk through timing and price.`]};
+  const [s,b]=m[l.type]||m.seller; return {s,b:b+signature()};
+}
+function renderDrawer(){
+  const d=$("drawer"),l=S.sel&&S.leads.get(S.sel); const keepSV=$("svBox")&&l&&svFor===l.id?$("svBox"):null;
+  $("mapwrap").classList.toggle("dopen",!!l||$("prospect").classList.contains("open"));
+  if(!l){d.classList.remove("open");return;}
+  const t=TYPES[l.type],sc=score(l),tel=(l.phone||"").replace(/[^\d+]/g,"");
+  const canCall=!!l.phone&&!(l.dnc==="listed"&&!l.consent), canText=!!l.phone&&!!l.consent, em=emailTpl(l);
+  let comp="";
+  if(l.dnc==="listed"&&!l.consent)comp=`<div class="warn">This number is on the Do Not Call list and there's no consent on file. Calling is off; use email or mail instead.</div>`;
+  else if(l.phone&&l.dnc==="unchecked")comp=`<div class="warn">Scrub this number against the National Do Not Call registry before calling, then update the DNC check.</div>`;
+  else if(l.phone)comp=`<div class="okm">${l.consent?"Consent on file.":"DNC checked: clear to call. Texting still needs consent."}</div>`;
+  const gm=isFinite(l.lat)?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:"";
+  const sv=isFinite(l.lat)?`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${l.lat},${l.lng}`:"";
+  const acts=(l.activity||[]).slice().reverse().map(a=>`<li><time>${new Date(a.at).toLocaleString("en-US",{dateStyle:"medium",timeStyle:"short"})}</time>${esc(a.text)}</li>`).join("")||`<li class="muted">No activity yet.</li>`;
+  const off='aria-disabled="true" tabindex="-1"';
+  d.innerHTML=`<div class="dhead"><button class="btn sm x" id="dClose">Close</button><span class="tag"><span class="dia" style="background:${t.color}"></span>${t.label}</span><h3>${esc(l.name)}</h3><span class="score ${sc>=70?"hot":sc>=50?"warm":""}">${sc}</span> <span class="muted" style="font-size:13px">lead score</span></div>
+  <div class="dbody">
+    <div class="acts">
+      <a class="btn" ${canCall?`href="tel:${tel}" data-log="call"`:off}>☎ Call</a>
+      <a class="btn" ${canText?`href="sms:${tel}" data-log="text"`:off} title="Needs a phone number and consent">💬 Text</a>
+      <a class="btn" ${l.email?`href="mailto:${encodeURIComponent(l.email)}?subject=${encodeURIComponent(em.s)}&body=${encodeURIComponent(em.b)}" data-log="email"`:off}>✉ Email</a>
+    </div>
+    ${comp}
+    ${E&&E.kind==="google"&&isFinite(l.lat)?`<div class="sv" id="svBox"><p class="note" style="padding:10px">Loading Street View…</p></div>`:""}
+    <div class="acts2">
+      <a class="btn" ${sv?`href="${sv}" target="_blank" rel="noopener"`:off}>${E&&E.kind==="google"?"Open in Google":"Street View"}</a>
+      <button class="btn" id="dGhl">${l.ghl&&/^sent/.test(l.ghl.status)?"Re-send to GHL":"Send to GHL"}</button>
+    </div>
+    <div class="field"><label for="dStatus">Pipeline status</label><select id="dStatus">${STATUSES.map(s=>`<option ${s===l.status?"selected":""}>${s}</option>`).join("")}</select></div>
+    <dl class="kv">
+      <dt>Phone</dt><dd>${esc(l.phone||"—")}</dd><dt>Email</dt><dd>${esc(l.email||"—")}</dd>
+      <dt>Property</dt><dd>${esc([l.address,l.city,l.state,l.zip].filter(Boolean).join(", ")||"—")}${gm?`<br><a href="${gm}" target="_blank" rel="noopener" style="color:inherit">Open in Google Maps</a>`:""}</dd>
+      ${l.website?`<dt>Website</dt><dd><a href="${esc(l.website)}" target="_blank" rel="noopener" style="color:inherit">${esc(l.website.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))}</a></dd>`:""}
+      ${l.social?`<dt>Found on</dt><dd><a href="${esc(l.social)}" target="_blank" rel="noopener" style="color:inherit">${esc(l.source||"Open link")}</a></dd>`:""}
+      <dt>County</dt><dd>${esc(l.county||"—")}${l.geoApprox?' <span class="muted">(pin approximate)</span>':""}</dd>
+      <dt>Est. value</dt><dd>${money(l.value)}</dd><dt>Equity</dt><dd>${l.equity!==""&&l.equity!=null?esc(l.equity)+"%":"—"}</dd>
+      <dt>Source</dt><dd>${esc(l.source||"—")}${l.caseNo?`<br><span class="muted">${esc(l.caseNo)}</span>`:""}</dd>
+      <dt>DNC check</dt><dd>${{unchecked:"Not checked",clear:"Not on DNC",listed:"On DNC list"}[l.dnc||"unchecked"]}${l.consent?" · consent on file":""}</dd>
+      <dt>GHL</dt><dd>${l.ghl?esc(l.ghl.status)+" · "+fdate(l.ghl.at):"Not sent"}</dd>
+      <dt>Added</dt><dd>${fdate(l.created)}</dd>
+    </dl>
+    ${l.notes?`<div><p class="sect">NOTES</p><p style="margin:0;white-space:pre-wrap">${esc(l.notes)}</p></div>`:""}
+    <div><p class="sect">ACTIVITY</p><div class="inline" style="margin-bottom:10px"><input type="text" id="dNote" placeholder="Log a call outcome or note"><button class="btn" id="dLog">Log</button></div><ul class="activity">${acts}</ul></div>
+    <div class="inline" style="flex-wrap:wrap"><button class="btn" id="dEdit">Edit lead</button><button class="btn" id="dMove">Move pin here</button><button class="btn danger" id="dDel">Delete</button></div>
+  </div>`;
+  if(keepSV&&$("svBox")) $("svBox").replaceWith(keepSV); else svFor=null;
+  if(!keepSV) setTimeout(renderSV,0);
+  $("dClose").onclick=closeDrawer;
+  $("dStatus").onchange=e=>{const n=Object.assign({},l,{status:e.target.value});addAct(n,`Status changed to ${e.target.value}`);saveLead(n);};
+  $("dLog").onclick=()=>{const v=$("dNote").value.trim();if(!v)return;const n=Object.assign({},l,{lastContact:Date.now()});addAct(n,v);saveLead(n);toast("Note logged.");};
+  $("dNote").onkeydown=e=>{if(e.key==="Enter")$("dLog").click();};
+  $("dEdit").onclick=()=>openForm(l.id);
+  $("dMove").onclick=()=>{const c=E.center();if(E.zoom()<15){toast("Zoom in on the rooftop first, then center it and click again.");return;}const n=Object.assign({},l,{lat:+c.lat.toFixed(6),lng:+c.lng.toFixed(6),geoApprox:false});addAct(n,"Pin moved to map center");saveLead(n);toast("Pin moved to the center of the map.");};
+  $("dDel").onclick=()=>{if(confirm(`Delete ${l.name}? This can't be undone.`)){S.leads.delete(l.id);persist();closeDrawer();toast("Lead deleted.");}};
+  $("dGhl").onclick=()=>sendGhl(l.id,false);
+  d.querySelectorAll("[data-log]").forEach(a=>a.addEventListener("click",()=>{const k=a.dataset.log;const n=Object.assign({},l,{lastContact:Date.now(),status:l.status==="New"?"Contacted":l.status});addAct(n,{call:"Called",text:"Sent a text",email:"Sent an email"}[k]+(n.status!==l.status?" · status set to Contacted":""));saveLead(n);}));
+}
+let svFor=null;
+function renderSV(){ const box=$("svBox"), l=S.sel&&S.leads.get(S.sel); if(!box||!l||svFor===l.id) return; svFor=l.id;
+  E.streetView(box,l.lat,l.lng).then(ok=>{ if(!ok&&$("svBox")) $("svBox").innerHTML=`<p class="note" style="padding:10px">No Street View imagery within 80 m of this pin.</p>`; }); }
+function addAct(l,text){l.activity=(l.activity||[]).concat([{at:Date.now(),text}]).slice(-50);}
+function saveLead(l,opts){ l.updated=Date.now(); S.leads.set(l.id,l); persist(); render(); if(S.set.auto&&S.set.ghl&&!(opts&&opts.noSync)) sendGhl(l.id,true); }
+
+/* ---------------- Lead form ---------------- */
+function openForm(id,preset){
+  S.editId=id||null; const l=id?S.leads.get(id):Object.assign({type:"seller",status:"New",dnc:"unchecked",source:SOURCES[0]},preset||{});
+  $("dlgTitle").textContent=id?"Edit lead":"New lead";
+  ["name","type","status","phone","email","address","city","zip","lat","lng","value","equity","source","notes","dnc","website","social"].forEach(k=>{$("f_"+k).value=l[k]==null?"":l[k];});
+  S.formPlace=l.placeId||"";
+  $("f_case").value=l.caseNo||""; $("f_consent").checked=!!l.consent;
+  $("f_state").value=l.state||(!id&&!preset?S.f.state:"")||""; fillCounties($("f_county"),$("f_state").value,l.county||(!id&&!preset?S.f.county:""));
+  ["e_name","e_phone","e_email","e_state","e_geo"].forEach(i=>$(i).textContent="");
+  $("dlg").showModal(); setTimeout(()=>$("f_name").focus(),40);
+}
+$("f_state").onchange=e=>fillCounties($("f_county"),e.target.value,"");
+$("bGeocode").onclick=async()=>{
+  const q=[$("f_address").value,$("f_city").value,$("f_state").value,$("f_zip").value].filter(Boolean).join(", ");
+  if(!$("f_address").value.trim()){ $("e_geo").textContent="Type the street address first."; return; }
+  $("e_geo").textContent="Searching…";
+  try{ const r=await E.search(q); if(!r.length){$("e_geo").textContent="No match found. Check the spelling, or drop a pin instead.";return;}
+    const it=r[0]; $("f_lat").value=it.lat.toFixed(6); $("f_lng").value=it.lng.toFixed(6);
+    if(!$("f_city").value)$("f_city").value=it.city||""; if(!$("f_zip").value)$("f_zip").value=it.zip||"";
+    if(!$("f_state").value&&BY_ABBR[it.state])$("f_state").value=it.state;
+    const st=stateAt(it.lat,it.lng),co=st?countyAt(st.id,it.lat,it.lng):null;
+    fillCounties($("f_county"),$("f_state").value,co?co.properties.name:it.county);
+    $("e_geo").textContent="Found: "+it.label;
+  }catch(e){ $("e_geo").textContent="Address search isn't reachable right now."; }
+};
+$("leadForm").addEventListener("submit",e=>{
+  if(!e.submitter||e.submitter.value!=="save") return;
+  e.preventDefault();
+  const g=k=>$("f_"+k).value.trim(); let bad=false; const err=(k,m)=>{$("e_"+k).textContent=m;if(m)bad=true;};
+  err("name",g("name")?"":"Enter a name so you can find this lead later.");
+  err("state",g("state")?"":"Choose the property's state.");
+  err("phone",g("phone")&&!phoneOk(g("phone"))?"Use a 10-digit US phone number.":"");
+  err("email",g("email")&&!emailOk(g("email"))?"Check the email address format.":"");
+  if(bad)return;
+  const prev=S.editId?S.leads.get(S.editId):null;
+  const l=Object.assign({},prev||{id:uid(),created:Date.now(),activity:[]},{name:g("name"),type:g("type"),status:g("status"),phone:normPhone(g("phone")),email:g("email").toLowerCase(),address:g("address"),city:g("city"),zip:g("zip"),state:g("state"),county:g("county"),value:g("value")?+g("value"):"",equity:g("equity")?Math.max(0,Math.min(100,+g("equity"))):"",source:g("source"),caseNo:g("case"),dnc:g("dnc"),consent:$("f_consent").checked,notes:g("notes"),website:g("website"),social:g("social"),placeId:(prev&&prev.placeId)||S.formPlace||""});
+  const lat=parseFloat(g("lat")),lng=parseFloat(g("lng"));
+  if(isFinite(lat)&&isFinite(lng)){ if(!prev||prev.lat!==lat||prev.lng!==lng) l.geoApprox=false; l.lat=lat; l.lng=lng; }
+  else { const p=approxPoint(l.state,l.county); if(p){l.lat=+p[0].toFixed(6);l.lng=+p[1].toFixed(6);l.geoApprox=true;} }
+  if(!prev) addAct(l,"Lead created"+(l.source?` from ${l.source}`:""));
+  saveLead(l); $("dlg").close(); toast(prev?"Lead updated.":"Lead saved."); selectLead(l.id,true);
+});
+
+/* ---------------- GoHighLevel ---------------- */
+function ghlPayload(l){
+  const parts=(l.name||"").replace(/\(sample\)/,"").trim().split(/\s+/);
+  return {source:"Kam Team Lead Generator",lead_id:l.id,full_name:l.name,first_name:parts[0]||"",last_name:parts.slice(1).join(" "),email:l.email||"",phone:l.phone||"",
+    address1:l.address||"",city:l.city||"",state:l.state||"",postal_code:l.zip||"",country:"US",county:l.county||"",
+    lead_type:TYPES[l.type].label,lead_score:score(l),pipeline_status:l.status||"New",lead_source:l.source||"",case_number:l.caseNo||"",
+    est_value:l.value||"",equity_percent:l.equity===""?"":l.equity,dnc_status:l.dnc||"unchecked",consent:l.consent?"yes":"no",notes:l.notes||"",
+    website:l.website||"",profile_link:l.social||"",google_place_id:l.placeId||"",latitude:l.lat||"",longitude:l.lng||"",map_link:isFinite(l.lat)?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:"",
+    tags:["kam-lead-gen",l.type,l.state?("state-"+l.state.toLowerCase()):""].filter(Boolean).join(",")};
+}
+const validGhl=u=>/^https:\/\//.test(u)||/^\/[^/]/.test(u);
+const isRelay=u=>/^\//.test(u)||/\/api\/ghl\/?$/.test(u);
+async function postGhl(payload){
+  const url=(S.set.ghl||"").trim(); if(!validGhl(url)) throw new Error("Add the relay URL (/api/ghl) or an https webhook URL in Settings.");
+  if(isRelay(url)){
+    const h={"Content-Type":"application/json"}; if(S.set.ghlKey) h["X-API-Key"]=S.set.ghlKey;
+    const r=await fetch(url,{method:"POST",headers:h,body:JSON.stringify(payload)});
+    if(r.ok) return "sent";
+    let msg=""; try{ msg=(await r.json()).error||""; }catch(e){}
+    return "error "+r.status+(msg?": "+msg:"");
+  }
+  try{ const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}); return r.ok?"sent":"error "+r.status; }
+  catch(e){ await fetch(url,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(payload)}); return "sent (unconfirmed)"; }
+}
+async function sendGhl(id,silent){
+  const l=S.leads.get(id); if(!l)return;
+  if(!S.set.ghl){ if(!silent){toast("Set up GHL sync in Settings first.");openSettings();} return; }
+  let status; try{ status=await postGhl(ghlPayload(l)); }catch(e){ status="failed"; if(!silent) toast(e.message||"Couldn't reach GHL."); }
+  const n=Object.assign({},S.leads.get(id)||l,{ghl:{status,at:Date.now()}}); addAct(n,`GHL: ${status}`);
+  S.leads.set(id,n); persist(); render(); if(!silent&&/^sent/.test(status)) toast(status==="sent"?"Sent to GHL.":"Sent to GHL. Check the workflow's execution log to confirm.");
+}
+$("bSync").onclick=async()=>{
+  if(!S.set.ghl){toast("Set up GHL sync in Settings first.");openSettings();return;}
+  const todo=filtered().filter(l=>!(l.ghl&&/^sent/.test(l.ghl.status))); if(!todo.length){toast("Every lead in view is already in GHL.");return;}
+  if(!confirm(`Send ${todo.length} lead${todo.length>1?"s":""} to GoHighLevel?`))return;
+  $("bSync").disabled=true; let i=0;
+  for(const l of todo){ i++; $("bSync").textContent=`Sending ${i}/${todo.length}…`; await sendGhl(l.id,true); await new Promise(r=>setTimeout(r,350)); }
+  $("bSync").disabled=false; $("bSync").textContent="Send new to GHL"; toast(`Sent ${todo.length} leads to GHL.`);
+};
+function updateGhlStat(){ const on=!!S.set.ghl; $("ghlStat").classList.toggle("off",!on); $("ghlText").textContent=on?(S.set.auto?"GHL auto-sync on":"GHL connected"):"GHL not connected"; }
+
+/* ---------------- Settings ---------------- */
+function openSettings(){ const s=S.set; ["agent","dre","phone","brokerage","address","ghl","tiles"].forEach(k=>$("s_"+k).value=s[k]||""); $("s_gkey").value=s.gkey||""; $("s_gmapid").value=s.gmapId||""; $("s_iguser").value=s.igUser||""; $("s_igtoken").value=s.igToken||""; $("s_ghlkey").value=s.ghlKey||""; $("s_auto").checked=!!s.auto; $("ghlTestMsg").textContent=""; $("dlgSet").showModal(); }
+$("bSettings").onclick=openSettings;
+$("setForm").addEventListener("submit",e=>{
+  if(!e.submitter||e.submitter.value!=="save") return; e.preventDefault();
+  const g=k=>$("s_"+k).value.trim(); const ghl=g("ghl");
+  if(ghl&&!validGhl(ghl)){ $("ghlTestMsg").textContent="Use /api/ghl or a URL that starts with https://"; return; }
+  const tilesChanged=g("tiles")!==(S.set.tiles||""), gChanged=g("gkey")!==(S.set.gkey||"")||g("gmapid")!==(S.set.gmapId||"");
+  Object.assign(S.set,{agent:g("agent"),dre:g("dre"),phone:g("phone"),brokerage:g("brokerage"),address:g("address"),ghl,tiles:g("tiles"),auto:$("s_auto").checked,ghlKey:$("s_ghlkey").value.trim(),gkey:g("gkey"),gmapId:g("gmapid"),igUser:g("iguser").replace(/\D/g,""),igToken:g("igtoken")});
+  store.set(SKEY,S.set); updateGhlStat(); if(gChanged){ try{localStorage.removeItem("kamteam.gfail");}catch(e){} $("dlgSet").close(); toast("Saved. Reloading the map…"); setTimeout(()=>location.reload(),900); return; } if(tilesChanged) setBase(baseMode); if($("prospect").classList.contains("open")) renderProspect(); $("dlgSet").close(); toast("Settings saved."); render();
+});
+$("bTestGhl").onclick=async()=>{
+  const url=$("s_ghl").value.trim(); if(!validGhl(url)){$("ghlTestMsg").textContent="Enter /api/ghl or an https webhook URL first.";return;}
+  const keep=S.set.ghl, keepKey=S.set.ghlKey; S.set.ghl=url; S.set.ghlKey=$("s_ghlkey").value.trim(); $("ghlTestMsg").textContent="Sending…";
+  try{ const st=await postGhl(Object.assign(ghlPayload({id:"TEST",name:"Test Lead",type:"seller",status:"New",email:"test@example.com",phone:"(555) 555-0100",address:"123 Sample St",city:"Pasadena",state:"CA",zip:"91101",county:"Los Angeles",lat:34.1478,lng:-118.1445,dnc:"unchecked",equity:50,value:900000,source:"Test"}),{test:true}));
+    $("ghlTestMsg").textContent=st==="sent"?"Test lead sent. In GHL, click “Fetch sample request” on the Inbound Webhook trigger to see the fields.":st==="sent (unconfirmed)"?"Test lead sent, but the browser couldn't read GHL's reply. Click “Fetch sample request” in GHL to confirm it arrived.":(isRelay(url)?"The relay replied with "+st+".":"GHL replied with "+st+". Check the URL.");
+  }catch(e){ $("ghlTestMsg").textContent="Couldn't reach that URL. Check it and your connection."; }
+  S.set.ghl=keep; S.set.ghlKey=keepKey;
+};
+// When served by the Kam Team server with a webhook configured, use its relay by default.
+if(!S.set.ghl&&location.protocol!=="file:") fetch("/api/health").then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.relay&&!S.set.ghl){ S.set.ghl="/api/ghl"; store.set(SKEY,S.set); updateGhlStat(); } }).catch(()=>{});
+
+/* ---------------- CSV + backup ---------------- */
+const CSV_COLS=["name","type","status","phone","email","address","city","county","state","zip","lat","lng","value","equity","source","caseNo","dnc","consent","website","social","notes"];
+const cq=v=>{v=v==null?"":String(v);return/[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+const toCsv=list=>[CSV_COLS.join(",")].concat(list.map(l=>CSV_COLS.map(c=>cq(c==="type"?TYPES[l.type].label:c==="consent"?(l.consent?"yes":"no"):l[c])).join(","))).join("\r\n");
+function parseCsv(t){const rows=[];let row=[],f="",q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}else if(c==='"')q=true;else if(c===","){row.push(f);f="";}else if(c==="\n"||c==="\r"){if(c==="\r"&&t[i+1]==="\n")i++;row.push(f);f="";if(row.some(x=>x!==""))rows.push(row);row=[];}else f+=c;}row.push(f);if(row.some(x=>x!==""))rows.push(row);return rows;}
+const ALIAS={name:["name","owner","owner name","full name","contact","contact name","decedent","petitioner"],type:["type","lead type","category","list"],status:["status","stage"],phone:["phone","phone number","mobile","cell","telephone","phone 1"],email:["email","email address","e-mail","email 1"],address:["address","property address","street","situs address"],city:["city","property city"],county:["county"],state:["state","st","property state"],zip:["zip","zip code","postal code","zipcode"],lat:["lat","latitude"],lng:["lng","lon","long","longitude"],value:["value","est value","estimated value","market value","price"],equity:["equity","equity %","equity percent"],source:["source","lead source"],caseNo:["case","case #","case number","caseno","apn","record #","mls #"],dnc:["dnc","dnc status"],consent:["consent"],notes:["notes","note","comments"],website:["website","web","url","site"],social:["social","profile","profile link","linkedin","instagram","listing link"]};
+function mapType(v){v=(v||"").toLowerCase();if(!v)return"seller";if(/partner|referral|attorney|vendor/.test(v))return"partner";if(v.includes("probate"))return"probate";if(/inherit|will|heir|estate/.test(v))return"inherited";if(/foreclos|default|lis pendens/.test(v))return"preforeclosure";if(v.includes("expired"))return"expired";if(/fsbo|by owner/.test(v))return"fsbo";if(v.includes("absentee"))return"absentee";if(v.includes("buy"))return"buyer";return"seller";}
+function mapState(v){v=(v||"").trim();if(!v)return"";if(BY_ABBR[v.toUpperCase()])return v.toUpperCase();const o=BY_NAME[v.toLowerCase()];return o?o.abbr:"";}
+async function importCsv(file){
+  await Promise.race([geoReady,new Promise(r=>setTimeout(r,4000))]);
+  const rows=parseCsv((await file.text()).replace(/^\uFEFF/,""));
+  if(rows.length<2){toast("That file has no data rows. The first row must be a header.");return;}
+  const head=rows[0].map(h=>h.trim().toLowerCase()),idx={};
+  Object.entries(ALIAS).forEach(([k,al])=>{const i=head.findIndex(h=>al.includes(h));if(i>=0)idx[k]=i;});
+  if(idx.name==null||idx.state==null){toast("The CSV needs a name column and a state column. Download the template to see the format.");return;}
+  const out=[];let skip=0;
+  rows.slice(1).forEach(r=>{const g=k=>idx[k]!=null?(r[idx[k]]||"").trim():"";const st=mapState(g("state"));if(!g("name")||!st){skip++;return;}
+    const cf=countyFeat(st,g("county"));
+    const l={id:uid(),created:Date.now(),activity:[{at:Date.now(),text:`Imported from ${file.name}`}],name:g("name"),type:mapType(g("type")),status:STATUSES.includes(g("status"))?g("status"):"New",phone:g("phone")&&phoneOk(g("phone"))?normPhone(g("phone")):"",email:emailOk(g("email"))?g("email").toLowerCase():"",address:g("address"),city:g("city"),county:cf?cf.properties.name:g("county").replace(/\s+county$/i,""),state:st,zip:g("zip"),value:+String(g("value")).replace(/[$,]/g,"")||"",equity:g("equity")?+String(g("equity")).replace("%",""):"",source:g("source")||"Data provider import",caseNo:g("caseNo"),dnc:["clear","listed"].includes(g("dnc").toLowerCase())?g("dnc").toLowerCase():"unchecked",consent:/^(y|yes|true|1)$/i.test(g("consent")),notes:g("notes"),website:g("website"),social:g("social")};
+    const lat=parseFloat(g("lat")),lng=parseFloat(g("lng"));
+    if(isFinite(lat)&&isFinite(lng)){l.lat=lat;l.lng=lng;l.geoApprox=false;}else{const p=approxPoint(st,l.county);if(p){l.lat=+p[0].toFixed(6);l.lng=+p[1].toFixed(6);l.geoApprox=true;}}
+    out.push(l);});
+  if(!out.length){toast(`No usable rows (${skip} skipped). Each row needs a name and a US state.`);return;}
+  out.forEach(l=>S.leads.set(l.id,l)); persist(); render();
+  toast(`Imported ${out.length} leads${skip?`, skipped ${skip}`:""}. Pins without coordinates sit at the county center until you locate them.`);
+}
+$("bImport").onclick=()=>$("fileCsv").click();
+$("fileCsv").onchange=e=>{const f=e.target.files[0];if(f)importCsv(f);e.target.value="";};
+$("bExport").onclick=()=>{const list=filtered();if(!list.length){toast("No leads in view to export.");return;}download(`kam-team-leads-${new Date().toISOString().slice(0,10)}.csv`,toCsv(list),"text/csv");};
+$("bTemplate").onclick=()=>download("kam-team-lead-template.csv",CSV_COLS.join(",")+"\r\n"+["Estate of Jordan Lee","Probate","New","(555) 555-0101","executor@example.com","123 Sample St","Pasadena","Los Angeles","CA","91101","","","950000","70","County probate filing","25STPB01234","unchecked","no","Executor is the son; attorney listed on filing"].map(cq).join(","),"text/csv");
+$("bBackup").onclick=()=>download(`kam-team-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify({app:"kam-team-lead-generator",version:2,exported:new Date().toISOString(),leads:[...S.leads.values()]},null,1),"application/json");
+$("bRestore").onclick=()=>$("fileJson").click();
+$("fileJson").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{const d=JSON.parse(await f.text());const arr=Array.isArray(d)?d:d.leads;if(!Array.isArray(arr))throw 0;
+    let n=0;arr.forEach(l=>{if(l&&l.id&&l.name&&TYPES[l.type]){S.leads.set(l.id,l);n++;}});persist();render();toast(`Restored ${n} leads. Existing leads with the same ID were updated.`);
+  }catch(err){toast("That file isn't a Kam Team backup.");}};
+
+/* ---------------- Samples ---------------- */
+async function loadSamples(){
+  $("loading").classList.remove("hidden"); await Promise.race([geoReady,new Promise(r=>setTimeout(r,5000))]); $("loading").classList.add("hidden");
+  const spec=[["CA","Los Angeles","probate"],["CA","Los Angeles","inherited"],["CA","Los Angeles","seller"],["CA","Los Angeles","buyer"],["CA","Orange","probate"],["CA","Orange","expired"],["CA","San Diego","preforeclosure"],["CA","San Diego","inherited"],["CA","Riverside","preforeclosure"],["CA","Riverside","fsbo"],["CA","San Bernardino","absentee"],["CA","Sacramento","probate"],["CA","Sacramento","buyer"],["CA","Alameda","inherited"],["CA","Santa Clara","seller"],["CA","Santa Clara","buyer"],["CA","Fresno","absentee"],["CA","Kern","preforeclosure"],["CA","Contra Costa","probate"],["CA","Ventura","expired"],["CA","San Mateo","inherited"],["CA","Sonoma","fsbo"],["CA","Placer","seller"],["CA","San Joaquin","probate"],["CA","Marin","inherited"],["CA","Santa Barbara","absentee"],["TX","Harris","probate"],["FL","Miami-Dade","preforeclosure"],["AZ","Maricopa","buyer"],["NV","Clark","absentee"],["WA","King","inherited"],["NY","Kings","probate"],["IL","Cook","expired"],["GA","Fulton","fsbo"],["CO","Denver","seller"],["NC","Mecklenburg","buyer"],["OR","Multnomah","inherited"],["TN","Davidson","preforeclosure"]];
+  const last=["Alvarez","Nguyen","Okafor","Bennett","Castillo","Park","Moreno","Reyes","Hughes","Patel","Santos","Kim","Brooks","Delgado","Foster","Ito","Lopez","Murray","Ochoa","Price"];
+  const src={probate:"County probate filing",inherited:"County probate filing",preforeclosure:"Recorder: notice of default",expired:"MLS expired listing",fsbo:"FSBO listing",absentee:"Assessor: absentee owner",buyer:"Website inquiry",seller:"Referral"};
+  spec.forEach(([st,co,ty],i)=>{const ln=last[i%20],p=approxPoint(st,co),n=String(100+i).slice(-2);
+    const name=ty==="probate"?`Estate of ${"ABCDEFGHJKLMNPRSTW"[i%18]}. ${ln} (sample)`:ty==="inherited"?`${ln} heirs (sample)`:`${["Jordan","Taylor","Morgan","Casey","Riley","Avery"][i%6]} ${ln} (sample)`;
+    const l={id:uid(),created:Date.now()-((i*3)%40)*864e5,name,type:ty,status:["New","New","Contacted","Appointment","New"][i%5],phone:i%4===3?"":`(555) 555-01${n}`,email:i%3===2?"":`sample${n}@example.com`,address:`${100+i*7} Sample Ave`,city:"",county:co,state:st,zip:"",value:(450+((i*137)%1400))*1000,equity:20+((i*29)%75),source:src[ty],caseNo:ty==="probate"?`SAMPLE-PB-2026-${1000+i}`:"",dnc:["unchecked","clear","listed","clear"][i%4],consent:i%5===0,notes:"Fictional sample lead for training. Remove before real prospecting.",lat:p?+p[0].toFixed(6):null,lng:p?+p[1].toFixed(6):null,geoApprox:true,sample:true,activity:[{at:Date.now(),text:"Sample lead created"}]};
+    S.leads.set(l.id,l);});
+  persist(); render(); toast("Sample leads loaded. They're fictional and marked “(sample)”.");
+}
+$("bSample").onclick=()=>{const s=[...S.leads.values()].filter(l=>l.sample);if(s.length){if(confirm(`Remove all ${s.length} sample leads?`)){s.forEach(l=>S.leads.delete(l.id));persist();if(S.sel&&!S.leads.has(S.sel))closeDrawer();render();toast("Sample leads removed.");}}else loadSamples();};
+
+/* ---------------- Chrome ---------------- */
+$("bNew").onclick=()=>openForm();
+$("bToggle").onclick=e=>{const p=$("tablepanel");const c=p.classList.toggle("collapsed");e.target.textContent=c?"Show list":"Hide list";e.target.setAttribute("aria-expanded",!c);setTimeout(()=>E&&E.resize(),50);};
+$("bFilters").onclick=()=>{$("rail").classList.add("open");$("scrim").classList.add("show");};
+$("scrim").onclick=closeRail;
+function closeRail(){$("rail").classList.remove("open");$("scrim").classList.remove("show");}
+const theme=store.get("kamteam.theme","dark"); if(theme==="light") document.documentElement.dataset.theme="light";
+$("bTheme").onclick=()=>{const r=document.documentElement;const light=r.dataset.theme!=="light";if(light)r.dataset.theme="light";else delete r.dataset.theme;store.set("kamteam.theme",light?"light":"dark");};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(S.adding)setAdding(false);else if($("dlg").open||$("dlgSet").open)return;else if($("drawer").classList.contains("open"))closeDrawer();else if($("prospect").classList.contains("open"))closeProspect();}});
+window.addEventListener("resize",()=>E&&E.resize());
+
+function render(){ const list=filtered(); renderPins(list); renderTable(list); renderKpis(list); renderDrawer();
+  $("bSample").textContent=[...S.leads.values()].some(l=>l.sample)?"Remove sample leads":"Load sample leads"; }
+
+async function boot(){
+  buildFilters(); syncFilterInputs(); updateGhlStat();
+  const key=(S.set.gkey||"").trim();
+  if(key&&store.get("kamteam.gfail","")!==key){
+    $("loading").textContent="Loading Google Maps…"; $("loading").classList.remove("hidden");
+    try{ E=await makeGoogle(key); }catch(e){ toast("Google Maps didn't load ("+e.message+"). Using the standard satellite map."); }
+    $("loading").classList.add("hidden");
+  }
+  if(!E){ $("map").innerHTML=""; E=makeLeaflet(); }
+  $("engineTag").textContent=E.kind==="google"?"Google Maps":"Esri satellite";
+  setBase(baseMode); E.onClick(handleMapClick); E.onMove(onMove);
+  afterGeo(); render();
+}
+boot();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "kam-team-lead-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kam Team real estate lead generator with a secure GoHighLevel relay",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
