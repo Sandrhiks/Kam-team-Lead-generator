@@ -206,9 +206,10 @@ async function currentUser(req) {
 }
 
 /* ---------------- Sign-up rules ---------------- */
-// ALLOWED_EMAILS lists addresses ("sam@x.com") and whole domains ("@x.com").
-// With no list, only the very first account can be created (the owner).
+// ALLOWED_EMAILS lists addresses ("sam@x.com") and whole domains ("@x.com"),
+// or "*" for open sign-up. With no list, only the very first account can be created.
 async function signupAllowed(email) {
+  if (ALLOWED_EMAILS.includes("*")) return true;
   if (!ALLOWED_EMAILS.length) return (await store.count()) === 0;
   const domain = email.slice(email.lastIndexOf("@"));
   return ALLOWED_EMAILS.includes(email) || ALLOWED_EMAILS.includes(domain);
