@@ -279,6 +279,7 @@ a.chip{text-decoration:none;color:inherit}
     <button class="btn" id="bFind" aria-label="Find leads">⌕<span class="hide-m">&nbsp;Find leads</span></button>
     <button class="btn" id="bSettings" aria-label="Settings">⚙<span class="hide-m">&nbsp;Settings</span></button>
     <button class="btn" id="bTheme" aria-label="Switch light or dark theme">◐</button>
+    <button class="btn hidden" id="bLogout" aria-label="Sign out" title="Sign out">⏻<span class="hide-m">&nbsp;<span id="userName">Sign out</span></span></button>
     <button class="btn primary" id="bNew">＋<span class="hide-m">&nbsp;New lead</span></button>
   </header>
 
@@ -421,7 +422,7 @@ a.chip{text-decoration:none;color:inherit}
       <div class="field full"><label for="s_address">Office mailing address (required in marketing emails)</label><input type="text" id="s_address"></div>
       <h4>GoHighLevel sync</h4>
       <div class="field full"><label for="s_ghl">Relay URL</label><input type="text" id="s_ghl" autocomplete="off" spellcheck="false" placeholder="/api/ghl"><div class="note" style="margin:0">Use <b>/api/ghl</b> when this page runs on the Kam Team server, so your real GHL webhook URL stays private on the server. A raw https GHL webhook URL also works, but anyone using this browser can see it.</div></div>
-      <div class="field full"><label for="s_ghlkey">Relay API key (only if the server sets API_KEY)</label><input type="password" id="s_ghlkey" autocomplete="off"></div>
+      <div class="field full"><label for="s_ghlkey">Relay API key (not needed when you're signed in)</label><input type="password" id="s_ghlkey" autocomplete="off"></div>
       <label class="check full"><input type="checkbox" id="s_auto"> Send every new or updated lead to GHL automatically</label>
       <div class="field full"><button type="button" class="btn sm" id="bTestGhl" style="align-self:flex-start">Send a test lead</button><div class="note" id="ghlTestMsg" style="margin:0"></div></div>
       <h4>Google Maps (optional)</h4>
@@ -1072,6 +1073,7 @@ async function postGhl(payload){
     const h={"Content-Type":"application/json"}; if(S.set.ghlKey) h["X-API-Key"]=S.set.ghlKey;
     const r=await fetch(url,{method:"POST",headers:h,body:JSON.stringify(payload)});
     if(r.ok) return "sent";
+    if(r.status===401&&url.startsWith("/")){ location.href="/login"; throw new Error("Your session ended. Sign in again."); }
     let msg=""; try{ msg=(await r.json()).error||""; }catch(e){}
     return "error "+r.status+(msg?": "+msg:"");
   }
@@ -1114,6 +1116,11 @@ $("bTestGhl").onclick=async()=>{
   }catch(e){ $("ghlTestMsg").textContent="Couldn't reach that URL. Check it and your connection."; }
   S.set.ghl=keep; S.set.ghlKey=keepKey;
 };
+// Signed-in user (only when served by the Kam Team server).
+if(location.protocol!=="file:") fetch("/auth/me",{credentials:"same-origin"}).then(r=>r.ok?r.json():null).then(u=>{
+  if(!u) return; const b=$("bLogout"); b.classList.remove("hidden"); b.title=`Signed in as ${u.email}. Click to sign out.`; $("userName").textContent=u.name||u.email;
+  b.onclick=async()=>{ if(!confirm("Sign out of Kam Team?"))return; try{await fetch("/auth/logout",{method:"POST",credentials:"same-origin"});}catch(e){} location.href="/login"; };
+}).catch(()=>{});
 // When served by the Kam Team server with a webhook configured, use its relay by default.
 if(!S.set.ghl&&location.protocol!=="file:") fetch("/api/health").then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.relay&&!S.set.ghl){ S.set.ghl="/api/ghl"; store.set(SKEY,S.set); updateGhlStat(); } }).catch(()=>{});
 
