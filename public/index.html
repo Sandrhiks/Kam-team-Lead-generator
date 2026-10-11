@@ -256,6 +256,52 @@ a.chip{text-decoration:none;color:inherit}
   .tscroll{height:42vh}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Contact log & history */
+.activity li{display:grid;grid-template-columns:24px 1fr;gap:1px 10px;border-left:0;padding-left:0}
+.activity .ic,.hitem .ic{grid-row:span 2;width:24px;height:24px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1}
+.activity .by,.hitem .by{color:var(--muted)}
+.logc{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.logc input,.logc .btn{grid-column:1/-1}
+.hstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.hstat{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--panel-2)}
+.hstat b{display:block;font-size:20px;line-height:1.2;font-weight:800;font-variation-settings:"wdth" 118;font-variant-numeric:tabular-nums}
+.hstat span{font-size:11.5px;color:var(--muted);line-height:1.25;display:block}
+.hfilters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hfilters input{grid-column:1/-1}
+.hday{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted);margin:10px 0 2px}
+.hitem{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:1px 10px;padding:8px 6px;border-radius:6px;cursor:pointer;border:0;background:none;text-align:left;width:100%;color:inherit;font-size:14px}
+.hitem:hover{background:var(--panel-2)}
+.hitem .who{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hitem time{font-size:12px;color:var(--muted);white-space:nowrap}
+.hitem .what{grid-column:2/4;font-size:13.5px;color:var(--ink);word-break:break-word}
+.hempty{border:1px dashed var(--line-2);border-radius:8px;padding:18px;text-align:center;color:var(--muted);font-size:14px}
+
+/* Chat support */
+.chatfab{position:fixed;right:18px;bottom:18px;z-index:1200;height:48px;padding:0 18px 0 16px;border-radius:24px;border:1px solid var(--primary);background:var(--primary);color:var(--on-primary);box-shadow:var(--shadow);cursor:pointer;font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:8px}
+.chatfab .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.chatbox{position:fixed;right:18px;bottom:78px;z-index:1200;width:min(390px,calc(100vw - 32px));height:min(580px,calc(100dvh - 110px));background:var(--panel);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.chathead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.chathead .av{width:34px;height:34px;border-radius:8px;background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center;flex:none}
+.chathead .av svg{width:14px;height:20px}
+.chathead b{display:block;font-size:15px}
+.chathead small{color:var(--muted);font-size:12px}
+.chathead .grow{flex:1}
+.chatlog{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:9px 12px;border-radius:10px;font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.user{align-self:flex-end;background:var(--primary);color:var(--on-primary);border-bottom-right-radius:3px}
+.msg.bot{align-self:flex-start;background:var(--panel-2);border:1px solid var(--line);border-bottom-left-radius:3px}
+.msg.err{border-color:var(--danger);color:var(--danger)}
+.msg.typing::after{content:"▍";animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.chatsugg{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px}
+.chatsugg .chip{text-align:left}
+.chatform{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);align-items:flex-end}
+.chatform textarea{flex:1;min-height:42px;max-height:120px;resize:none;padding:10px}
+.chatfoot{font-size:11.5px;color:var(--muted);padding:0 12px 10px;line-height:1.4}
+.chatfoot a{color:inherit}
+@media (max-width:700px){.chatfab{right:12px;bottom:12px}.chatfab .lbl{display:none}.chatfab{width:48px;padding:0;justify-content:center}.chatbox{right:8px;left:8px;width:auto;bottom:70px}}
+@media print{.chatfab,.chatbox{display:none!important}}
 </style>
 </head>
 <body>
@@ -273,10 +319,12 @@ a.chip{text-decoration:none;color:inherit}
       <div class="word">KAM TEAM<small>Real Estate Agent Lead Generator</small></div>
     </div>
     <div class="grow"></div>
+    <div class="stat hidden" id="syncStat" title="Your leads are saved to your account"><i></i><span id="syncText">Saved</span></div>
     <div class="stat" id="ghlStat" title="GoHighLevel connection"><i></i><span id="ghlText">GHL not connected</span></div>
     <span class="sep"></span>
     <span class="engine hide-m" id="engineTag">Map</span>
     <button class="btn" id="bFind" aria-label="Find leads">⌕<span class="hide-m">&nbsp;Find leads</span></button>
+    <button class="btn" id="bHistory" aria-label="Contact history">◷<span class="hide-m">&nbsp;History</span></button>
     <button class="btn" id="bSettings" aria-label="Settings">⚙<span class="hide-m">&nbsp;Settings</span></button>
     <button class="btn" id="bTheme" aria-label="Switch light or dark theme">◐</button>
     <button class="btn hidden" id="bLogout" aria-label="Sign out" title="Sign out">⏻<span class="hide-m">&nbsp;<span id="userName">Sign out</span></span></button>
@@ -310,7 +358,7 @@ a.chip{text-decoration:none;color:inherit}
           <button class="btn sm" id="bRestore">Restore backup</button>
         </div>
         <input type="file" id="fileJson" accept=".json,application/json" class="hidden">
-        <p class="note">Leads are saved in this browser. Download a backup weekly, or turn on GHL sync in Settings so every lead also lands in your CRM.</p>
+        <p class="note" id="backupNote">Leads are saved in this browser. Download a backup weekly, or turn on GHL sync in Settings so every lead also lands in your CRM.</p>
       </div>
       <button class="btn" id="bClear">Reset filters</button>
     </aside>
@@ -358,6 +406,26 @@ a.chip{text-decoration:none;color:inherit}
         <div class="ov loading hidden" id="loading">Loading…</div>
 
         <aside class="drawer" id="drawer" aria-label="Lead details"></aside>
+        <aside class="drawer" id="history" aria-label="Contact history">
+          <div class="dhead"><button class="btn sm x" id="hClose">Close</button><h3>Contact history</h3>
+            <p class="muted" style="margin:0;font-size:13px">Every call, text, email and update across your leads.</p></div>
+          <div class="dbody">
+            <div class="hstats" id="hStats"></div>
+            <div class="hfilters">
+              <input type="search" id="hQ" placeholder="Search lead, note or outcome" aria-label="Search history">
+              <select id="hKind" aria-label="Activity type">
+                <option value="contacts">Contacts only</option><option value="all">All activity</option>
+                <option value="call">Calls</option><option value="text">Texts</option><option value="email">Emails</option>
+                <option value="meeting">Meetings</option><option value="note">Notes</option><option value="status">Status changes</option><option value="ghl">GHL syncs</option>
+              </select>
+              <select id="hRange" aria-label="Date range">
+                <option value="1">Today</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option><option value="0">All time</option>
+              </select>
+            </div>
+            <div id="hList"></div>
+            <div class="inline"><button class="btn sm" id="hExport">Export CSV</button></div>
+          </div>
+        </aside>
         <aside class="drawer" id="prospect" aria-label="Find leads">
           <div class="dhead"><button class="btn sm x" id="pClose">Close</button><h3>Find leads</h3>
             <div class="tabs" role="tablist"><button data-tab="google" role="tab" aria-selected="true">Google listings</button><button data-tab="ig" role="tab" aria-selected="false">Instagram</button><button data-tab="li" role="tab" aria-selected="false">LinkedIn</button></div></div>
@@ -441,6 +509,23 @@ a.chip{text-decoration:none;color:inherit}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<button class="chatfab hidden" id="chatFab" aria-expanded="false" aria-controls="chatBox"><span class="dot"></span>💬<span class="lbl">Support</span></button>
+<section class="chatbox hidden" id="chatBox" role="dialog" aria-label="Chat support">
+  <div class="chathead">
+    <div class="av"><svg aria-hidden="true"><use href="#kam"/></svg></div>
+    <div class="grow"><b>Kam · Support</b><small id="chatSub">AI assistant · replies in seconds</small></div>
+    <button class="btn sm" id="chatNew" title="Start a new conversation">New</button>
+    <button class="btn sm" id="chatClose" aria-label="Close chat">✕</button>
+  </div>
+  <div class="chatlog" id="chatLog" aria-live="polite"></div>
+  <div class="chatsugg" id="chatSugg"></div>
+  <form class="chatform" id="chatForm">
+    <textarea id="chatIn" rows="1" placeholder="Ask a question…" aria-label="Message"></textarea>
+    <button class="btn primary" id="chatSend" type="submit">Send</button>
+  </form>
+  <div class="chatfoot" id="chatFoot">AI answers can be wrong. Double-check anything important.</div>
+</section>
+
 <script>
 (function(){
 "use strict";
@@ -492,8 +577,23 @@ const KEY="kamteam.leads.v2", SKEY="kamteam.settings.v1";
 const S={leads:new Map(),sel:null,adding:false,sort:{k:"score",dir:-1},editId:null,
   f:{q:"",types:new Set(Object.keys(TYPES)),state:"",county:"",statuses:new Set(),hot:false,reach:false,ghl:false},
   set:Object.assign({agent:"",dre:"",phone:"",brokerage:"",address:"",ghl:"",auto:false,ghlKey:"",tiles:"",gkey:"",gmapId:"",igUser:"",igToken:""},store.get(SKEY,{}))};
-(store.get(KEY,[])||[]).forEach(l=>S.leads.set(l.id,l));
-const persist=()=>store.set(KEY,[...S.leads.values()]);
+// On the Kam Team server, leads belong to the signed-in user and load after sign-in
+// (see Sync below). Opened as a plain file, they live in this browser only.
+const SERVER=location.protocol!=="file:";
+let USER=null, leadKey=KEY;
+if(!SERVER) (store.get(KEY,[])||[]).forEach(l=>S.leads.set(l.id,l));
+const persist=()=>{ store.set(leadKey,[...S.leads.values()]); if(USER) Sync.schedule(); };
+
+/* ---------------- Activity ---------------- */
+const ACT={call:{label:"Call",ic:"☎"},text:{label:"Text",ic:"💬"},email:{label:"Email",ic:"✉"},meeting:{label:"Meeting",ic:"◉"},
+  note:{label:"Note",ic:"✎"},status:{label:"Status",ic:"◆"},ghl:{label:"GHL",ic:"⇪"},system:{label:"Update",ic:"•"}};
+const CONTACT_KINDS=new Set(["call","text","email","meeting"]);
+const OUTCOMES=["Connected","Left voicemail","No answer","Wrong number","Not interested","Appointment set"];
+// Older entries only have text; work out their kind from it.
+function actKind(a){ if(a.kind&&ACT[a.kind]) return a.kind; const t=a.text||"";
+  if(/^Called/.test(t))return"call"; if(/^Sent a text/.test(t))return"text"; if(/^Sent an email/.test(t))return"email";
+  if(/^Status changed/.test(t))return"status"; if(/^GHL:/.test(t))return"ghl"; if(/^(Lead created|Sample lead|Imported|Pin moved|Restored)/.test(t))return"system"; return"note"; }
+const fwhen=t=>new Date(t).toLocaleString("en-US",{dateStyle:"medium",timeStyle:"short"});
 
 /* ---------------- Geography (boundaries load in background) ---------------- */
 const GEO={ready:false,states:[],counties:{},stateFeat:{}};
@@ -721,7 +821,7 @@ const LI_POSTS=["selling my house","relocating to","moving to","buying our first
 const P={tab:"google",items:[],busy:false,msg:"",preset:null,ig:{posts:[],biz:null,tag:"",msg:""}};
 
 function areaLabel(){ if(whereCounty) return (whereCounty.county?whereCounty.county+" County, ":"")+whereCounty.state; if(S.f.county) return S.f.county+" County, "+S.f.state; if(S.f.state) return BY_ABBR[S.f.state].name; return ""; }
-function openProspect(tab){ if(tab) P.tab=tab; closeDrawer(); $("prospect").classList.add("open"); $("mapwrap").classList.add("dopen"); renderProspect(); }
+function openProspect(tab){ if(tab) P.tab=tab; closeDrawer(); $("history").classList.remove("open"); $("prospect").classList.add("open"); $("mapwrap").classList.add("dopen"); renderProspect(); }
 function closeProspect(){ $("prospect").classList.remove("open"); if(E) E.results([],()=>{}); P.items=[]; $("mapwrap").classList.toggle("dopen",!!S.sel); }
 $("bFind").onclick=()=>$("prospect").classList.contains("open")?closeProspect():openProspect();
 $("pClose").onclick=closeProspect;
@@ -932,6 +1032,7 @@ $("tscroll").addEventListener("keydown",e=>{if(e.key==="Enter"){const tr=e.targe
 function selectLead(id,fly){
   const l=S.leads.get(id); if(!l)return; S.sel=id;
   if($("prospect").classList.contains("open")) $("prospect").classList.remove("open");
+  $("history").classList.remove("open");
   if(fly&&isFinite(l.lat)) E.focusLead(l.lat,l.lng,innerWidth>900?205:0);
   render(); $("drawer").classList.add("open"); svFor=null; renderSV();
 }
@@ -952,7 +1053,7 @@ function emailTpl(l){
 }
 function renderDrawer(){
   const d=$("drawer"),l=S.sel&&S.leads.get(S.sel); const keepSV=$("svBox")&&l&&svFor===l.id?$("svBox"):null;
-  $("mapwrap").classList.toggle("dopen",!!l||$("prospect").classList.contains("open"));
+  $("mapwrap").classList.toggle("dopen",!!l||$("prospect").classList.contains("open")||$("history").classList.contains("open"));
   if(!l){d.classList.remove("open");return;}
   const t=TYPES[l.type],sc=score(l),tel=(l.phone||"").replace(/[^\d+]/g,"");
   const canCall=!!l.phone&&!(l.dnc==="listed"&&!l.consent), canText=!!l.phone&&!!l.consent, em=emailTpl(l);
@@ -962,7 +1063,7 @@ function renderDrawer(){
   else if(l.phone)comp=`<div class="okm">${l.consent?"Consent on file.":"DNC checked: clear to call. Texting still needs consent."}</div>`;
   const gm=isFinite(l.lat)?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`:"";
   const sv=isFinite(l.lat)?`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${l.lat},${l.lng}`:"";
-  const acts=(l.activity||[]).slice().reverse().map(a=>`<li><time>${new Date(a.at).toLocaleString("en-US",{dateStyle:"medium",timeStyle:"short"})}</time>${esc(a.text)}</li>`).join("")||`<li class="muted">No activity yet.</li>`;
+  const acts=(l.activity||[]).slice().reverse().map(a=>{const k=actKind(a);return `<li><span class="ic" title="${ACT[k].label}">${ACT[k].ic}</span><time>${fwhen(a.at)}${a.by?` <span class="by">· ${esc(a.by)}</span>`:""}</time><span>${esc(a.text)}</span></li>`;}).join("")||`<li class="muted">No activity yet.</li>`;
   const off='aria-disabled="true" tabindex="-1"';
   d.innerHTML=`<div class="dhead"><button class="btn sm x" id="dClose">Close</button><span class="tag"><span class="dia" style="background:${t.color}"></span>${t.label}</span><h3>${esc(l.name)}</h3><span class="score ${sc>=70?"hot":sc>=50?"warm":""}">${sc}</span> <span class="muted" style="font-size:13px">lead score</span></div>
   <div class="dbody">
@@ -991,25 +1092,40 @@ function renderDrawer(){
       <dt>Added</dt><dd>${fdate(l.created)}</dd>
     </dl>
     ${l.notes?`<div><p class="sect">NOTES</p><p style="margin:0;white-space:pre-wrap">${esc(l.notes)}</p></div>`:""}
-    <div><p class="sect">ACTIVITY</p><div class="inline" style="margin-bottom:10px"><input type="text" id="dNote" placeholder="Log a call outcome or note"><button class="btn" id="dLog">Log</button></div><ul class="activity">${acts}</ul></div>
+    <div><p class="sect">LOG CONTACT</p><div class="logc">
+      <select id="dKind" aria-label="Contact type">${["call","text","email","meeting","note"].map(k=>`<option value="${k}">${ACT[k].label}</option>`).join("")}</select>
+      <select id="dOutcome" aria-label="Outcome"><option value="">Outcome (optional)</option>${OUTCOMES.map(o=>`<option>${o}</option>`).join("")}</select>
+      <input type="text" id="dNote" placeholder="What happened? Next step?" maxlength="500">
+      <button class="btn primary" id="dLog">Log contact</button>
+    </div></div>
+    <div><p class="sect">HISTORY</p><ul class="activity">${acts}</ul></div>
     <div class="inline" style="flex-wrap:wrap"><button class="btn" id="dEdit">Edit lead</button><button class="btn" id="dMove">Move pin here</button><button class="btn danger" id="dDel">Delete</button></div>
   </div>`;
   if(keepSV&&$("svBox")) $("svBox").replaceWith(keepSV); else svFor=null;
   if(!keepSV) setTimeout(renderSV,0);
   $("dClose").onclick=closeDrawer;
-  $("dStatus").onchange=e=>{const n=Object.assign({},l,{status:e.target.value});addAct(n,`Status changed to ${e.target.value}`);saveLead(n);};
-  $("dLog").onclick=()=>{const v=$("dNote").value.trim();if(!v)return;const n=Object.assign({},l,{lastContact:Date.now()});addAct(n,v);saveLead(n);toast("Note logged.");};
+  $("dStatus").onchange=e=>{const n=Object.assign({},l,{status:e.target.value});addAct(n,`Status changed to ${e.target.value}`,{kind:"status"});saveLead(n);};
+  $("dKind").onchange=e=>{$("dOutcome").disabled=e.target.value==="note";};
+  $("dLog").onclick=()=>{
+    const kind=$("dKind").value, outcome=kind==="note"?"":$("dOutcome").value, note=$("dNote").value.trim();
+    if(kind==="note"&&!note){toast("Type the note first.");$("dNote").focus();return;}
+    const n=Object.assign({},l), contact=CONTACT_KINDS.has(kind);
+    if(contact){ n.lastContact=Date.now(); if(outcome==="Appointment set") n.status="Appointment"; else if(n.status==="New") n.status="Contacted"; }
+    let text=ACT[kind].label+(outcome?` · ${outcome}`:"")+(note?`: ${note}`:"");
+    if(n.status!==l.status) text+=` · status set to ${n.status}`;
+    addAct(n,text,{kind,outcome}); saveLead(n); toast(contact?"Contact logged.":"Note logged.");
+  };
   $("dNote").onkeydown=e=>{if(e.key==="Enter")$("dLog").click();};
   $("dEdit").onclick=()=>openForm(l.id);
   $("dMove").onclick=()=>{const c=E.center();if(E.zoom()<15){toast("Zoom in on the rooftop first, then center it and click again.");return;}const n=Object.assign({},l,{lat:+c.lat.toFixed(6),lng:+c.lng.toFixed(6),geoApprox:false});addAct(n,"Pin moved to map center");saveLead(n);toast("Pin moved to the center of the map.");};
   $("dDel").onclick=()=>{if(confirm(`Delete ${l.name}? This can't be undone.`)){S.leads.delete(l.id);persist();closeDrawer();toast("Lead deleted.");}};
   $("dGhl").onclick=()=>sendGhl(l.id,false);
-  d.querySelectorAll("[data-log]").forEach(a=>a.addEventListener("click",()=>{const k=a.dataset.log;const n=Object.assign({},l,{lastContact:Date.now(),status:l.status==="New"?"Contacted":l.status});addAct(n,{call:"Called",text:"Sent a text",email:"Sent an email"}[k]+(n.status!==l.status?" · status set to Contacted":""));saveLead(n);}));
+  d.querySelectorAll("[data-log]").forEach(a=>a.addEventListener("click",()=>{const k=a.dataset.log;const n=Object.assign({},l,{lastContact:Date.now(),status:l.status==="New"?"Contacted":l.status});addAct(n,{call:"Called",text:"Sent a text",email:"Sent an email"}[k]+(n.status!==l.status?" · status set to Contacted":""),{kind:k});saveLead(n);}));
 }
 let svFor=null;
 function renderSV(){ const box=$("svBox"), l=S.sel&&S.leads.get(S.sel); if(!box||!l||svFor===l.id) return; svFor=l.id;
   E.streetView(box,l.lat,l.lng).then(ok=>{ if(!ok&&$("svBox")) $("svBox").innerHTML=`<p class="note" style="padding:10px">No Street View imagery within 80 m of this pin.</p>`; }); }
-function addAct(l,text){l.activity=(l.activity||[]).concat([{at:Date.now(),text}]).slice(-50);}
+function addAct(l,text,extra){l.activity=(l.activity||[]).concat([Object.assign({at:Date.now(),text},USER?{by:USER.name||USER.email}:{},extra)]).slice(-200);}
 function saveLead(l,opts){ l.updated=Date.now(); S.leads.set(l.id,l); persist(); render(); if(S.set.auto&&S.set.ghl&&!(opts&&opts.noSync)) sendGhl(l.id,true); }
 
 /* ---------------- Lead form ---------------- */
@@ -1084,7 +1200,7 @@ async function sendGhl(id,silent){
   const l=S.leads.get(id); if(!l)return;
   if(!S.set.ghl){ if(!silent){toast("Set up GHL sync in Settings first.");openSettings();} return; }
   let status; try{ status=await postGhl(ghlPayload(l)); }catch(e){ status="failed"; if(!silent) toast(e.message||"Couldn't reach GHL."); }
-  const n=Object.assign({},S.leads.get(id)||l,{ghl:{status,at:Date.now()}}); addAct(n,`GHL: ${status}`);
+  const n=Object.assign({},S.leads.get(id)||l,{ghl:{status,at:Date.now()}}); addAct(n,`GHL: ${status}`,{kind:"ghl"});
   S.leads.set(id,n); persist(); render(); if(!silent&&/^sent/.test(status)) toast(status==="sent"?"Sent to GHL.":"Sent to GHL. Check the workflow's execution log to confirm.");
 }
 $("bSync").onclick=async()=>{
@@ -1116,11 +1232,172 @@ $("bTestGhl").onclick=async()=>{
   }catch(e){ $("ghlTestMsg").textContent="Couldn't reach that URL. Check it and your connection."; }
   S.set.ghl=keep; S.set.ghlKey=keepKey;
 };
-// Signed-in user (only when served by the Kam Team server).
-if(location.protocol!=="file:") fetch("/auth/me",{credentials:"same-origin"}).then(r=>r.ok?r.json():null).then(u=>{
-  if(!u) return; const b=$("bLogout"); b.classList.remove("hidden"); b.title=`Signed in as ${u.email}. Click to sign out.`; $("userName").textContent=u.name||u.email;
+/* ---------------- Contact history ---------------- */
+function allActs(){ const out=[]; for(const l of S.leads.values()) for(const a of (l.activity||[])) out.push({a,l,k:actKind(a)}); return out.sort((x,y)=>y.a.at-x.a.at); }
+function historyRows(){
+  const kind=$("hKind").value, days=+$("hRange").value, q=$("hQ").value.trim().toLowerCase();
+  const since=days===1?new Date().setHours(0,0,0,0):days?Date.now()-days*864e5:0;
+  return allActs().filter(({a,l,k})=>a.at>=since
+    &&(kind==="all"||(kind==="contacts"?CONTACT_KINDS.has(k):k===kind))
+    &&(!q||[l.name,a.text,a.by,a.outcome].some(v=>(v||"").toLowerCase().includes(q))));
+}
+function renderHistory(){
+  if(!$("history").classList.contains("open")) return;
+  const all=allActs(), day0=new Date().setHours(0,0,0,0), wk=Date.now()-7*864e5;
+  const contacts=all.filter(x=>CONTACT_KINDS.has(x.k)), week=contacts.filter(x=>x.a.at>=wk);
+  const appts=all.filter(x=>x.a.at>=wk&&(x.a.outcome==="Appointment set"||(x.k==="status"&&/Appointment$/.test(x.a.text)))).length;
+  $("hStats").innerHTML=[[contacts.filter(x=>x.a.at>=day0).length,"Contacts today"],[week.length,"Contacts, 7 days"],
+    [new Set(week.map(x=>x.l.id)).size,"Leads reached, 7 days"],[appts,"Appointments, 7 days"]]
+    .map(([n,t])=>`<div class="hstat"><b>${n}</b><span>${t}</span></div>`).join("");
+  const rows=historyRows(), shown=rows.slice(0,500); let day="", html="";
+  for(const {a,l,k} of shown){
+    const d=new Date(a.at).toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"});
+    if(d!==day){ day=d; html+=`<div class="hday">${a.at>=day0?"TODAY":esc(d.toUpperCase())}</div>`; }
+    html+=`<button class="hitem" data-lead="${esc(l.id)}"><span class="ic" title="${ACT[k].label}">${ACT[k].ic}</span><span class="who">${esc(l.name)}</span>`+
+      `<time>${new Date(a.at).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}</time><span class="what">${esc(a.text)}${a.by?` <span class="by">· ${esc(a.by)}</span>`:""}</span></button>`;
+  }
+  $("hList").innerHTML=html||`<div class="hempty">Nothing here yet.<br>Open a lead and use <b>Log contact</b>, or the Call, Text and Email buttons, and it shows up here.</div>`;
+  if(rows.length>shown.length) $("hList").insertAdjacentHTML("beforeend",`<p class="note">Showing the latest 500 of ${rows.length}. Narrow the date range or export to see everything.</p>`);
+}
+function openHistory(){ closeDrawer(); if($("prospect").classList.contains("open")) closeProspect(); $("history").classList.add("open"); $("mapwrap").classList.add("dopen"); renderHistory(); }
+function closeHistory(){ $("history").classList.remove("open"); $("mapwrap").classList.toggle("dopen",!!S.sel||$("prospect").classList.contains("open")); }
+$("bHistory").onclick=()=>$("history").classList.contains("open")?closeHistory():openHistory();
+$("hClose").onclick=closeHistory;
+["hKind","hRange"].forEach(id=>$(id).onchange=renderHistory); $("hQ").oninput=renderHistory;
+$("hList").onclick=e=>{const b=e.target.closest("[data-lead]"); if(b) selectLead(b.dataset.lead,true);};
+$("hExport").onclick=()=>{ const rows=historyRows(); if(!rows.length){toast("No history in this view to export.");return;}
+  const csv=[["date","lead","lead_type","activity","outcome","details","by","phone","email"].join(",")].concat(rows.map(({a,l,k})=>
+    [new Date(a.at).toISOString(),l.name,TYPES[l.type]?TYPES[l.type].label:"",ACT[k].label,a.outcome||"",a.text,a.by||"",l.phone||"",l.email||""].map(cq).join(","))).join("\r\n");
+  download(`kam-team-contact-history-${new Date().toISOString().slice(0,10)}.csv`,csv,"text/csv"); };
+
+/* ---------------- Account sync ---------------- */
+// Leads are saved to the signed-in user's account on the server. This browser keeps a
+// copy (so the app opens instantly and works offline) and pushes changes in the background.
+const Sync={snap:new Map(),timer:0,busy:false,again:false,retry:0,
+  status(text,ok){ $("syncStat").classList.remove("hidden"); $("syncStat").classList.toggle("off",!ok); $("syncText").textContent=text; },
+  pendKey(){ return "kamteam.pendingDeletes.u:"+USER.email; },
+  schedule(){ clearTimeout(this.timer); this.timer=setTimeout(()=>this.push(),700); },
+  async pull(){
+    this.status("Syncing…",true);
+    try{
+      const r=await fetch("/api/leads",{credentials:"same-origin"}); if(r.status===401){location.href="/login";return;}
+      const j=await r.json(); if(!r.ok) throw new Error(j.error);
+      const server=new Map(j.leads.map(x=>[x.id,x]));
+      for(const [id,x] of server){ const l=S.leads.get(id);
+        if(x.deleted){ if(l&&(l.updated||0)<=x.updated) S.leads.delete(id); continue; }
+        if(!l||(l.updated||0)<x.updated) S.leads.set(id,x); }
+      this.snap=new Map([...server].filter(([,x])=>!x.deleted).map(([id,x])=>[id,JSON.stringify(x)]));
+      (store.get(this.pendKey(),[])||[]).forEach(id=>S.leads.delete(id));
+      if(S.sel&&!S.leads.has(S.sel)) S.sel=null;
+      store.set(leadKey,[...S.leads.values()]); render(); await this.push();
+    }catch(e){ this.status("Offline · saved on this device",false); this.later(); }
+  },
+  async push(){
+    if(this.busy){ this.again=true; return; } this.busy=true;
+    try{
+      const ups=[], dels=[...this.snap.keys()].filter(id=>!S.leads.has(id));
+      for(const l of S.leads.values()){ let j=JSON.stringify(l); if(this.snap.get(l.id)===j) continue;
+        // Make sure a changed lead always carries a newer time than the saved copy.
+        const prev=this.snap.get(l.id); if(!l.updated||(prev&&JSON.parse(prev).updated>=l.updated)){ l.updated=Date.now(); j=JSON.stringify(l); }
+        ups.push(l); }
+      if(!ups.length&&!dels.length){ this.status("Saved",true); store.set(this.pendKey(),[]); return; }
+      this.status("Saving…",true); store.set(this.pendKey(),dels);
+      // Send in batches of up to 200 changes and about 2 MB.
+      const batches=[]; let cur={up:[],del:dels.slice(0,200),size:0};
+      for(const l of ups){ const n=JSON.stringify(l).length; if(cur.up.length&&(cur.up.length+cur.del.length>=200||cur.size+n>2e6)){ batches.push(cur); cur={up:[],del:[],size:0}; } cur.up.push(l); cur.size+=n; }
+      batches.push(cur); for(let i=200;i<dels.length;i+=200) batches.push({up:[],del:dels.slice(i,i+200)});
+      let skipped=0;
+      for(const {up,del} of batches){
+        const r=await fetch("/api/leads/sync",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({upsert:up,delete:del})});
+        if(r.status===401){location.href="/login";return;}
+        const j=await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.error||"error "+r.status);
+        skipped+=j.skipped||0; up.forEach(l=>this.snap.set(l.id,JSON.stringify(l))); del.forEach(id=>this.snap.delete(id));
+      }
+      store.set(this.pendKey(),[]); store.set(leadKey,[...S.leads.values()]); this.retry=0; this.status("Saved",true);
+      if(skipped) setTimeout(()=>this.pull(),0); // another device saved something newer
+    }catch(e){ this.status("Offline · saved on this device",false); if(e.message&&!/fetch|network/i.test(e.message)) toast("Couldn't save to your account: "+e.message); this.later(); }
+    finally{ this.busy=false; if(this.again){ this.again=false; this.schedule(); } }
+  },
+  later(){ this.retry=Math.min(this.retry+1,6); clearTimeout(this.timer); this.timer=setTimeout(()=>this.pull(),5000*2**this.retry); },
+};
+addEventListener("online",()=>{ if(USER) Sync.pull(); });
+
+function startAccount(u){
+  USER=u; leadKey="kamteam.leads.u:"+u.email;
+  let local=store.get(leadKey,null);
+  // First sign-in on this browser: bring over leads saved here before accounts existed (once).
+  if(!local&&!store.get("kamteam.leads.migrated","")){ local=store.get(KEY,[])||[]; if(local.length){ store.set("kamteam.leads.migrated",u.email); toast(`Moving ${local.length} saved leads into your account…`); } }
+  S.leads.clear(); (local||[]).forEach(l=>{ if(l&&l.id){ if(!l.updated) l.updated=l.created||Date.now(); S.leads.set(l.id,l); } });
+  render(); Sync.pull();
+  $("backupNote").textContent="Leads are saved to your account and sync to every device you sign in on. Download a backup now and then for your own records.";
+  const b=$("bLogout"); b.classList.remove("hidden"); b.title=`Signed in as ${u.email}. Click to sign out.`; $("userName").textContent=u.name||u.email;
   b.onclick=async()=>{ if(!confirm("Sign out of Kam Team?"))return; try{await fetch("/auth/logout",{method:"POST",credentials:"same-origin"});}catch(e){} location.href="/login"; };
-}).catch(()=>{});
+  Chat.init(u);
+}
+
+/* ---------------- Chat support ---------------- */
+const Chat={msgs:[],busy:false,user:null,email:"",on:false,
+  key(){ return "kamteam.chat.u:"+this.user.email; },
+  save(){ try{ sessionStorage.setItem(this.key(),JSON.stringify(this.msgs.slice(-40))); }catch(e){} },
+  async init(u){
+    this.user=u; let cfg={};
+    try{ cfg=await (await fetch("/api/support",{credentials:"same-origin"})).json(); }catch(e){}
+    this.on=!!cfg.chat; this.email=cfg.email||"";
+    if(!this.on&&!this.email) return;
+    try{ this.msgs=JSON.parse(sessionStorage.getItem(this.key())||"[]"); }catch(e){ this.msgs=[]; }
+    if(this.email) $("chatFoot").innerHTML=`AI answers can be wrong. Need a person? <a href="mailto:${encodeURIComponent(this.email)}?subject=${encodeURIComponent("Kam Team Lead Generator support")}">Email ${esc(this.email)}</a>`;
+    if(!this.on){ $("chatSub").textContent="Contact our team"; $("chatIn").disabled=$("chatSend").disabled=true; $("chatIn").placeholder="Chat isn't available yet"; }
+    $("chatFab").classList.remove("hidden"); this.draw();
+  },
+  toggle(open){ open=open??$("chatBox").classList.contains("hidden"); $("chatBox").classList.toggle("hidden",!open); $("chatFab").setAttribute("aria-expanded",open); if(open){ this.draw(); setTimeout(()=>$("chatIn").focus(),0); } },
+  md(t){ return esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/`([^`]+)`/g,"<code>$1</code>").replace(/^#{1,4} (.+)$/gm,"<b>$1</b>"); },
+  draw(){
+    const first=(this.user.name||"").split(" ")[0];
+    const hello=this.on?`Hi${first?" "+esc(first):""}! I'm Kam, your support assistant. Ask me how to use the app, fix GoHighLevel sync, or get help working your leads.`
+      :`Chat support isn't switched on yet.${this.email?` Email us at <a href="mailto:${encodeURIComponent(this.email)}" style="color:inherit">${esc(this.email)}</a> and we'll help.`:""}`;
+    $("chatLog").innerHTML=`<div class="msg bot">${hello}</div>`+this.msgs.map(m=>`<div class="msg ${m.role==="user"?"user":"bot"}">${m.role==="user"?esc(m.content):this.md(m.content)}</div>`).join("");
+    const sugg=["How do I connect GoHighLevel?","How is the lead score worked out?","Write a gentle first text for a probate lead","How do I import leads from a CSV?"];
+    $("chatSugg").innerHTML=this.on&&!this.msgs.length?sugg.map(q=>`<button class="chip" type="button">${esc(q)}</button>`).join(""):"";
+    $("chatLog").scrollTop=$("chatLog").scrollHeight;
+  },
+  summary(){
+    const byStatus={},byType={}; let hot=0; const wk=Date.now()-7*864e5;
+    for(const l of S.leads.values()){ byStatus[l.status||"New"]=(byStatus[l.status||"New"]||0)+1; const t=(TYPES[l.type]||TYPES.seller).label; byType[t]=(byType[t]||0)+1; if(score(l)>=70)hot++; }
+    return {total:S.leads.size,hot,byStatus,byType,contactsThisWeek:allActs().filter(x=>CONTACT_KINDS.has(x.k)&&x.a.at>=wk).length};
+  },
+  async send(text){
+    text=text.trim(); if(!text||this.busy||!this.on) return;
+    this.busy=true; $("chatSend").disabled=true; $("chatIn").value=""; $("chatIn").style.height="";
+    this.msgs.push({role:"user",content:text}); this.draw();
+    const bubble=document.createElement("div"); bubble.className="msg bot typing"; $("chatLog").appendChild(bubble); $("chatLog").scrollTop=$("chatLog").scrollHeight;
+    let reply="", error="";
+    try{
+      const r=await fetch("/api/chat",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:this.msgs.slice(-20),summary:this.summary()})});
+      if(r.status===401){ location.href="/login"; return; }
+      if(!r.ok){ error=(await r.json().catch(()=>({}))).error||"Chat support isn't available right now."; }
+      else{
+        const reader=r.body.getReader(), dec=new TextDecoder(); let buf="";
+        for(;;){ const {value,done}=await reader.read(); if(done) break; buf+=dec.decode(value,{stream:true});
+          let i; while((i=buf.indexOf("\n\n"))>=0){ const line=buf.slice(0,i); buf=buf.slice(i+2); if(!line.startsWith("data: ")) continue;
+            const ev=JSON.parse(line.slice(6)); if(ev.t){ reply+=ev.t; bubble.innerHTML=this.md(reply); $("chatLog").scrollTop=$("chatLog").scrollHeight; } if(ev.error) error=ev.error; } }
+      }
+    }catch(e){ error="Couldn't reach chat support. Check your connection and try again."; }
+    bubble.classList.remove("typing");
+    if(reply){ this.msgs.push({role:"assistant",content:reply}); this.save(); }
+    if(error){ bubble.classList.add("err"); bubble.textContent=(reply?reply+"\n\n":"")+error; if(!reply) this.msgs.pop(); }
+    this.busy=false; $("chatSend").disabled=false; $("chatIn").focus();
+  },
+};
+$("chatFab").onclick=()=>Chat.toggle();
+$("chatClose").onclick=()=>Chat.toggle(false);
+$("chatNew").onclick=()=>{ Chat.msgs=[]; Chat.save(); Chat.draw(); };
+$("chatForm").onsubmit=e=>{ e.preventDefault(); Chat.send($("chatIn").value); };
+$("chatIn").onkeydown=e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); Chat.send($("chatIn").value); } };
+$("chatIn").oninput=e=>{ e.target.style.height=""; e.target.style.height=Math.min(e.target.scrollHeight,120)+"px"; };
+$("chatSugg").onclick=e=>{ const b=e.target.closest(".chip"); if(b) Chat.send(b.textContent); };
+
+// Signed-in user (only when served by the Kam Team server).
+if(SERVER) fetch("/auth/me",{credentials:"same-origin"}).then(r=>r.ok?r.json():null).then(u=>{ if(u) startAccount(u); }).catch(()=>{});
 // When served by the Kam Team server with a webhook configured, use its relay by default.
 if(!S.set.ghl&&location.protocol!=="file:") fetch("/api/health").then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.relay&&!S.set.ghl){ S.set.ghl="/api/ghl"; store.set(SKEY,S.set); updateGhlStat(); } }).catch(()=>{});
 
@@ -1183,10 +1460,10 @@ $("scrim").onclick=closeRail;
 function closeRail(){$("rail").classList.remove("open");$("scrim").classList.remove("show");}
 const theme=store.get("kamteam.theme","dark"); if(theme==="light") document.documentElement.dataset.theme="light";
 $("bTheme").onclick=()=>{const r=document.documentElement;const light=r.dataset.theme!=="light";if(light)r.dataset.theme="light";else delete r.dataset.theme;store.set("kamteam.theme",light?"light":"dark");};
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(S.adding)setAdding(false);else if($("dlg").open||$("dlgSet").open)return;else if($("drawer").classList.contains("open"))closeDrawer();else if($("prospect").classList.contains("open"))closeProspect();}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(S.adding)setAdding(false);else if($("dlg").open||$("dlgSet").open)return;else if($("drawer").classList.contains("open"))closeDrawer();else if($("prospect").classList.contains("open"))closeProspect();else if($("history").classList.contains("open"))closeHistory();}});
 window.addEventListener("resize",()=>E&&E.resize());
 
-function render(){ const list=filtered(); renderPins(list); renderTable(list); renderKpis(list); renderDrawer();
+function render(){ const list=filtered(); renderPins(list); renderTable(list); renderKpis(list); renderDrawer(); renderHistory();
   $("bSample").textContent=[...S.leads.values()].some(l=>l.sample)?"Remove sample leads":"Load sample leads"; }
 
 async function boot(){
