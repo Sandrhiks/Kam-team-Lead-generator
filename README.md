@@ -1,6 +1,6 @@
 # Kam Team Lead Generator
 
-A real estate lead generator for finding and working sellers, buyers, probate, inherited, pre-foreclosure, expired, FSBO and absentee-owner leads on a live satellite map. Leads are scored, tracked through a pipeline, and synced to GoHighLevel (GHL). Team members sign in before they can use it.
+A real estate lead generator for finding and working sellers, buyers, probate, inherited, pre-foreclosure, expired, FSBO and absentee-owner leads on a live satellite map. Leads are scored, tracked through a pipeline with a full contact history, and synced to GoHighLevel (GHL). Team members sign in before they can use it, their leads are saved to their account, and an AI support assistant answers questions inside the app.
 
 ## What's in the repo
 
@@ -9,13 +9,22 @@ A real estate lead generator for finding and working sellers, buyers, probate, i
 | `public/index.html` | The whole app (single page: map, lead table, prospecting, settings) |
 | `public/login.html` | Sign-in and create-account page |
 | `public/kam-team-logo.png` | Logo |
-| `server.js` | Node server: sign-in, hosts the app, relays leads to GHL at `/api/ghl` |
+| `server.js` | Node server: sign-in, hosts the app, lead sync, chat support, GHL relay |
 | `lib/users.js` | Accounts: password hashing and storage (Postgres or a JSON file) |
+| `lib/leads.js` | Each user's leads and contact history (Postgres or JSON files) |
+| `lib/chat.js` | AI chat support (Claude): support instructions and streaming replies |
+| `lib/db.js` | Shared Postgres connection |
 | `test/` | Tests (`npm test`) |
 | `.env.example` | Environment variable template |
 | `Dockerfile`, `render.yaml` | Deployment configs |
 
-The server needs Node 18.17 or newer. Its only npm dependency is `pg`, the Postgres driver.
+The server needs Node 18.17 or newer. Its npm dependencies are `pg` (Postgres driver) and `@anthropic-ai/sdk` (chat support).
+
+```
+browser (public/index.html) ──▶ server.js ──▶ Postgres: kam_users, kam_leads
+         │  /auth/*  /api/leads  /api/chat  /api/ghl      ├──▶ Claude API (chat support)
+         └─ keeps an offline copy of the user's leads     └──▶ GoHighLevel webhook
+```
 
 ## Quick start
 
@@ -47,7 +56,25 @@ You can also open `public/index.html` directly with no server. In that case the 
 
 **On Render's free plan you need `DATABASE_URL`.** Free services have no persistent disk, so a `users.json` file is wiped on every deploy or restart and everyone would have to sign up again. Any Postgres works: for example, create a Render Postgres database or a free one at another provider, and paste its connection string into `DATABASE_URL`.
 
-Leads themselves are still saved in each person's browser (see below). Signing in controls who can open the app; it doesn't move leads to the server.
+Each user's leads are saved in the same place, in `kam_leads` or `DATA_DIR/leads/` (see [Leads and contact history](#leads-and-contact-history)).
+
+## Leads and contact history
+
+- **Saved to your account.** Leads belong to the signed-in user and sync to every device they sign in on. Each user only sees their own leads. The browser keeps a copy, so the app opens instantly and keeps working offline; changes upload in the background. The top bar shows **Saved**, **Saving…** or **Offline · saved on this device**.
+- **Conflicts:** each lead carries an `updated` time and the newer copy wins. Deleted leads leave a marker so a stale copy on another device can't bring them back.
+- **First sign-in:** leads saved in that browser before accounts existed are moved into the first account that signs in there.
+- **Log contact:** in a lead's panel, record a call, text, email, meeting or note with an outcome (Connected, Left voicemail, No answer, Wrong number, Not interested, Appointment set) and a note. Logging a contact moves a New lead to Contacted, and "Appointment set" moves it to Appointment. The Call, Text and Email buttons log automatically.
+- **History:** the **History** button opens every contact and change across all leads, newest first, with today/7-day counts, filters (contacts, calls, texts, emails, meetings, notes, status changes, GHL), date ranges, search, and **Export CSV**. Click an entry to open the lead. Each entry records who logged it.
+- Each lead keeps its latest 200 history entries.
+
+## Chat support
+
+A **Support** button in the bottom-right corner opens Kam, an AI assistant built on Claude. It knows how the app works (setup, GHL troubleshooting, lead scoring, imports, history) and can help with prospecting and follow-up, with Do Not Call / TCPA reminders. It sees a summary of the user's pipeline (counts by status and type), not their contacts' details.
+
+- Turn it on by setting `ANTHROPIC_API_KEY`. Without it the button is hidden (or, if `SUPPORT_EMAIL` is set, shows a "contact our team" link).
+- `SUPPORT_EMAIL` adds an "Email support" link and tells the assistant where to send people who need a human.
+- The default model is `claude-opus-5-5` (set `CHAT_MODEL` to change it). Requests use low effort for quick replies, and server-side refusal fallback (`fallbacks: "default"`) so a safety decline is retried on a fallback model.
+- Each user can send 30 messages per 10 minutes (`CHAT_MESSAGES_PER_10_MIN`). Conversations stay in the browser tab and are not stored on the server.
 
 ## How the relay keeps the webhook private
 
@@ -75,13 +102,21 @@ browser ──POST /api/ghl──▶ server.js ──POST──▶ GHL inbound w
 | `PORT` | no | Server port (default `3000`) |
 | `ALLOWED_ORIGINS` | no | Comma-separated extra origins allowed to call `/api/ghl` |
 | `API_KEY` | no | Lets outside tools call `/api/ghl` with an `X-API-Key` header |
+| `ANTHROPIC_API_KEY` | for chat | Turns on AI chat support |
+| `SUPPORT_EMAIL` | no | Human support address shown in the chat |
+| `CHAT_MODEL` | no | Claude model for chat (default `claude-opus-5-5`) |
+| `CHAT_MESSAGES_PER_10_MIN` | no | Chat messages per user per 10 minutes (default `30`) |
 | `RATE_LIMIT_PER_MIN` | no | Relay requests per IP per minute (default `60`) |
 | `AUTH_ATTEMPTS_PER_15_MIN` | no | Sign-in and sign-up attempts per IP per 15 minutes (default `20`) |
 | `NODE_ENV` | no | Set to `production` to send the HSTS header |
 
 ## Where data is stored
 
-Leads and settings are stored in the browser's `localStorage` (`kamteam.leads.v2`, `kamteam.settings.v1`). They don't move between browsers or devices, and clearing site data deletes them. Use **Backup** in the sidebar to export JSON or CSV regularly.
+- Accounts and leads (with contact history): on the server, as above.
+- App settings (signature, map keys, GHL options) and an offline copy of the user's leads: the browser's `localStorage`.
+- When `public/index.html` is opened as a plain file with no server, leads live only in that browser (`kamteam.leads.v2`).
+
+Use **Backup** in the sidebar to export JSON or CSV for your own records.
 
 Optional integrations, all set up in **Settings**:
 - Google Maps API key: Google satellite tiles, Street View, and Google address and business search
@@ -93,7 +128,7 @@ Optional integrations, all set up in **Settings**:
 ### Render
 
 1. Create a new **Blueprint** from this repo. Render picks up `render.yaml`.
-2. Fill in `GHL_WEBHOOK_URL`, `ALLOWED_EMAILS` and `DATABASE_URL`. Render generates `SESSION_SECRET` for you. `ALLOWED_ORIGINS` and `API_KEY` are optional.
+2. Fill in `GHL_WEBHOOK_URL`, `ALLOWED_EMAILS`, `DATABASE_URL` and, for chat support, `ANTHROPIC_API_KEY` (plus `SUPPORT_EMAIL` if you like). Render generates `SESSION_SECRET` for you. `ALLOWED_ORIGINS` and `API_KEY` are optional.
 3. Deploy. Render checks `/api/health` to confirm the app is up.
 
 ### Docker

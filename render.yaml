@@ -23,3 +23,7 @@ services:
         generateValue: true
       - key: DATABASE_URL
         sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: SUPPORT_EMAIL
+        sync: false

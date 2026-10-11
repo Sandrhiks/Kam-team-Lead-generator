@@ -10,6 +10,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const users = require("./lib/users");
+const leads = require("./lib/leads");
+const { createChat } = require("./lib/chat");
 
 loadDotEnv(path.join(__dirname, ".env"));
 
@@ -21,6 +23,8 @@ const ALLOWED_EMAILS = list(process.env.ALLOWED_EMAILS).map(s => s.toLowerCase()
 const SESSION_DAYS = Number(process.env.SESSION_DAYS) || 7;
 const PUBLIC_DIR = path.join(__dirname, "public");
 const MAX_BODY = 64 * 1024;
+const MAX_SYNC_BODY = 4 * 1024 * 1024;
+const SUPPORT_EMAIL = (process.env.SUPPORT_EMAIL || "").trim();
 const UPSTREAM_TIMEOUT_MS = 10000;
 const COOKIE = "kt_session";
 
@@ -35,9 +39,16 @@ if (GHL_WEBHOOK_URL && !/^https:\/\//.test(GHL_WEBHOOK_URL)) {
   process.exit(1);
 }
 
-const store = users.createStore({
+const storage = {
   databaseUrl: process.env.DATABASE_URL,
   dataDir: process.env.DATA_DIR || path.join(__dirname, "data"),
+};
+const store = users.createStore(storage);
+const leadStore = leads.createLeadStore(storage);
+const chat = createChat({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+  model: process.env.CHAT_MODEL || "claude-opus-5-5",
+  supportEmail: SUPPORT_EMAIL,
 });
 
 // Pages and files anyone may load without signing in.
@@ -118,6 +129,7 @@ function makeLimiter(windowMs, max) {
 }
 const relayLimited = makeLimiter(60000, Number(process.env.RATE_LIMIT_PER_MIN) || 60);
 const authLimited = makeLimiter(15 * 60000, Number(process.env.AUTH_ATTEMPTS_PER_15_MIN) || 20);
+const chatLimited = makeLimiter(10 * 60000, Number(process.env.CHAT_MESSAGES_PER_10_MIN) || 30);
 
 function sameOrigin(req) {
   const origin = req.headers.origin;
@@ -141,13 +153,13 @@ function applyCors(req, res) {
   }
 }
 
-function readBody(req) {
+function readBody(req, limit = MAX_BODY) {
   return new Promise((resolve, reject) => {
     let size = 0;
     const chunks = [];
     req.on("data", c => {
       size += c.length;
-      if (size > MAX_BODY) { reject(Object.assign(new Error("Payload too large"), { status: 413 })); req.destroy(); return; }
+      if (size > limit) { reject(Object.assign(new Error("Payload too large"), { status: 413 })); req.destroy(); return; }
       chunks.push(c);
     });
     req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
@@ -155,9 +167,9 @@ function readBody(req) {
   });
 }
 
-async function readJsonObject(req) {
+async function readJsonObject(req, limit) {
   let v;
-  try { v = JSON.parse(await readBody(req)); } catch (e) {
+  try { v = JSON.parse(await readBody(req, limit)); } catch (e) {
     throw Object.assign(new Error(e.status ? e.message : "Body must be JSON"), { status: e.status || 400 });
   }
   if (!v || typeof v !== "object" || Array.isArray(v)) {
@@ -295,6 +307,44 @@ async function handleRelay(req, res, user) {
   }
 }
 
+// GET /api/leads returns all of the user's leads (and tombstones for deleted ones).
+// POST /api/leads/sync { upsert: [lead...], delete: [id...] } saves changes; the newer copy wins.
+async function handleLeads(req, res, pathname, user) {
+  if (!user) return sendJson(res, 401, { ok: false, error: "Sign in first" });
+  if (!sameOrigin(req)) return sendJson(res, 403, { ok: false, error: "Origin not allowed" });
+  if (pathname === "/api/leads" && req.method === "GET") {
+    return sendJson(res, 200, { ok: true, leads: await leadStore.list(user.email), now: Date.now() });
+  }
+  if (pathname !== "/api/leads/sync") return sendJson(res, 404, { ok: false, error: "Not found" });
+  if (req.method !== "POST") return sendJson(res, 405, { ok: false, error: "Method not allowed" });
+
+  const body = await readJsonObject(req, MAX_SYNC_BODY);
+  const upsert = Array.isArray(body.upsert) ? body.upsert : [];
+  const del = Array.isArray(body.delete) ? body.delete : [];
+  if (upsert.length + del.length > 1000) return sendJson(res, 413, { ok: false, error: "Send at most 1000 changes at a time" });
+  const records = [];
+  for (const lead of upsert) {
+    const r = leads.checkLead(lead);
+    if (typeof r === "string") return sendJson(res, 400, { ok: false, error: r });
+    records.push(r);
+  }
+  if (!del.every(id => typeof id === "string" && /^[\w-]{1,64}$/.test(id))) {
+    return sendJson(res, 400, { ok: false, error: "Invalid lead id to delete" });
+  }
+  const result = await leadStore.apply(user.email, records, del, Date.now());
+  return sendJson(res, 200, { ok: true, ...result });
+}
+
+async function handleChat(req, res, user) {
+  if (!user) return sendJson(res, 401, { ok: false, error: "Sign in first" });
+  if (!sameOrigin(req)) return sendJson(res, 403, { ok: false, error: "Origin not allowed" });
+  if (req.method !== "POST") return sendJson(res, 405, { ok: false, error: "Method not allowed" });
+  if (!chat) return sendJson(res, 503, { ok: false, error: "Chat support isn't set up yet. Ask your admin to add ANTHROPIC_API_KEY." });
+  if (chatLimited(user.email)) return sendJson(res, 429, { ok: false, error: "You're sending messages quickly. Wait a few minutes and try again." });
+  const body = await readJsonObject(req, 256 * 1024);
+  return chat.stream(req, res, user, body);
+}
+
 function serveFile(req, res, rel) {
   if (req.method !== "GET" && req.method !== "HEAD") { res.writeHead(405); return res.end(); }
   if (rel.endsWith("/")) rel += "index.html";
@@ -326,6 +376,12 @@ async function route(req, res) {
 
   const user = await currentUser(req);
   if (pathname === "/api/ghl") return handleRelay(req, res, user);
+  if (pathname === "/api/leads" || pathname === "/api/leads/sync") return handleLeads(req, res, pathname, user);
+  if (pathname === "/api/chat") return handleChat(req, res, user);
+  if (pathname === "/api/support") {
+    if (!user) return sendJson(res, 401, { ok: false, error: "Sign in first" });
+    return sendJson(res, 200, { ok: true, chat: !!chat, email: SUPPORT_EMAIL });
+  }
   if (pathname.startsWith("/api/")) return sendJson(res, 404, { ok: false, error: "Not found" });
 
   if (pathname === "/login" || pathname === "/login.html") {
@@ -346,7 +402,7 @@ const server = http.createServer((req, res) => {
     if (!res.headersSent) sendJson(res, 500, { ok: false, error: "Server error" });
   });
 });
-server.ready = store.init();
+server.ready = Promise.all([store.init(), leadStore.init()]);
 
 if (require.main === module) {
   server.ready.then(() => {
@@ -355,6 +411,7 @@ if (require.main === module) {
       console.log(`Accounts stored in: ${store.kind}`);
       console.log(GHL_WEBHOOK_URL ? "GHL relay: enabled at /api/ghl" : "GHL relay: disabled (set GHL_WEBHOOK_URL)");
       if (!ALLOWED_EMAILS.length) console.warn("ALLOWED_EMAILS not set: only the first account can be created");
+      console.log(chat ? `Chat support: on (${chat.model})` : "Chat support: off (set ANTHROPIC_API_KEY)");
     });
   }).catch(e => {
     console.error("Couldn't open the account store:", e.message);
