@@ -32,7 +32,7 @@ You can also open `public/index.html` directly with no server. In that case the 
 ## Sign-in
 
 - Every page and API call needs a signed-in user. The only exceptions are the sign-in page, the logo and `/api/health`.
-- **Who can create an account:** list approved emails or whole domains in `ALLOWED_EMAILS`, for example `sandy@kam-team.com,@kam-team.com`. People who aren't on the list can't sign up. If the list is empty, only the very first account can be created, so set the list before sharing the link.
+- **Who can create an account:** list approved emails or whole domains in `ALLOWED_EMAILS`, for example `sandy@kam-team.com,@kam-team.com`, or `*` to let anyone sign up. People who aren't on the list can't sign up. If the list is empty, only the very first account can be created, so set the list before sharing the link.
 - **Passwords** must be at least 8 characters. They're stored hashed with scrypt, never in plain text.
 - **Sessions** last `SESSION_DAYS` (default 7) in an HttpOnly cookie signed with `SESSION_SECRET`. Keep that secret the same: changing it signs everyone out.
 - Sign-in and sign-up attempts are limited to 20 per IP address per 15 minutes.
@@ -67,7 +67,7 @@ browser ──POST /api/ghl──▶ server.js ──POST──▶ GHL inbound w
 | Variable | Required | Description |
 | --- | --- | --- |
 | `GHL_WEBHOOK_URL` | yes, for sync | Your GHL inbound webhook URL (must be `https://`) |
-| `ALLOWED_EMAILS` | yes | Emails and `@domains` allowed to create an account |
+| `ALLOWED_EMAILS` | yes | Emails and `@domains` allowed to create an account, or `*` for anyone |
 | `SESSION_SECRET` | yes, in production | Long random string that signs sign-in cookies |
 | `DATABASE_URL` | yes, on Render free | Postgres connection string for accounts |
 | `DATA_DIR` | no | Folder for `users.json` when there's no database (default `./data`) |
