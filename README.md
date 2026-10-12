@@ -1,6 +1,6 @@
 # Kam Team Graphic Designer AI
 
-A web app for making on-brand Kam Team graphics with AI. It lives on its own `design-studio` branch, separate from the Lead Generator. People sign in with a one-time code sent to their email, describe what they need, and an AI design agent builds it on the canvas. Every design follows the team's [Design SOP](docs/SOP.md) (Brief → Create → Review → Approve → Export) and downloads as PNG, JPG, PDF, SVG or an editable source file.
+A web app for making on-brand Kam Team graphics with AI. It lives on its own `graphic-designer-ai` branch, separate from the Lead Generator. People sign in with a one-time code sent to their email, describe what they need, and an AI design agent builds it on the canvas. Every design follows the team's [Design SOP](docs/SOP.md) (Brief → Create → Review → Approve → Export) and downloads as PNG, JPG, PDF, SVG or an editable source file.
 
 ## Features
 
@@ -100,7 +100,7 @@ The browser sends the conversation, the current design (with image pixels swappe
 
 **Render (one click):** `render.yaml` on this branch creates the web service and a Postgres database, wires `DATABASE_URL`, and generates `SESSION_SECRET`.
 
-1. In Render: **New → Blueprint**, connect the `Kam-team-Lead-generator` repo, and pick the **`design-studio`** branch.
+1. In Render: **New → Blueprint**, connect the `Kam-team-Lead-generator` repo, and pick the **`graphic-designer-ai`** branch.
 2. Fill in the prompted values: `ALLOWED_EMAILS` (e.g. `@kam-team.com`), one email option (`RESEND_API_KEY` + `MAIL_FROM`, or `MAIL_WEBHOOK_URL`), `ANTHROPIC_API_KEY`, and optionally `OPENAI_API_KEY` and `SUPPORT_EMAIL`. Leave the rest empty.
 3. Click **Apply**. When the deploy is live, open the `.onrender.com` URL and sign in.
 
