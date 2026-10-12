@@ -1,6 +1,6 @@
 "use strict";
 
-// Kam Team Design Studio: static host + email one-time-code sign-in + designs API +
+// Kam Team Graphic Designer AI: static host + email one-time-code sign-in + designs API +
 // AI assistant (Claude) + optional image generation + support tickets.
 // Every page and API call needs a signed-in user, except the sign-in page itself.
 
@@ -38,7 +38,7 @@ if (!SESSION_SECRET) {
 const store = createStore({ databaseUrl: process.env.DATABASE_URL, dataDir: process.env.DATA_DIR || path.join(__dirname, "data") });
 const mailer = createMailer({
   resendKey: process.env.RESEND_API_KEY,
-  from: process.env.MAIL_FROM || "Kam Team Design Studio <onboarding@resend.dev>",
+  from: process.env.MAIL_FROM || "Kam Team Graphic Designer AI <onboarding@resend.dev>",
   webhookUrl: process.env.MAIL_WEBHOOK_URL,
   production: PRODUCTION,
 });
@@ -226,7 +226,7 @@ async function handleAuth(req, res, pathname) {
     if (!validEmail(email)) return err(res, 400, "Enter a valid email address.");
     const existing = await store.getUser(email);
     if (!existing && !(await signupAllowed(email))) {
-      return err(res, 403, "This email isn't approved for the Design Studio. Ask your admin to add it.");
+      return err(res, 403, "This email isn't approved for the Graphic Designer AI. Ask your admin to add it.");
     }
     if (codeEmailLimited(email)) return err(res, 429, "Too many codes for this email. Try again in an hour.");
     const r = await otp.issue(email);
@@ -245,7 +245,7 @@ async function handleAuth(req, res, pathname) {
     const now = Date.now();
     if (!user) {
       // The code proves the email; check approval again in case the list changed meanwhile.
-      if (!(await signupAllowed(email))) return err(res, 403, "This email isn't approved for the Design Studio.");
+      if (!(await signupAllowed(email))) return err(res, 403, "This email isn't approved for the Graphic Designer AI.");
       user = { email, name: String(body.name || "").trim().slice(0, 100), created: now, sv: 0 };
       console.log(`New account: ${email}`);
     }
@@ -345,7 +345,7 @@ async function handleTickets(req, res, user) {
     try {
       await mailer.send({
         to: SUPPORT_EMAIL,
-        subject: `[Design Studio ${ticket.id}] ${subject}`,
+        subject: `[Graphic Designer AI ${ticket.id}] ${subject}`,
         text: `From: ${user.name || ""} <${user.email}>\nCategory: ${category}\n\n${message}`,
         html: `<p><b>From:</b> ${esc(user.name || "")} &lt;${esc(user.email)}&gt;<br><b>Category:</b> ${esc(category)}</p><p style="white-space:pre-wrap">${esc(message)}</p>`,
       });
@@ -455,7 +455,7 @@ server.ready = store.init();
 if (require.main === module) {
   server.ready.then(() => {
     server.listen(PORT, () => {
-      console.log(`Kam Team Design Studio on http://localhost:${PORT}`);
+      console.log(`Kam Team Graphic Designer AI on http://localhost:${PORT}`);
       console.log(`Storage: ${store.kind}`);
       console.log(`Sign-in emails: ${mailer.kind}${mailer.kind === "console" ? " (codes are printed here; set RESEND_API_KEY or MAIL_WEBHOOK_URL)" : ""}`);
       if (mailer.kind === "none") console.warn("No email provider: nobody can sign in. Set RESEND_API_KEY or MAIL_WEBHOOK_URL.");

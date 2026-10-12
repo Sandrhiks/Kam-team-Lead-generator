@@ -1,6 +1,6 @@
 # Kam Team Design SOP
 
-This is the standard operating procedure every graphic follows in the Kam Team Design Studio. The studio enforces it: each design carries its SOP stage, a checklist per stage, and an automatic brand check. The AI assistant works inside the same procedure.
+This is the standard operating procedure every graphic follows in the Kam Team Graphic Designer AI. The app enforces it: each design carries its SOP stage, a checklist per stage, and an automatic brand check. The AI assistant works inside the same procedure.
 
 ```
 Brief ──▶ Create ──▶ Review ──▶ Approve ──▶ Export
@@ -15,7 +15,7 @@ Brief ──▶ Create ──▶ Review ──▶ Approve ──▶ Export
 | Role | Does |
 | --- | --- |
 | **Requester** (agent or marketing) | Writes the brief, gives facts (address, price, dates, DRE #). |
-| **Designer** (anyone using the studio, with the AI assistant) | Builds the design from a template, runs the brand check. |
+| **Designer** (anyone using the app, with the AI assistant) | Builds the design from a template, runs the brand check. |
 | **Approver** (team lead or broker) | Checks facts and compliance, signs off. Only a person can approve; the AI never does. |
 
 ## 1. Brief
@@ -27,7 +27,7 @@ Agree on what the design must do before anyone designs it.
 - [ ] **Key message and call to action written.** One message, one call to action.
 - [ ] **Canvas size matches the channel.** Use a template or a size preset.
 
-In the studio: *Workflow → Brief*, or tell the AI assistant what you need and it fills in the brief.
+In the app: *Workflow → Brief*, or tell the AI assistant what you need and it fills in the brief.
 
 ## 2. Create
 
@@ -69,7 +69,7 @@ Download in the right format and file it.
 | Editing later | Source `.kamdesign.json` (Home → Import) |
 
 - [ ] **Right format** chosen.
-- [ ] **File named** `channel_campaign_date` (the studio names files `design-name_YYYY-MM-DD` automatically).
+- [ ] **File named** `channel_campaign_date` (the app names files `design-name_YYYY-MM-DD` automatically).
 - [ ] **Source saved** with the export.
 
 ## AI rules
@@ -77,6 +77,6 @@ Download in the right format and file it.
 1. AI is a helper, not a source of facts. Prices, addresses, statistics and license numbers come from people.
 2. Use AI images for mood, concepts and backgrounds. Listing photos must show the real property.
 3. Never generate images of real people or of a specific real home.
-4. Check each AI tool's license terms before commercial use (see *AI Tools* in the studio).
+4. Check each AI tool's license terms before commercial use (see *AI Tools* in the app).
 5. Disclose AI-generated or virtually staged imagery where MLS or platform rules require it.
-6. Add headlines and text in the studio, not inside AI images, so they stay sharp and on brand.
+6. Add headlines and text in the app, not inside AI images, so they stay sharp and on brand.

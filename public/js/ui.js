@@ -31,7 +31,7 @@ export async function api(path, { method = "GET", body, signal } = {}) {
     });
   } catch (e) {
     if (e.name === "AbortError") throw e;
-    throw new ApiError("Couldn't reach the studio. Check your connection.", 0);
+    throw new ApiError("Couldn't reach the server. Check your connection.", 0);
   }
   const j = await r.json().catch(() => ({}));
   if (r.status === 401 && !path.startsWith("/auth/")) { location.href = "/login"; throw new ApiError("Signed out", 401); }

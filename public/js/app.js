@@ -1,4 +1,4 @@
-// Studio shell: routing, Home, Templates, AI Tools (guide + Prompt Builder),
+// App shell: routing, Home, Templates, AI Tools (guide + Prompt Builder),
 // Assistant (ChatGPT-style chat), Support (help center + tickets).
 import { $, $$, esc, h, uid, api, stream, toast, modal, confirmBox, promptBox, md, timeAgo, copyText, store } from "./ui.js";
 import { renderSVG } from "./render.js";
@@ -14,7 +14,7 @@ async function boot() {
     const [cat, cfg] = await Promise.all([api("/api/catalog"), api("/api/config")]);
     ctx.catalog = cat; ctx.config = cfg;
   } catch (e) {
-    view.innerHTML = `<div class="page"><div class="empty"><b>Couldn't load the studio.</b><p>${esc(e.message)}</p><a class="btn" href="/">Try again</a></div></div>`;
+    view.innerHTML = `<div class="page"><div class="empty"><b>Couldn't load the app.</b><p>${esc(e.message)}</p><a class="btn" href="/">Try again</a></div></div>`;
     return;
   }
   const u = ctx.config.user;
@@ -322,7 +322,7 @@ function tools(arg) {
         <div class="row2"><div class="field"><label>Style</label>${sel("style", STYLES)}</div><div class="field"><label>Lighting</label>${sel("light", LIGHTS)}</div></div>
         <div class="row2"><div class="field"><label>Camera</label>${sel("camera", CAMERAS)}</div><div class="field"><label>Aspect</label><select data-p="aspect">${Object.entries(ASPECTS).map(([v, l]) => `<option value="${v}" ${P.aspect === v ? "selected" : ""}>${l}</option>`).join("")}</select></div></div>
         <div class="field"><label>Mood</label><input data-p="mood" value="${esc(P.mood)}" placeholder="e.g. calm, premium, welcoming"></div>
-        <div class="field"><label>Text in the image (Ideogram, GPT Image)</label><input data-p="text" value="${esc(P.text)}" placeholder="Leave empty; add text in the studio instead"></div>
+        <div class="field"><label>Text in the image (Ideogram, GPT Image)</label><input data-p="text" value="${esc(P.text)}" placeholder="Leave empty; add text in the app instead"></div>
         <div class="field"><label>Motion (video tools)</label><input data-p="motion" value="${esc(P.motion)}" placeholder="e.g. slow push-in toward the front door"></div>
         <div class="field"><label>Avoid</label><input data-p="exclude" value="${esc(P.exclude)}"></div>
       </form>
@@ -335,7 +335,7 @@ function tools(arg) {
         <div id="pbImg"></div>
         <div class="pbtips"><h4>Tips</h4><ul>
           <li>Front-load the subject; add style, light and camera after it.</li>
-          <li>Keep text out of AI images. Add headlines in the studio, where they stay sharp and on-brand.</li>
+          <li>Keep text out of AI images. Add headlines in the app, where they stay sharp and on-brand.</li>
           <li>For listings, use AI for mood and concept images only. Real listing photos must show the real property.</li>
           <li>Upscale AI images before using them in print templates.</li></ul></div>
       </div></div>`;
@@ -395,7 +395,7 @@ async function chat(chatId) {
     ["Write captions", "Write 3 Instagram captions for a just-listed 4 bed home with ocean views. Include a call to action and hashtags."],
     ["Pick an AI tool", "I need a lifestyle image of a family kitchen for a flyer. Which AI tool should I use and what prompt?"],
     ["Plan a campaign", "Plan a 2-week social campaign for an open house, with a post for each day and which template to use."],
-    ["Learn the SOP", "Walk me through the Design Studio SOP from brief to export."],
+    ["Learn the SOP", "Walk me through the Graphic Designer AI SOP from brief to export."],
     ["Fix sign-in", "My sign-in code isn't arriving. What should I do?"],
     ["Brand rules", "Summarize the Kam Team brand rules I need to follow."],
   ];
@@ -404,7 +404,7 @@ async function chat(chatId) {
     const msgs = cur ? cur.messages : [];
     $("#chatTitle").textContent = cur && cur.title ? cur.title : "New chat";
     if (!msgs.length && !live) {
-      col.innerHTML = `<div class="chatempty"><svg class="bigmark"><use href="#kam"/></svg><h2>How can I help?</h2><p class="muted">Ask about the studio, brand, campaigns, copy or AI tools.</p>
+      col.innerHTML = `<div class="chatempty"><svg class="bigmark"><use href="#kam"/></svg><h2>How can I help?</h2><p class="muted">Ask about the app, brand, campaigns, copy or AI tools.</p>
         <div class="sugg">${suggestions.map(([t, q]) => `<button class="suggcard" data-q="${esc(q)}"><b>${esc(t)}</b><span>${esc(q)}</span></button>`).join("")}</div></div>`;
       return;
     }
@@ -500,7 +500,7 @@ async function chat(chatId) {
 /* ---------------- Support ---------------- */
 const FAQ = [
   ["How do I sign in?", "Enter your work email on the sign-in page. We email you a 6-digit code that works for 10 minutes. Type it in and you're signed in for 7 days on that device. No password to remember."],
-  ["My code didn't arrive", "Check spam and promotions folders, and make sure the email is spelled right. You can request a new code after 30 seconds. If your email isn't approved for the studio, the sign-in page will say so; ask your admin to add it."],
+  ["My code didn't arrive", "Check spam and promotions folders, and make sure the email is spelled right. You can request a new code after 30 seconds. If your email isn't approved for the app, the sign-in page will say so; ask your admin to add it."],
   ["How do I sign out?", "Click your initials (top right) and choose Sign out. \"Sign out of all devices\" ends every session, for example if you lost a phone or used a shared computer."],
   ["Are my designs saved?", "Yes. Designs save to your account automatically a moment after each change, and follow you to any device you sign in on. The editor shows Saved / Saving… next to the Download button."],
   ["Which format should I download?", "PNG for social media and the web, PNG @2x for extra-sharp screens, JPG for smaller files, PDF for printing (print templates export at 300 DPI), and SVG for vector use. Also keep the .kamdesign.json source so the design can be edited later."],
@@ -513,10 +513,10 @@ const FAQ = [
 async function support() {
   const { catalog, config } = ctx;
   view.innerHTML = `<div class="page">
-    <div class="sechead"><div><h1>Support</h1><p class="muted">Answers, the studio SOP, and a direct line to the team.</p></div></div>
+    <div class="sechead"><div><h1>Support</h1><p class="muted">Answers, the app SOP, and a direct line to the team.</p></div></div>
     <div class="supgrid">
       <section>
-        <div class="askcard"><div><b>Ask Kam, the AI assistant</b><p class="muted">Instant answers about the studio, brand rules, AI tools and campaigns.</p></div><a class="btn primary" href="#/chat">Start a chat</a></div>
+        <div class="askcard"><div><b>Ask Kam, the AI assistant</b><p class="muted">Instant answers about the app, brand rules, AI tools and campaigns.</p></div><a class="btn primary" href="#/chat">Start a chat</a></div>
         <h2>Frequently asked</h2>
         <input id="faqQ" placeholder="Search help" aria-label="Search help">
         <div class="faq" id="faq"></div>

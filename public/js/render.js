@@ -211,7 +211,7 @@ export async function renderPDF(d, opts) {
   obj(3, () => push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`));
   obj(4, () => { push(`<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`); push(jpeg); push("\nendstream"); });
   obj(5, () => push(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`));
-  obj(6, () => push(`<< /Title (${d.name.replace(/[()\\]/g, "")}) /Producer (Kam Team Design Studio) >>`));
+  obj(6, () => push(`<< /Title (${d.name.replace(/[()\\]/g, "")}) /Producer (Kam Team Graphic Designer AI) >>`));
   const xref = size;
   push(`xref\n0 7\n0000000000 65535 f \n${offsets.slice(1).map(o => String(o).padStart(10, "0") + " 00000 n \n").join("")}`);
   push(`trailer\n<< /Size 7 /Root 1 0 R /Info 6 0 R >>\nstartxref\n${xref}\n%%EOF`);

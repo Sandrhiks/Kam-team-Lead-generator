@@ -1,4 +1,4 @@
-# Kam Team Design Studio
+# Kam Team Graphic Designer AI
 
 A web app for making on-brand Kam Team graphics with AI. It lives on its own `design-studio` branch, separate from the Lead Generator. People sign in with a one-time code sent to their email, describe what they need, and an AI design agent builds it on the canvas. Every design follows the team's [Design SOP](docs/SOP.md) (Brief → Create → Review → Approve → Export) and downloads as PNG, JPG, PDF, SVG or an editable source file.
 
@@ -12,8 +12,8 @@ A web app for making on-brand Kam Team graphics with AI. It lives on its own `de
 | **Templates** | 12 on-brand starters: Just Listed, Open House, New Listing Story, Just Sold, Market Update, Facebook cover, LinkedIn banner, newsletter header, YouTube thumbnail, listing flyer (300 DPI), business card, presentation slide. Each lists the best AI tools and prompt starters. |
 | **SOP workflow** | Stage stepper, per-stage checklists, the brief, approver, and an automatic **brand check** (contrast, palette, fonts, logo, placeholders, margins, text size, DRE reminder) with a score. |
 | **AI Tools guide** | When to use Claude, GPT Image, Midjourney, Adobe Firefly, Ideogram, Recraft, FLUX, Gemini, Canva, Photoshop Generative Fill, upscalers, background removal and video tools, with strengths, watch-outs and prompt tips. |
-| **Prompt Builder** | Builds a prompt formatted for the chosen tool (Midjourney parameters, Ideogram text, video motion, and so on). Copy it, ask the assistant to improve it, or generate it in the studio. |
-| **Assistant** | A ChatGPT-style chat: saved conversations (search, pin, rename, delete), streaming answers with markdown, copy and regenerate. Knows the studio, the brand, the SOP and the tool guide. |
+| **Prompt Builder** | Builds a prompt formatted for the chosen tool (Midjourney parameters, Ideogram text, video motion, and so on). Copy it, ask the assistant to improve it, or generate it in the app. |
+| **Assistant** | A ChatGPT-style chat: saved conversations (search, pin, rename, delete), streaming answers with markdown, copy and regenerate. Knows the app, the brand, the SOP and the tool guide. |
 | **Support** | Searchable FAQ, the SOP, and support tickets that are saved and emailed to `SUPPORT_EMAIL`. |
 | **Downloads** | PNG, PNG @2x, JPG, PDF (one page, 300 DPI for print templates), SVG, and `.kamdesign.json` (re-import from Home). |
 | **Brand** | Kam Team monochrome palette, Archivo + Inter, the chevron mark, light and dark themes, works on phones. |
@@ -28,7 +28,7 @@ npm start
 
 Open http://localhost:3000 and sign in with an approved email. With no email provider configured (and `NODE_ENV` not `production`), the code is printed in the server log so you can try it locally.
 
-To turn on AI, set `ANTHROPIC_API_KEY`. To generate images inside the studio, also set `OPENAI_API_KEY`. Without them, everything else still works and the AI buttons explain what's missing.
+To turn on AI, set `ANTHROPIC_API_KEY`. To generate images inside the app, also set `OPENAI_API_KEY`. Without them, everything else still works and the AI buttons explain what's missing.
 
 ## How it fits together
 
@@ -109,8 +109,8 @@ The Blueprint uses Render's free plans: the web service sleeps when idle (the fi
 **Docker:**
 
 ```bash
-docker build -t kam-team-design-studio .
-docker run -p 3000:3000 --env-file .env -v kds-data:/app/data kam-team-design-studio
+docker build -t kam-team-graphic-designer-ai .
+docker run -p 3000:3000 --env-file .env -v kds-data:/app/data kam-team-graphic-designer-ai
 ```
 
 Put it behind HTTPS (Nginx, Cloudflare, or your host's TLS). The server reads `X-Forwarded-For` and `X-Forwarded-Proto` for rate limits and secure cookies.

@@ -63,7 +63,7 @@ test("a wrong code is rejected, the right one signs in and creates the account",
   assert.strictEqual((await verify("agent@kam.test", code)).status, 401);
   const r = await t.req("/", { cookie: t.cookieOf(ok) });
   assert.strictEqual(r.status, 200);
-  assert.match(await r.text(), /Design Studio/);
+  assert.match(await r.text(), /Graphic Designer AI/);
 });
 
 test("five wrong guesses burn the code", async () => {

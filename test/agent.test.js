@@ -82,7 +82,7 @@ test("design mode runs tools on the design and returns the result", async () => 
   assert.deepStrictEqual(first.body.output_config, { effort: "medium" });
   assert.ok(first.body.tools.every(x => x.eager_input_streaming === true));
   assert.ok(!first.body.tools.some(x => x.name === "generate_image")); // no image key configured
-  assert.match(first.body.system[0].text, /Kam Team Design Studio/);
+  assert.match(first.body.system[0].text, /Kam Team Graphic Designer AI/);
   assert.match(first.body.system[0].text, /AI tool guide/);
   assert.match(first.body.system[1].text, /Sam Agent/);
   const content = first.body.messages[0].content;
