@@ -1,0 +1,36 @@
+# One-click Render Blueprint: the studio web service plus a Postgres database for accounts and designs.
+services:
+  - type: web
+    name: kam-team-design-studio
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kam-team-design-studio-db
+          property: connectionString
+      - key: ALLOWED_EMAILS
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: MAIL_WEBHOOK_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SUPPORT_EMAIL
+        sync: false
+
+databases:
+  - name: kam-team-design-studio-db
+    plan: free

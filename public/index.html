@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kam Team · Design Studio</title>
+<meta name="theme-color" content="#111111">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/kam-team-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Inter:wght@300..800&family=Playfair+Display:wght@400..900&family=Montserrat:wght@300..900&family=Bebas+Neue&family=DM+Serif+Display&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<script src="/js/theme.js"></script>
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="kam" viewBox="0 0 748 1098"><polygon fill="currentColor" points="374,0 748,403 628,515 374,242 120,515 0,403"/><polygon fill="currentColor" points="120,583 374,856 628,583 748,695 374,1098 0,695"/></symbol>
+</svg>
+
+<header class="top">
+  <a class="brand" href="#/" aria-label="Kam Team Design Studio home"><svg class="mark" aria-hidden="true"><use href="#kam"/></svg><span class="word">KAM TEAM<small>Design Studio</small></span></a>
+  <nav id="nav" aria-label="Main">
+    <a href="#/" data-page="home">Home</a>
+    <a href="#/templates" data-page="templates">Templates</a>
+    <a href="#/tools" data-page="tools">AI Tools</a>
+    <a href="#/chat" data-page="chat">Assistant</a>
+    <a href="#/support" data-page="support">Support</a>
+  </nav>
+  <div class="grow"></div>
+  <button class="btn ghost icon" id="theme" title="Switch light/dark theme" aria-label="Switch theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+  <div class="menu-wrap" id="acct">
+    <button class="avatar" id="acctBtn" aria-haspopup="true" aria-label="Account"><span id="avatar">··</span></button>
+    <div class="menu right hidden" id="acctMenu">
+      <div class="acctinfo"><b id="acctName"></b><small id="acctEmail"></small></div>
+      <hr>
+      <a href="#/support">Help & support</a>
+      <button id="signOut">Sign out</button>
+      <button id="signOutAll">Sign out of all devices</button>
+    </div>
+  </div>
+</header>
+
+<main id="view"><div class="loading">Loading the studio…</div></main>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<script src="/js/design.js"></script>
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

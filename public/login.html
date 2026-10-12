@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kam Team · Design Studio sign in</title>
+<meta name="theme-color" content="#111111">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/kam-team-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="/js/theme.js"></script>
+<link rel="stylesheet" href="/css/base.css">
+<style>
+body{min-height:100vh;min-height:100dvh;display:grid;grid-template-columns:1.1fr 1fr}
+.hero{background:#111;color:#F4F4F2;padding:56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;border-right:1px solid var(--line)}
+.hero .mark{color:#fff}
+.hero h2{font-size:clamp(34px,4.4vw,60px);line-height:1.02;font-weight:800;font-variation-settings:"wdth" 118;margin:0 0 18px;letter-spacing:-.01em;max-width:12ch}
+.hero p{color:#9C9C98;max-width:44ch;margin:0;font-family:var(--body);font-size:15.5px}
+.hero ul{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:10px;font-family:var(--body);font-size:14px;color:#C9C9C5}
+.hero li{display:flex;gap:10px;align-items:baseline}
+.hero li b{color:#fff;font-family:var(--font);font-weight:700;min-width:84px;letter-spacing:.06em;font-size:12px}
+.hero>*{position:relative;z-index:1}
+.hero .ghostmark{position:absolute;z-index:0;right:-120px;bottom:-160px;width:420px;height:617px;color:#181818;pointer-events:none}
+.side{display:flex;align-items:center;justify-content:center;padding:32px 16px;background:var(--bg)}
+.card{width:100%;max-width:400px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:28px 24px}
+h1{font-size:21px;font-weight:700;font-variation-settings:"wdth" 112;margin:0 0 4px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 18px;font-family:var(--body)}
+form{display:flex;flex-direction:column;gap:14px}
+.submit{padding:11px 14px;font-size:14.5px}
+.code{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.code input{text-align:center;font-size:24px;font-weight:700;padding:10px 0;font-family:var(--font)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px}
+.link{border:0;background:none;padding:0;color:var(--ink);font-weight:600;text-decoration:underline;cursor:pointer;font-size:13px}
+.link:disabled{color:var(--muted);text-decoration:none;cursor:default}
+.note{font-size:12.5px;color:var(--muted);font-family:var(--body)}
+.ok{color:var(--ok);font-size:13.5px}
+.ok:empty{display:none}
+@media (max-width:860px){body{grid-template-columns:1fr}.hero{display:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="kam" viewBox="0 0 748 1098"><polygon fill="currentColor" points="374,0 748,403 628,515 374,242 120,515 0,403"/><polygon fill="currentColor" points="120,583 374,856 628,583 748,695 374,1098 0,695"/></symbol>
+</svg>
+
+<aside class="hero" aria-hidden="true">
+  <div class="brand"><svg class="mark"><use href="#kam"/></svg><div class="word">KAM TEAM<small style="color:#9C9C98">Design Studio</small></div></div>
+  <div>
+    <h2>Design on brand, with AI by your side.</h2>
+    <p>Templates, an AI design agent that edits your canvas, and a workflow that takes every graphic from brief to approved download.</p>
+    <ul>
+      <li><b>CREATE</b>Describe it. The assistant builds the layout and writes the copy.</li>
+      <li><b>REVIEW</b>Brand, legibility and compliance checks before anything goes out.</li>
+      <li><b>EXPORT</b>PNG, JPG, PDF and SVG, ready for social, print and web.</li>
+    </ul>
+  </div>
+  <svg class="ghostmark"><use href="#kam"/></svg>
+</aside>
+
+<main class="side">
+  <div class="card">
+    <div class="brand" style="margin-bottom:22px"><svg class="mark" aria-hidden="true"><use href="#kam"/></svg><div class="word">KAM TEAM<small>Design Studio</small></div></div>
+
+    <section id="stepEmail">
+      <h1>Sign in</h1>
+      <p class="sub">Enter your email and we'll send you a 6-digit code. No password needed.</p>
+      <form id="fEmail" novalidate>
+        <div class="field"><label for="email">Work email</label><input type="email" id="email" autocomplete="email" inputmode="email" required></div>
+        <div class="err" id="eErr" role="alert"></div>
+        <button class="btn primary submit" type="submit" id="eBtn">Email me a code</button>
+      </form>
+      <p class="note" style="margin-top:16px">New here? Use the email your team admin approved. Your account is created the first time you sign in.</p>
+    </section>
+
+    <section id="stepCode" class="hidden">
+      <h1>Check your email</h1>
+      <p class="sub">We sent a code to <b id="sentTo"></b>. It expires in <span id="mins">10</span> minutes.</p>
+      <form id="fCode" novalidate>
+        <div class="field">
+          <label id="codeLbl">6-digit code</label>
+          <div class="code" id="code" role="group" aria-labelledby="codeLbl"></div>
+        </div>
+        <div class="field" id="newName" hidden><label for="name">Your name</label><input type="text" id="name" autocomplete="name" maxlength="100" placeholder="Shown on your account"></div>
+        <div class="err" id="cErr" role="alert"></div>
+        <div class="ok" id="cOk" role="status"></div>
+        <button class="btn primary submit" type="submit" id="cBtn">Sign in</button>
+        <div class="row">
+          <button type="button" class="link" id="back">Use a different email</button>
+          <button type="button" class="link" id="resend" disabled>Send a new code</button>
+        </div>
+      </form>
+      <p class="note hidden" id="devNote" style="margin-top:14px">Developer mode: no email provider is set up, so the code is printed in the server log.</p>
+    </section>
+  </div>
+</main>
+<script src="/js/login.js"></script>
+</body>
+</html>
