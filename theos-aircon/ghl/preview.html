@@ -294,6 +294,8 @@
 #theo-site .product__media{ position: relative; background: linear-gradient(160deg, var(--ice), #F6FAFE); aspect-ratio: 4 / 3; display: grid; place-items: center; }
 #theo-site .product__media img{ width: 82%; transition: transform .6s var(--ease); }
 #theo-site .product:hover .product__media img{ transform: scale(1.06) translateY(-4px); }
+#theo-site .product__media img.is-photo{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#theo-site .product:hover .product__media img.is-photo{ transform: scale(1.05); }
 #theo-site .badge{
   position: absolute; top: 14px; left: 14px; padding: 5px 12px; border-radius: 999px;
   font-size: .72rem; font-weight: 700; letter-spacing: .04em; background: var(--white); color: var(--blue); box-shadow: var(--shadow-sm);
@@ -413,7 +415,7 @@
 #theo-site .work__body{ padding: 18px 20px 20px; }
 #theo-site .work__body h3{ font-size: 1.05rem; margin-bottom: 4px; }
 #theo-site .work__meta{ display: flex; justify-content: space-between; font-size: .84rem; color: var(--muted); }
-#theo-site .work .badge{ z-index: 2; }
+#theo-site .work .badge, #theo-site .product__media .badge{ z-index: 2; }
 #theo-site .work.is-hidden{ display: none; }
 #theo-site .lightbox{ position: fixed; inset: 0; z-index: 300; background: rgba(6,16,32,.86); display: grid; place-items: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity .35s, visibility .35s; }
 #theo-site .lightbox.is-open{ opacity: 1; visibility: visible; }
@@ -691,7 +693,7 @@
     </div>
     <div class="grid grid--3" id="product-grid">
       <article class="card product reveal" data-cat="split">
-        <div class="product__media"><span class="badge">Best Seller</span><img data-img="prod-split" alt="Inverter Split-Type" loading="lazy"></div>
+        <div class="product__media" data-product="split"><span class="badge">Best Seller</span><img data-img="prod-split" alt="Inverter Split-Type" loading="lazy"></div>
         <div class="product__body">
           <h3>Inverter Split-Type</h3>
           <p>Quiet wall-mounted unit with up to 60% energy savings vs. non-inverter.</p>
@@ -703,7 +705,7 @@
         </div>
       </article>
       <article class="card product reveal" data-cat="window">
-        <div class="product__media"><span class="badge">Budget Pick</span><img data-img="prod-window" alt="Window-Type Aircon" loading="lazy"></div>
+        <div class="product__media" data-product="window"><span class="badge">Budget Pick</span><img data-img="prod-window" alt="Window-Type Aircon" loading="lazy"></div>
         <div class="product__body">
           <h3>Window-Type Aircon</h3>
           <p>Easy to install, simple to maintain &#8212; ideal for bedrooms and small rooms.</p>
@@ -715,7 +717,7 @@
         </div>
       </article>
       <article class="card product reveal" data-cat="commercial">
-        <div class="product__media"><span class="badge">Commercial</span><img data-img="prod-cassette" alt="Ceiling Cassette" loading="lazy"></div>
+        <div class="product__media" data-product="cassette"><span class="badge">Commercial</span><img data-img="prod-cassette" alt="Ceiling Cassette" loading="lazy"></div>
         <div class="product__body">
           <h3>Ceiling Cassette</h3>
           <p>4-way 360&#176; airflow, hidden in the ceiling for clean, modern interiors.</p>
@@ -727,7 +729,7 @@
         </div>
       </article>
       <article class="card product reveal" data-cat="commercial">
-        <div class="product__media"><span class="badge">Commercial</span><img data-img="prod-floor" alt="Floor-Standing Unit" loading="lazy"></div>
+        <div class="product__media" data-product="floor"><span class="badge">Commercial</span><img data-img="prod-floor" alt="Floor-Standing Unit" loading="lazy"></div>
         <div class="product__body">
           <h3>Floor-Standing Unit</h3>
           <p>High-capacity cooling for offices, shops, halls and function rooms.</p>
@@ -739,7 +741,7 @@
         </div>
       </article>
       <article class="card product reveal" data-cat="portable">
-        <div class="product__media"><span class="badge">Plug &amp; Play</span><img data-img="prod-portable" alt="Portable Aircon" loading="lazy"></div>
+        <div class="product__media" data-product="portable"><span class="badge">Plug &amp; Play</span><img data-img="prod-portable" alt="Portable Aircon" loading="lazy"></div>
         <div class="product__body">
           <h3>Portable Aircon</h3>
           <p>No installation needed &#8212; roll it to any room. Great for renters.</p>
@@ -751,7 +753,7 @@
         </div>
       </article>
       <article class="card product reveal" data-cat="split commercial">
-        <div class="product__media"><span class="badge badge--warm">Heat Pump</span><img data-img="prod-outdoor" alt="Inverter Heat Pump / Multi-Split" loading="lazy"></div>
+        <div class="product__media" data-product="outdoor"><span class="badge badge--warm">Heat Pump</span><img data-img="prod-outdoor" alt="Inverter Heat Pump / Multi-Split" loading="lazy"></div>
         <div class="product__body">
           <h3>Inverter Heat Pump / Multi-Split</h3>
           <p>One outdoor unit, multiple rooms. Cooling and heating in a single system.</p>
@@ -1433,6 +1435,28 @@
     go(0);
     play();
   }
+
+  /* ---------- Product photos ---------- */
+  // Paste a photo link between the quotes to replace a product's illustration.
+  const PRODUCT_PHOTOS = {
+    split: "",     // Inverter Split-Type
+    window: "",    // Window-Type Aircon
+    cassette: "",  // Ceiling Cassette
+    floor: "",     // Floor-Standing Unit
+    portable: "",  // Portable Aircon
+    outdoor: ""    // Inverter Heat Pump / Multi-Split
+  };
+  $$("[data-product]").forEach((media) => {
+    const url = PRODUCT_PHOTOS[media.dataset.product];
+    if (!url) return;
+    const photo = new Image();
+    photo.onload = () => {
+      const img = $("img", media);
+      img.src = url;
+      img.classList.add("is-photo");
+    };
+    photo.src = url;
+  });
 
   /* ---------- Filters (products & portfolio) ---------- */
   $$("[data-filter-group]").forEach((group) => {

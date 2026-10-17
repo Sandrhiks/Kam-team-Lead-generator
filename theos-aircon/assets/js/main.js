@@ -105,6 +105,28 @@
     play();
   }
 
+  /* ---------- Product photos ---------- */
+  // Paste a photo link between the quotes to replace a product's illustration.
+  const PRODUCT_PHOTOS = {
+    split: "",     // Inverter Split-Type
+    window: "",    // Window-Type Aircon
+    cassette: "",  // Ceiling Cassette
+    floor: "",     // Floor-Standing Unit
+    portable: "",  // Portable Aircon
+    outdoor: ""    // Inverter Heat Pump / Multi-Split
+  };
+  $$("[data-product]").forEach((media) => {
+    const url = PRODUCT_PHOTOS[media.dataset.product];
+    if (!url) return;
+    const photo = new Image();
+    photo.onload = () => {
+      const img = $("img", media);
+      img.src = url;
+      img.classList.add("is-photo");
+    };
+    photo.src = url;
+  });
+
   /* ---------- Filters (products & portfolio) ---------- */
   $$("[data-filter-group]").forEach((group) => {
     const target = $(group.dataset.filterGroup);

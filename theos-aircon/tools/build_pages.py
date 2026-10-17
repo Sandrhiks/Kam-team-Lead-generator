@@ -247,7 +247,7 @@ def product(p):
     cat, img, badge, badge_cls, name, desc, specs, price = p
     spec = "".join(f"<li>{s}</li>" for s in specs)
     return f"""      <article class="card product reveal" data-cat="{cat}">
-        <div class="product__media"><span class="badge{badge_cls}">{badge}</span><img src="assets/img/{img}" alt="{name}" loading="lazy"></div>
+        <div class="product__media" data-product="{img[5:-4]}"><span class="badge{badge_cls}">{badge}</span><img src="assets/img/{img}" alt="{name}" loading="lazy"></div>
         <div class="product__body">
           <h3>{name}</h3>
           <p>{desc}</p>
