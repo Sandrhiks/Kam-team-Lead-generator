@@ -28,3 +28,19 @@ You can also upload the folder as-is to any static host (Netlify, Vercel, GitHub
 - **Credentials:** add the DTI, Mayor's Permit, BIR and TESDA numbers in `portfolio.html` once they're issued.
 - **Photos:** the slides, portfolio and product images are custom SVG illustrations in `assets/img/`. Replace them with real job photos when you have them (keep the same file names, or update the `src` attributes).
 - **Prices & hours:** the prices are sample figures. Opening hours are set in the `HOURS` constant in `assets/js/main.js`; also update the hours shown in the footer.
+
+## GoHighLevel (GHL) version
+
+`ghl/theos-website-ghl.html` is the whole 5-page website in **one self-contained file**: all styles, scripts and images are inside it, with no outside files. Its menu switches between Home, About, Services, Portfolio and Contact without leaving the page.
+
+**To add it to GHL:**
+1. In GHL, go to **Sites → Websites (or Funnels) → New → From blank**, and create one page (e.g. "Home", path `/`).
+2. In the page builder, add a **Full Width** section, delete its default rows/padding if you like, and drag in the **Custom JS/HTML** (Code) element.
+3. Open the element, click **Code Editor**, paste the **entire** contents of `ghl/theos-website-ghl.html`, and save.
+4. Set the page's SEO title/description in **Page Settings → SEO Meta Data**, then **Publish** and connect your domain.
+
+You can see it in a browser first by opening `ghl/preview.html`, which is the same code wrapped in a normal web page.
+
+**Sending form leads into GHL (optional):** create a GHL Workflow with the **Inbound Webhook** trigger, copy its URL, and paste it into `GHL_WEBHOOK_URL = ""` near the top of the `<script>` in the GHL file. Each form submission then reaches that workflow (name, first_name, email, phone, address, service, units, schedule, message). Use **Create/Update Contact** and an internal notification action to save the lead and alert you. Send one test submission and confirm the fields arrive in the workflow before going live. The email copy through FormSubmit still goes to theoacservices2026@gmail.com either way.
+
+**Making changes:** edit the multi-page source, then run `python3 tools/build_pages.py && python3 tools/build_ghl.py` to regenerate both versions.
