@@ -8,7 +8,7 @@ OUT.mkdir(exist_ok=True)
 # Reuse the page builder without letting it write files.
 src = pathlib.Path(__file__).with_name("build_pages.py").read_text()
 src = src[:src.index("for name, html in [")]
-ns = {}
+ns = {"__file__": str(pathlib.Path(__file__).with_name("build_pages.py"))}
 exec(src, ns)
 
 HEADER, FOOTER = ns["header"](), ns["footer"]()
