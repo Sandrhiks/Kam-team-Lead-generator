@@ -80,10 +80,11 @@ def head(title, desc, page):
 <a class="skip-link" href="#main">Skip to content</a>
 """
 
-def brand(tag="a"):
-    return ("""<a class="brand" href="index.html" aria-label="Theo's Airconditioning Services — Home">
-      <img src="assets/img/logo.svg" alt="" width="44" height="44">
-      <span class="brand__text"><span class="brand__name">Theo's</span><span class="brand__tag">Airconditioning Services</span></span>
+def brand(light=False):
+    logo = "logo-light.svg" if light else "logo.svg"
+    return (f"""<a class="brand" href="index.html" aria-label="Theo's Airconditioning Services — Home">
+      <img src="assets/img/{logo}" alt="Theo's logo" width="46" height="42">
+      <span class="brand__text"><span class="brand__name">THEO&#8217;S</span><span class="brand__tag">Airconditioning Services</span></span>
     </a>""")
 
 def header():
@@ -127,8 +128,9 @@ def footer():
   <div class="container">
     <div class="footer__grid">
       <div>
-        {brand()}
-        <p style="margin-top:18px;max-width:300px">Cleaning, repair, installation and HVAC care for homes and businesses in San Fernando, Pampanga and nearby towns.</p>
+        {brand(light=True)}
+        <div class="brand__services">Supply &middot; Installation &middot; Maintenance &middot; Repair</div>
+        <p style="margin-top:14px;max-width:300px">Cleaning, repair, installation and HVAC care for homes and businesses in San Fernando, Pampanga and nearby towns.</p>
         <div class="socials">
           <a href="{FB}" target="_blank" rel="noopener" aria-label="Facebook">{I['fb']}</a>
           <a href="{IG}" target="_blank" rel="noopener" aria-label="Instagram">{I['ig']}</a>
@@ -202,10 +204,10 @@ SLIDES = [
      "Quiet, energy-saving inverter split-types fitted cleanly into modern living spaces — neat piping, no mess."),
     ("slide-bedroom.svg", "Wall-Mounted Inverter · Bedroom", "Sleep cool all night,<br>pay less every month.",
      "Whisper-quiet bedroom units with sleep mode and smart temperature control for restful Pampanga nights."),
-    ("slide-dining.svg", "Ceiling Cassette · Open Dining", "Even 360° airflow<br>for open spaces.",
-     "Ceiling-mounted cassette units that disappear into your ceiling and cool open kitchens and dining areas evenly."),
-    ("slide-office.svg", "Floor-Standing · Office &amp; Lobby", "Big rooms.<br>Strong, steady cooling.",
-     "High-capacity floor-standing units for offices, shops, clinics and function rooms."),
+    ("slide-dining.svg", "Clean Installs · Modern Homes", "Neat work<br>you can see.",
+     "Level mounting, hidden piping and tidy finishing — every unit tested before we leave your home."),
+    ("slide-office.svg", "Lofts, Studios &amp; Home Offices", "Quiet cooling<br>for work and rest.",
+     "Right-sized inverter units for condos, lofts and home offices — cool, quiet and easy on your electric bill."),
     ("slide-exterior.svg", "Outdoor Condensers · Modern Home", "Whole-home HVAC,<br>planned and maintained.",
      "From layout and sizing to preventive maintenance — one local team for every unit in your home."),
 ]
@@ -388,7 +390,7 @@ about += f"""
 
 <section class="section section--alt" id="owner">
   <div class="container owner">
-    <div class="owner__photo reveal" role="img" aria-label="Theo, owner of Theo's Airconditioning Services"><span class="monogram">T</span></div>
+    <div class="owner__photo reveal" role="img" aria-label="Theo, owner of Theo's Airconditioning Services"><img src="assets/img/logo-light.svg" alt=""></div>
     <div class="reveal reveal-delay-1">
       <span class="eyebrow">Owner Profile</span>
       <h2>Theo</h2>

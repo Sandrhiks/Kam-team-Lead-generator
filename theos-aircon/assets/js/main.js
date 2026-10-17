@@ -42,9 +42,19 @@
   });
 
   /* ---------- Hero slider ---------- */
+  // Real photos for the hero slides, in slide order (1: living room, 2: bedroom, 3: close-up, 4: loft).
+  // A slide keeps its illustration until its photo loads, and if the photo is missing.
+  const HERO_PHOTOS = ["assets/img/hero-1.jpg", "assets/img/hero-2.jpg", "assets/img/hero-3.jpg", "assets/img/hero-4.jpg"];
   const hero = $(".hero");
   if (hero) {
     const slides = $$(".slide", hero);
+    slides.forEach((slide, i) => {
+      const url = HERO_PHOTOS[i];
+      if (!url) return;
+      const photo = new Image();
+      photo.onload = () => { $(".slide__img", slide).src = url; };
+      photo.src = url;
+    });
     const dots = $$(".hero__dot", hero);
     const counter = $(".hero__counter", hero);
     const DURATION = 6000;

@@ -109,6 +109,9 @@ sub('const BUSINESS_EMAIL = "theoacservices2026@gmail.com";',
     '  // Optional: paste a GHL Workflow "Inbound Webhook" URL here to send form leads straight into your GHL CRM.\n'
     '  const GHL_WEBHOOK_URL = "";\n'
     '  const site = document.getElementById("theo-site");')
+sub('const HERO_PHOTOS = ["assets/img/hero-1.jpg", "assets/img/hero-2.jpg", "assets/img/hero-3.jpg", "assets/img/hero-4.jpg"];',
+    '// Paste the photo links from your GHL Media Library between the quotes.\n'
+    '  const HERO_PHOTOS = ["", "", "", ""];')
 sub('const $ = (sel, root = document)', 'const $ = (sel, root = site)')
 sub('const $$ = (sel, root = document)', 'const $$ = (sel, root = site)')
 sub('document.body.classList.toggle("nav-open", open);',
@@ -146,6 +149,8 @@ sub('''  const page = document.body.dataset.page;
     if (a.getAttribute("href") === location.hash) { e.preventDefault(); route(true); }
   });
   route(false);
+  // The browser's own jump-to-anchor runs after this on first load; re-apply our offset.
+  window.addEventListener("load", () => route(false));
 ''')
 sub('''    // Pre-select a service from ?service=... links.
     const pre = new URLSearchParams(location.search).get("service");

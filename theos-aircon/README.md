@@ -26,7 +26,8 @@ You can also upload the folder as-is to any static host (Netlify, Vercel, GitHub
 - **Contact form:** requests are sent to `theoacservices2026@gmail.com` through [FormSubmit](https://formsubmit.co) (no server needed). The **first** submission sends a one-time activation email to that Gmail; click the link in it to turn the form on. If the request can't be sent, the visitor's email app opens with the details already filled in.
 - **Social links:** change the `FB`, `IG`, `TT` and `MESSENGER` URLs (they currently point to the platform home pages).
 - **Credentials:** add the DTI, Mayor's Permit, BIR and TESDA numbers in `portfolio.html` once they're issued.
-- **Photos:** the slides, portfolio and product images are custom SVG illustrations in `assets/img/`. Replace them with real job photos when you have them (keep the same file names, or update the `src` attributes).
+- **Hero photos:** save your 4 slideshow photos as `assets/img/hero-1.jpg` (living room), `hero-2.jpg` (bedroom), `hero-3.jpg` (close-up of the unit) and `hero-4.jpg` (loft / empty room). They appear automatically; a slide without a photo keeps its illustration. Landscape images about 2000 px wide work best.
+- **Other images:** the portfolio and product images are SVG illustrations in `assets/img/`. Replace them with real job photos when you have them.
 - **Prices & hours:** the prices are sample figures. Opening hours are set in the `HOURS` constant in `assets/js/main.js`; also update the hours shown in the footer.
 
 ## GoHighLevel (GHL) version
@@ -40,6 +41,8 @@ You can also upload the folder as-is to any static host (Netlify, Vercel, GitHub
 4. Set the page's SEO title/description in **Page Settings → SEO Meta Data**, then **Publish** and connect your domain.
 
 You can see it in a browser first by opening `ghl/preview.html`, which is the same code wrapped in a normal web page.
+
+**Hero photos in GHL:** upload the 4 photos to **Media Library** in GHL, copy each image's link, and paste them in order into `const HERO_PHOTOS = ["", "", "", ""];` near the top of the `<script>` (1: living room, 2: bedroom, 3: close-up, 4: loft).
 
 **Sending form leads into GHL (optional):** create a GHL Workflow with the **Inbound Webhook** trigger, copy its URL, and paste it into `GHL_WEBHOOK_URL = ""` near the top of the `<script>` in the GHL file. Each form submission then reaches that workflow (name, first_name, email, phone, address, service, units, schedule, message). Use **Create/Update Contact** and an internal notification action to save the lead and alert you. Send one test submission and confirm the fields arrive in the workflow before going live. The email copy through FormSubmit still goes to theoacservices2026@gmail.com either way.
 
