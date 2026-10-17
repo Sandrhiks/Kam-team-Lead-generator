@@ -208,8 +208,8 @@ SLIDES = [
      "Level mounting, hidden piping and tidy finishing — every unit tested before we leave your home."),
     ("slide-office.svg", "Lofts, Studios &amp; Home Offices", "Quiet cooling<br>for work and rest.",
      "Right-sized inverter units for condos, lofts and home offices — cool, quiet and easy on your electric bill."),
-    ("slide-exterior.svg", "Outdoor Condensers · Modern Home", "Whole-home HVAC,<br>planned and maintained.",
-     "From layout and sizing to preventive maintenance — one local team for every unit in your home."),
+    ("slide-office.svg", "Floor-Standing · Offices &amp; Shops", "Big rooms.<br>Strong, steady cooling.",
+     "High-capacity floor-standing units for offices, shops, clinics and function rooms — supplied and installed by our team."),
 ]
 
 def slide(i, s):

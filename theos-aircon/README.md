@@ -26,7 +26,7 @@ You can also upload the folder as-is to any static host (Netlify, Vercel, GitHub
 - **Contact form:** requests are sent to `theoacservices2026@gmail.com` through [FormSubmit](https://formsubmit.co) (no server needed). The **first** submission sends a one-time activation email to that Gmail; click the link in it to turn the form on. If the request can't be sent, the visitor's email app opens with the details already filled in.
 - **Social links:** change the `FB`, `IG`, `TT` and `MESSENGER` URLs (they currently point to the platform home pages).
 - **Credentials:** add the DTI, Mayor's Permit, BIR and TESDA numbers in `portfolio.html` once they're issued.
-- **Hero photos:** save your 4 slideshow photos as `assets/img/hero-1.jpg` (living room), `hero-2.jpg` (bedroom), `hero-3.jpg` (close-up of the unit) and `hero-4.jpg` (loft / empty room). They appear automatically; a slide without a photo keeps its illustration. Landscape images about 2000 px wide work best.
+- **Hero photos:** save your 4 slideshow photos as `assets/img/hero-1.jpg` (living room), `hero-2.jpg` (bedroom), `hero-3.jpg` (close-up of the unit), `hero-4.jpg` (loft / empty room) and `hero-5.jpg` (floor-standing unit). They appear automatically; a slide without a photo keeps its illustration. Landscape images about 2000 px wide work best.
 - **Product photos:** in `assets/js/main.js`, fill in `PRODUCT_PHOTOS` (split, window, cassette, floor, portable, outdoor) with a file path like `assets/img/product-split.jpg` or a full image link. Empty entries keep the illustration.
 - **Other images:** the portfolio and product images are SVG illustrations in `assets/img/`. Replace them with real job photos when you have them.
 - **Prices & hours:** the prices are sample figures. Opening hours are set in the `HOURS` constant in `assets/js/main.js`; also update the hours shown in the footer.
@@ -43,7 +43,7 @@ You can also upload the folder as-is to any static host (Netlify, Vercel, GitHub
 
 You can see it in a browser first by opening `ghl/preview.html`, which is the same code wrapped in a normal web page.
 
-**Hero photos in GHL:** upload the 4 photos to **Media Library** in GHL, copy each image's link, and paste them in order into `const HERO_PHOTOS = [...]` near the top of the `<script>` (1: living room, 2: bedroom, 3: close-up, 4: loft).
+**Hero photos in GHL:** upload the 4 photos to **Media Library** in GHL, copy each image's link, and paste them in order into `const HERO_PHOTOS = [...]` near the top of the `<script>` (1: living room, 2: bedroom, 3: close-up, 4: loft, 5: floor-standing).
 
 **Product photos in GHL:** upload them to **Media Library**, copy each link, and paste it into `PRODUCT_PHOTOS` in the `<script>` next to the matching product name.
 

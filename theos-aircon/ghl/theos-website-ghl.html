@@ -285,7 +285,7 @@
 #theo-site .product__media{ position: relative; background: linear-gradient(160deg, var(--ice), #F6FAFE); aspect-ratio: 4 / 3; display: grid; place-items: center; }
 #theo-site .product__media img{ width: 82%; transition: transform .6s var(--ease); }
 #theo-site .product:hover .product__media img{ transform: scale(1.06) translateY(-4px); }
-#theo-site .product__media img.is-photo{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#theo-site .product__media img.is-photo{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #fff; }
 #theo-site .product:hover .product__media img.is-photo{ transform: scale(1.05); }
 #theo-site .badge{
   position: absolute; top: 14px; left: 14px; padding: 5px 12px; border-radius: 999px;
@@ -634,11 +634,11 @@
       </div>
     </div>
     <div class="slide" role="group" aria-roledescription="slide" aria-label="5 of 5">
-      <img class="slide__img" data-img="slide-exterior" alt="Outdoor Condensers &#183; Modern Home aircon installation in a modern home" loading="lazy">
+      <img class="slide__img" data-img="slide-office" alt="Floor-Standing &#183; Offices and Shops aircon installation in a modern home" loading="lazy">
       <div class="container slide__content">
-        <span class="slide__tag">Outdoor Condensers &#183; Modern Home</span>
-        <h2 style="font-size:clamp(2.2rem,5vw,3.8rem)">Whole-home HVAC,<br>planned and maintained.</h2>
-        <p>From layout and sizing to preventive maintenance &#8212; one local team for every unit in your home.</p>
+        <span class="slide__tag">Floor-Standing &#183; Offices &amp; Shops</span>
+        <h2 style="font-size:clamp(2.2rem,5vw,3.8rem)">Big rooms.<br>Strong, steady cooling.</h2>
+        <p>High-capacity floor-standing units for offices, shops, clinics and function rooms &#8212; supplied and installed by our team.</p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="#contact">Book a Service <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a class="btn btn--light" href="#products">View Products</a>
@@ -1363,10 +1363,10 @@
   window.addEventListener("load", () => route(false));
 
   /* ---------- Hero slider ---------- */
-  // Real photos for the hero slides, in slide order (1: living room, 2: bedroom, 3: close-up, 4: loft).
+  // Real photos for the hero slides, in slide order (1: living room, 2: bedroom, 3: close-up, 4: loft, 5: floor-standing).
   // A slide keeps its illustration until its photo loads, and if the photo is missing.
   // Paste the photo links from your GHL Media Library between the quotes.
-  const HERO_PHOTOS = ["https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab85436f78fefb5ef77e.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab46f9a985d42cdb9530.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab513cacdd91178d05e5.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab3a989628c77a436aba.jpg"];
+  const HERO_PHOTOS = ["https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab85436f78fefb5ef77e.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab46f9a985d42cdb9530.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab513cacdd91178d05e5.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab3a989628c77a436aba.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b25e3cacdd91178dde61.jpg"];
   const hero = $(".hero");
   if (hero) {
     const slides = $$(".slide", hero);
@@ -1430,10 +1430,10 @@
   /* ---------- Product photos ---------- */
   // Paste a photo link between the quotes to replace a product's illustration.
   const PRODUCT_PHOTOS = {
-    split: "",     // Inverter Split-Type
-    window: "",    // Window-Type Aircon
-    cassette: "",  // Ceiling Cassette
-    floor: "",     // Floor-Standing Unit
+    split: "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b1a1f9a985d42cdc5032.jpg",     // Inverter Split-Type
+    window: "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b1afcd7225ed37b1ecad.jpg",    // Window-Type Aircon
+    cassette: "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b24b3cacdd91178ddc69.jpg",  // Ceiling Cassette
+    floor: "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b25e3cacdd91178dde61.jpg",     // Floor-Standing Unit
     portable: "",  // Portable Aircon
     outdoor: ""    // Inverter Heat Pump / Multi-Split
   };

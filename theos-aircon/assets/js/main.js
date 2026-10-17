@@ -42,9 +42,9 @@
   });
 
   /* ---------- Hero slider ---------- */
-  // Real photos for the hero slides, in slide order (1: living room, 2: bedroom, 3: close-up, 4: loft).
+  // Real photos for the hero slides, in slide order (1: living room, 2: bedroom, 3: close-up, 4: loft, 5: floor-standing).
   // A slide keeps its illustration until its photo loads, and if the photo is missing.
-  const HERO_PHOTOS = ["assets/img/hero-1.jpg", "assets/img/hero-2.jpg", "assets/img/hero-3.jpg", "assets/img/hero-4.jpg"];
+  const HERO_PHOTOS = ["assets/img/hero-1.jpg", "assets/img/hero-2.jpg", "assets/img/hero-3.jpg", "assets/img/hero-4.jpg", "assets/img/hero-5.jpg"];
   const hero = $(".hero");
   if (hero) {
     const slides = $$(".slide", hero);
