@@ -564,7 +564,7 @@ portfolio += f"""
   </div>
 </section>
 
-<section class="section section--alt">
+<section class="section section--cinema">
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Tools for You</span>
@@ -641,7 +641,7 @@ contact += header()
 contact += "<main id=\"main\">\n" + page_hero("Contact Us", "Contact Us", "Let's get your space<br>cool again.",
     "Send us your request and we'll reply with a schedule and quote — usually within the day.")
 contact += f"""
-<section class="section">
+<section class="section section--cinema">
   <div class="container contact-grid">
     <div class="widget reveal">
       <div class="widget__head"><h3>Request a Service</h3><span class="tag">Free quote</span></div>

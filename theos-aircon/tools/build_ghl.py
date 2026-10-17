@@ -90,6 +90,8 @@ css += f"""
 {ROOT} :is(.section, .section--alt, .widget, .card:not(.plan--featured)) :is(h1, h2, h3, h4) {{ color: var(--navy); }}
 {ROOT} :is(.section--dark, .cta-band, .page-hero, .slide__content, .site-footer) :is(h1, h2, h3, h4) {{ color: var(--white); }}
 {ROOT} .section--dark .card h3 {{ color: var(--white); }}
+{ROOT} .section--cinema .section-head h2, {ROOT} .section--cinema .widget h3 {{ color: var(--white); }}
+{ROOT} {{ width: 100%; }}
 {ROOT} ul {{ margin-top: 0; }}
 {ROOT} button {{ font-family: inherit; }}
 @keyframes theoFade {{ from {{ opacity: 0; transform: translateY(10px); }} to {{ opacity: 1; transform: none; }} }}
@@ -108,7 +110,12 @@ sub('const BUSINESS_EMAIL = "theoacservices2026@gmail.com";',
     'const BUSINESS_EMAIL = "theoacservices2026@gmail.com";\n'
     '  // Optional: paste a GHL Workflow "Inbound Webhook" URL here to send form leads straight into your GHL CRM.\n'
     '  const GHL_WEBHOOK_URL = "";\n'
-    '  const site = document.getElementById("theo-site");')
+    '  const site = document.getElementById("theo-site");\n'
+    '  // Break out of the GHL section/row/column padding so the site runs edge to edge.\n'
+    '  for (let el = site.parentElement; el && el !== document.body; el = el.parentElement) {\n'
+    '    ["max-width", "width", "padding", "margin", "transform"].forEach((prop, i) =>\n'
+    '      el.style.setProperty(prop, ["none", "100%", "0", "0", "none"][i], "important"));\n'
+    '  }')
 sub('const HERO_PHOTOS = ["assets/img/hero-1.jpg", "assets/img/hero-2.jpg", "assets/img/hero-3.jpg", "assets/img/hero-4.jpg", "assets/img/hero-5.jpg"];',
     '// Paste the photo links from your GHL Media Library between the quotes.\n'
     '  const HERO_PHOTOS = ["https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab85436f78fefb5ef77e.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab46f9a985d42cdb9530.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab513cacdd91178d05e5.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab3a989628c77a436aba.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b25e3cacdd91178dde61.jpg"];')
