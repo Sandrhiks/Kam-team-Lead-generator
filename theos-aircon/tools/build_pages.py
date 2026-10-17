@@ -91,9 +91,11 @@ def header():
     links = "\n".join(
         f'          <li><a class="nav__link" data-page="{p}" href="{href}">{label}</a></li>'
         for href, p, label in NAV)
+    logo = brand().replace('<img src="assets/img/logo.svg"', '<img class="logo-on-light" src="assets/img/logo.svg"').replace(
+        'width="46" height="42">', 'width="46" height="42"><img class="logo-on-dark" src="assets/img/logo-light.svg" alt="" width="46" height="42">', 1)
     return f"""<header class="site-header">
   <div class="container nav">
-    {brand()}
+    {logo}
     <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-panel"><span></span><span></span><span></span></button>
     <nav class="nav__panel" id="nav-panel" aria-label="Main">
       <ul class="nav__menu">

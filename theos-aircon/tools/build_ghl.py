@@ -80,7 +80,7 @@ css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
 css = scope(css)
 # Fixed header (sticky breaks inside GHL's section wrappers), hidden pages, and resets against GHL's theme.
 css += f"""
-{ROOT} {{ position: relative; font-size: 16px; text-align: left; padding-top: var(--header-h); overflow-x: clip; }}
+{ROOT} {{ position: relative; font-size: 16px; text-align: left; overflow-x: clip; }}
 {ROOT} .site-header {{ position: fixed; left: 0; right: 0; top: 0; }}
 {ROOT} .page {{ display: none; }}
 {ROOT} .page.is-current {{ display: block; animation: theoFade .5s var(--ease); }}

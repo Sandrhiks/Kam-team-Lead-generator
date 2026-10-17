@@ -92,16 +92,30 @@
 #theo-site .btn:focus-visible, #theo-site a:focus-visible, #theo-site button:focus-visible, #theo-site input:focus-visible, #theo-site select:focus-visible, #theo-site textarea:focus-visible{
   outline: 3px solid rgba(29, 95, 196, .4); outline-offset: 2px;
 }
-#theo-site .site-header{ position: sticky; top: 0; z-index: 100; border-bottom: 1px solid transparent; transition: box-shadow .35s var(--ease), border-color .35s; }
+#theo-site .site-header{ position: fixed; top: 0; left: 0; right: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, .16); transition: box-shadow .35s var(--ease), border-color .35s; }
 #theo-site .site-header::before{
   content: ""; position: absolute; inset: 0; z-index: -1;
-  background: rgba(255, 255, 255, .82);
-  backdrop-filter: saturate(160%) blur(14px);
-  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  background: linear-gradient(180deg, rgba(8, 33, 64, .42), rgba(8, 33, 64, .2));
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
   transition: background .35s;
 }
-#theo-site .site-header.is-scrolled{ box-shadow: var(--shadow-sm); border-color: var(--line); }
-#theo-site .site-header.is-scrolled::before{ background: rgba(255, 255, 255, .94); }
+#theo-site .site-header.is-scrolled{ box-shadow: 0 10px 30px -18px rgba(8, 33, 64, .35); border-color: rgba(255, 255, 255, .6); }
+#theo-site .site-header.is-scrolled::before{ background: rgba(255, 255, 255, .7); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); }
+#theo-site .site-header .logo-on-dark{ display: none; }
+#theo-site .site-header:not(.is-scrolled) .logo-on-dark{ display: block; }
+#theo-site .site-header:not(.is-scrolled) .logo-on-light{ display: none; }
+#theo-site .site-header:not(.is-scrolled) .brand__name{ color: var(--white); }
+#theo-site .site-header:not(.is-scrolled) .brand__tag{ color: #A9C8F5; }
+#theo-site .site-header:not(.is-scrolled) .nav__toggle{ background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .3); }
+#theo-site .site-header:not(.is-scrolled) .nav__toggle span{ background: var(--white); }
+#theo-site.nav-open .site-header .nav__toggle{ background: var(--white); border-color: var(--line); }
+#theo-site.nav-open .site-header .nav__toggle span{ background: var(--navy); }
+@media (min-width: 961px){#theo-site .site-header:not(.is-scrolled) .nav__link{ color: rgba(255, 255, 255, .92); text-shadow: 0 1px 8px rgba(8, 33, 64, .35); }
+#theo-site .site-header:not(.is-scrolled) .nav__link:hover{ color: var(--white); background: rgba(255, 255, 255, .14); }
+#theo-site .site-header:not(.is-scrolled) .nav__link.is-active{ color: var(--white); }
+#theo-site .site-header:not(.is-scrolled) .nav__link::after{ background: var(--white); }
+}
 #theo-site .nav{ height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 20px; transition: height .35s var(--ease); }
 #theo-site .site-header.is-scrolled .nav{ height: 64px; }
 #theo-site .brand{ display: flex; align-items: center; gap: 12px; }
@@ -238,7 +252,7 @@
 #theo-site .page-hero{
   position: relative; overflow: hidden; color: var(--white);
   background: radial-gradient(1200px 400px at 85% -10%, rgba(18,200,212,.35), transparent 60%), linear-gradient(135deg, var(--navy), var(--navy-2));
-  padding: clamp(72px, 10vw, 120px) 0 clamp(56px, 8vw, 90px);
+  padding: calc(var(--header-h) + clamp(56px, 8vw, 100px)) 0 clamp(56px, 8vw, 90px);
 }
 #theo-site .page-hero::after{
   content: ""; position: absolute; right: -80px; bottom: -120px; width: 420px; height: 420px; border-radius: 50%;
@@ -554,7 +568,7 @@
 @media (prefers-reduced-motion: reduce){#theo-site *, #theo-site *::before, #theo-site *::after{ animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 #theo-site .reveal{ opacity: 1; transform: none; }
 }
-#theo-site { position: relative; font-size: 16px; text-align: left; padding-top: var(--header-h); overflow-x: clip; }
+#theo-site { position: relative; font-size: 16px; text-align: left; overflow-x: clip; }
 #theo-site .site-header { position: fixed; left: 0; right: 0; top: 0; }
 #theo-site .page { display: none; }
 #theo-site .page.is-current { display: block; animation: theoFade .5s var(--ease); }
@@ -572,7 +586,7 @@
 <header class="site-header">
   <div class="container nav">
     <a class="brand" href="#home" aria-label="Theo's Airconditioning Services &#8212; Home">
-      <img data-img="logo" alt="Theo's logo" width="46" height="42">
+      <img class="logo-on-light" data-img="logo" alt="Theo's logo" width="46" height="42"><img class="logo-on-dark" data-img="logo-light" alt="" width="46" height="42">
       <span class="brand__text"><span class="brand__name">THEO&#8217;S</span><span class="brand__tag">Airconditioning Services</span></span>
     </a>
     <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-panel"><span></span><span></span><span></span></button>
