@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9EEF5"/><stop offset="1" stop-color="#D8E1EB"/></linearGradient>
+    <linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C7CED6"/><stop offset="1" stop-color="#AEB7C1"/></linearGradient>
+    <linearGradient id="n" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16294A"/><stop offset="1" stop-color="#3B5C8C"/></linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E4EAF0"/></linearGradient>
+    <linearGradient id="air" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7AD4FF" stop-opacity=".5"/><stop offset="1" stop-color="#7AD4FF" stop-opacity="0"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#w)"/>
+  <rect x="820" y="0" width="780" height="760" fill="#A9BCCF"/>
+  <g stroke="#9AAFC3" stroke-width="3"><path d="M880 0v760M940 0v760M1000 0v760M1060 0v760M1120 0v760M1180 0v760M1240 0v760M1300 0v760M1360 0v760M1420 0v760M1480 0v760M1540 0v760"/></g>
+  <rect y="760" width="1600" height="140" fill="url(#f)"/>
+  <!-- night window -->
+  <rect x="200" y="170" width="340" height="440" rx="8" fill="url(#n)"/>
+  <circle cx="460" cy="250" r="34" fill="#FFF3C4"/><circle cx="447" cy="242" r="30" fill="#1C3359"/>
+  <g fill="#FFFFFF" opacity=".8"><circle cx="270" cy="230" r="3"/><circle cx="330" cy="300" r="2"/><circle cx="250" cy="380" r="2"/><circle cx="400" cy="340" r="3"/></g>
+  <rect x="180" y="150" width="380" height="490" rx="10" fill="none" stroke="#F4F6F9" stroke-width="20"/>
+  <rect x="150" y="140" width="70" height="520" fill="#DCE4EC"/><rect x="520" y="140" width="70" height="520" fill="#DCE4EC"/>
+  <!-- AC -->
+  <g transform="translate(1000 120)">
+    <rect x="6" y="10" width="440" height="122" rx="28" fill="#0B1F35" opacity=".1"/>
+    <rect width="440" height="120" rx="28" fill="url(#ac)" stroke="#D2DCE6" stroke-width="2"/>
+    <rect x="24" y="86" width="392" height="16" rx="8" fill="#C9D4DF"/>
+    <rect x="320" y="30" width="80" height="26" rx="8" fill="#0E2A47"/><text x="332" y="50" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#5CE1FF">24°C</text>
+  </g>
+  <path d="M1020 240q200 280 400 0z" fill="url(#air)"/>
+  <!-- bed -->
+  <rect x="900" y="430" width="640" height="200" rx="20" fill="#2C4766"/>
+  <rect x="860" y="600" width="720" height="150" rx="24" fill="#F4F7FA"/>
+  <path d="M860 640h720v90a24 24 0 0 1-24 24H884a24 24 0 0 1-24-24z" fill="#3BB3F5" opacity=".9"/>
+  <rect x="920" y="560" width="200" height="70" rx="24" fill="#FFFFFF"/><rect x="1150" y="560" width="200" height="70" rx="24" fill="#FFFFFF"/>
+  <rect x="1360" y="575" width="150" height="55" rx="20" fill="#FFB65C"/>
+  <!-- side table & lamp -->
+  <rect x="690" y="640" width="140" height="120" rx="10" fill="#1B2B3C"/>
+  <rect x="752" y="560" width="16" height="80" fill="#C9A27E"/><path d="M705 560h110l-20-70h-70z" fill="#FFE2B3"/>
+  <ellipse cx="760" cy="520" rx="120" ry="90" fill="#FFE2B3" opacity=".25"/>
+</svg>
