@@ -111,7 +111,7 @@ sub('const BUSINESS_EMAIL = "theoacservices2026@gmail.com";',
     '  const site = document.getElementById("theo-site");')
 sub('const HERO_PHOTOS = ["assets/img/hero-1.jpg", "assets/img/hero-2.jpg", "assets/img/hero-3.jpg", "assets/img/hero-4.jpg"];',
     '// Paste the photo links from your GHL Media Library between the quotes.\n'
-    '  const HERO_PHOTOS = ["", "", "", ""];')
+    '  const HERO_PHOTOS = ["https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab85436f78fefb5ef77e.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab46f9a985d42cdb9530.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab513cacdd91178d05e5.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab3a989628c77a436aba.jpg"];')
 sub('const $ = (sel, root = document)', 'const $ = (sel, root = site)')
 sub('const $$ = (sel, root = document)', 'const $$ = (sel, root = site)')
 sub('document.body.classList.toggle("nav-open", open);',

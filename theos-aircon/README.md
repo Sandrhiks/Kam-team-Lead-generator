@@ -43,7 +43,7 @@ You can also upload the folder as-is to any static host (Netlify, Vercel, GitHub
 
 You can see it in a browser first by opening `ghl/preview.html`, which is the same code wrapped in a normal web page.
 
-**Hero photos in GHL:** upload the 4 photos to **Media Library** in GHL, copy each image's link, and paste them in order into `const HERO_PHOTOS = ["", "", "", ""];` near the top of the `<script>` (1: living room, 2: bedroom, 3: close-up, 4: loft).
+**Hero photos in GHL:** upload the 4 photos to **Media Library** in GHL, copy each image's link, and paste them in order into `const HERO_PHOTOS = [...]` near the top of the `<script>` (1: living room, 2: bedroom, 3: close-up, 4: loft).
 
 **Product photos in GHL:** upload them to **Media Library**, copy each link, and paste it into `PRODUCT_PHOTOS` in the `<script>` next to the matching product name.
 
