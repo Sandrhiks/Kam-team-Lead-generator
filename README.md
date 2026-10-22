@@ -16,6 +16,7 @@ A real estate lead generator for finding and working sellers, buyers, probate, i
 | `lib/db.js` | Shared Postgres connection |
 | `test/` | Tests (`npm test`) |
 | `.env.example` | Environment variable template |
+| `bible-study/` | Kam Team Bible Study Guide: a separate app (`npm run bible`). See [bible-study/README.md](bible-study/README.md) |
 | `Dockerfile`, `render.yaml` | Deployment configs |
 
 The server needs Node 18.17 or newer. Its npm dependencies are `pg` (Postgres driver) and `@anthropic-ai/sdk` (chat support).
