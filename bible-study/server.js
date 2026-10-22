@@ -36,9 +36,18 @@ const storage = {
 };
 const accounts = users.createStore(storage);
 const store = createStore(storage);
-const vapid = push.loadVapid({
-  publicKey: process.env.VAPID_PUBLIC_KEY, privateKey: process.env.VAPID_PRIVATE_KEY, dataDir: storage.dataDir,
-});
+// Push keys: from the environment if set, otherwise generated once and kept in
+// the data store, so they survive redeploys on hosts with a throwaway disk.
+let vapid = null;
+async function initVapid() {
+  if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+    vapid = push.vapidFrom(process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
+  } else {
+    const k = JSON.parse(await store.getOrSetMeta("vapid", () => JSON.stringify(push.generateVapidKeys())));
+    vapid = push.vapidFrom(k.publicKey, k.privateKey);
+  }
+  server.vapid = vapid;
+}
 
 // Pages and files anyone may load without signing in.
 const PUBLIC_PATHS = new Set([
@@ -400,9 +409,8 @@ const server = http.createServer((req, res) => {
     if (!res.headersSent) sendJson(res, 500, { ok: false, error: "Server error" });
   });
 });
-server.ready = Promise.all([accounts.init(), store.init()]);
+server.ready = Promise.all([accounts.init(), store.init()]).then(initVapid);
 server.tick = tick;
-server.vapid = vapid;
 
 if (require.main === module) {
   server.ready.then(() => {

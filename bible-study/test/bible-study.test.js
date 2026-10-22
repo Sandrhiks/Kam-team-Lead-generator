@@ -117,6 +117,11 @@ test("payload encryption round-trips (RFC 8291)", () => {
   assert.strictEqual(push.decrypt(ecdh, auth, record), '{"title":"Hi"}');
 });
 
+test("generated push keys are kept in the data store", () => {
+  const meta = JSON.parse(fs.readFileSync(path.join(dataDir, "meta.json"), "utf8"));
+  assert.strictEqual(JSON.parse(meta.vapid).publicKey, server.vapid.publicKey);
+});
+
 test("VAPID header is a valid ES256 JWT for the push service origin", () => {
   const h = push.vapidHeader(server.vapid, "https://push.test/abc", "mailto:test@example.com");
   const m = h.match(/^vapid t=([^.]+)\.([^.]+)\.([^,]+), k=(.+)$/);

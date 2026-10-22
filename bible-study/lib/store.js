@@ -1,7 +1,8 @@
 "use strict";
 
-// Each member's study progress (one JSON document per account) and their
-// push subscriptions (one row per device). Postgres when DATABASE_URL is set,
+// Each member's study progress (one JSON document per account), their
+// push subscriptions (one row per device) and a few app settings such as the
+// push keys. Postgres when DATABASE_URL is set,
 // JSON files in DATA_DIR otherwise — the same split the lead generator uses.
 
 const fs = require("node:fs");
@@ -45,6 +46,14 @@ function fileStore(dir) {
   return {
     kind: "file (" + dir + ")",
     async init() {},
+    async getOrSetMeta(key, make) {
+      const file = path.join(dir, "meta.json");
+      return locked(() => {
+        const meta = readJson(file, {});
+        if (meta[key] === undefined) { meta[key] = make(); writeJson(file, meta); }
+        return meta[key];
+      });
+    },
     async getProgress(owner) { return load(owner); },
     saveProgress(owner, data, updated) {
       return locked(() => {
@@ -93,6 +102,14 @@ function pgStore(url) {
         email TEXT PRIMARY KEY, data JSONB NOT NULL, updated BIGINT NOT NULL)`);
       await pool.query(`CREATE TABLE IF NOT EXISTS bible_push (
         endpoint TEXT PRIMARY KEY, email TEXT NOT NULL, sub JSONB NOT NULL, created BIGINT NOT NULL)`);
+      await pool.query("CREATE TABLE IF NOT EXISTS bible_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)");
+    },
+    // Keeps the first value written, so two servers starting at once agree.
+    async getOrSetMeta(key, make) {
+      const cur = await pool.query("SELECT value FROM bible_meta WHERE key = $1", [key]);
+      if (cur.rows[0]) return cur.rows[0].value;
+      await pool.query("INSERT INTO bible_meta (key, value) VALUES ($1, $2) ON CONFLICT (key) DO NOTHING", [key, make()]);
+      return (await pool.query("SELECT value FROM bible_meta WHERE key = $1", [key])).rows[0].value;
     },
     async getProgress(owner) {
       const r = await pool.query("SELECT data, updated FROM bible_progress WHERE email = $1", [owner]);

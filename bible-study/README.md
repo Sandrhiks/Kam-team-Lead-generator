@@ -129,7 +129,8 @@ Phone / browser (PWA)                         bible-study/server.js (Node 18+, n
 | `public/app.js` | The single-page app (Today, Path, Lesson, Journal, Verses, Me, Certificate) |
 | `public/login.html` | Sign-in and create-account page |
 | `public/sw.js` | Service worker: offline cache, push display, notification clicks |
-| `test/` | Tests (`npm test` from the repo root) |
+| `render.yaml` | Render Blueprint: web app + Postgres |
+| `test/` | Tests (`npm test` from the repo root; set `TEST_DATABASE_URL` to also run the Postgres test) |
 
 Accounts reuse the lead generator's `lib/users.js` and `lib/db.js`, so this app needs no extra npm packages. The repo's `pg` dependency is only loaded when `DATABASE_URL` is set.
 
@@ -147,10 +148,26 @@ npm test                    # runs the lead generator and Bible study tests
 
 Open http://localhost:3100, click **Create account**, and start Life Class.
 
+### Deploy on Render
+
+`bible-study/render.yaml` is a Render Blueprint. It creates the web app and its own Postgres database in Singapore, the closest region to the Philippines. The settings are filled in for you: `SESSION_SECRET` is generated, the database is connected, and push keys are created on first start and kept in the database.
+
+1. In the [Render dashboard](https://dashboard.render.com), choose **New → Blueprint**.
+2. Connect the GitHub repo `sandrhiks/kam-team-lead-generator`. Pick the branch that has this code: `main` once it's merged, or the feature branch until then.
+3. Set **Blueprint Path** to `bible-study/render.yaml`, then click **Apply**.
+4. Wait for the deploy to go green, then open the `https://kam-bible-study.onrender.com` link Render shows you.
+5. Optional: add your own domain (for example `bible.kam-team.com`) under the service's **Settings → Custom Domains**.
+
+**Cost:** Render's Starter web plan and the `basic-256mb` database are paid, at a few dollars a month each. The web app has to stay awake, because the reminder scheduler runs inside it; Render's free web plan sleeps and would miss reminders. Free Render databases also expire after 30 days. Check [Render pricing](https://render.com/pricing) for current prices.
+
+This database is separate from the lead generator's, so Bible study accounts are separate too.
+
+### Other hosts
+
 **Deploy:** any Node host works, including Render, Railway, Fly.io or a VPS. Set the start command to `node bible-study/server.js` from the repo root. Then:
 
 - Set `DATABASE_URL` (Postgres) so progress survives redeploys. Without it, use a persistent disk for `DATA_DIR`.
-- Set `SESSION_SECRET`, `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` so sessions and push subscriptions survive restarts.
+- Set `SESSION_SECRET` so sign-ins survive restarts. Push keys are generated and kept in the database automatically.
 - Serve it over **HTTPS**. Service workers and push only work on HTTPS (or localhost).
 
 ## Configuration
@@ -164,8 +181,8 @@ Copy `bible-study/.env.example` to `bible-study/.env`:
 | `SESSION_DAYS` | `30` | How long a sign-in lasts |
 | `ALLOWED_EMAILS` | `*` | Who can create an account: `*` (anyone), or a list like `pastor@church.org,@church.org` |
 | `DATABASE_URL` | – | Postgres. If unset, JSON files are used. |
-| `DATA_DIR` | `bible-study/data` | Where the JSON files and generated VAPID keys go |
-| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | generated | Push keys. Generate a pair with `node -e "console.log(require('./bible-study/lib/push').generateVapidKeys())"`. |
+| `DATA_DIR` | `bible-study/data` | Where the JSON files go when there's no `DATABASE_URL` |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | generated | Optional push keys. If unset, a pair is generated once and kept in the database (or `DATA_DIR`). To set your own, generate a pair with `node -e "console.log(require('./bible-study/lib/push').generateVapidKeys())"`. |
 | `VAPID_SUBJECT` | `mailto:team@kam-team.com` | Contact the push services see |
 
 **Shared database:** if this app and the lead generator use the same `DATABASE_URL`, they share the `kam_users` accounts table. Use a separate database if you want separate accounts.

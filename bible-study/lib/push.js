@@ -5,8 +5,6 @@
 // Works with Chrome, Edge, Firefox and Safari (iOS 16.4+ once the app is
 // added to the Home Screen).
 
-const fs = require("node:fs");
-const path = require("node:path");
 const crypto = require("node:crypto");
 
 const b64u = buf => Buffer.from(buf).toString("base64url");
@@ -14,24 +12,8 @@ const unb64u = s => Buffer.from(String(s || ""), "base64url");
 const hmac = (key, data) => crypto.createHmac("sha256", key).update(data).digest();
 
 /* ---------------- VAPID keys ---------------- */
-// Keys come from VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY (base64url), or are
-// generated once and kept in DATA_DIR/vapid.json. Changing them invalidates
-// every existing subscription, so keep them stable.
-function loadVapid({ publicKey, privateKey, dataDir }) {
-  if (publicKey && privateKey) return vapidFrom(publicKey, privateKey);
-  const file = path.join(dataDir, "vapid.json");
-  try {
-    const k = JSON.parse(fs.readFileSync(file, "utf8"));
-    return vapidFrom(k.publicKey, k.privateKey);
-  } catch (e) {
-    if (e.code !== "ENOENT") throw e;
-  }
-  const k = generateVapidKeys();
-  fs.mkdirSync(dataDir, { recursive: true });
-  fs.writeFileSync(file, JSON.stringify(k, null, 2), { mode: 0o600 });
-  return vapidFrom(k.publicKey, k.privateKey);
-}
-
+// Changing the keys invalidates every existing subscription, so the server
+// generates them once and keeps them (see initVapid in server.js).
 function generateVapidKeys() {
   const { publicKey, privateKey } = crypto.generateKeyPairSync("ec", { namedCurve: "prime256v1" });
   const jwk = privateKey.export({ format: "jwk" });
@@ -134,4 +116,4 @@ function validSubscription(sub) {
     unb64u(sub.keys && sub.keys.p256dh).length === 65 && unb64u(sub.keys && sub.keys.auth).length === 16;
 }
 
-module.exports = { loadVapid, generateVapidKeys, vapidHeader, encrypt, decrypt, send, validSubscription };
+module.exports = { vapidFrom, generateVapidKeys, vapidHeader, encrypt, decrypt, send, validSubscription };
