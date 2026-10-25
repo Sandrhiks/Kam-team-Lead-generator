@@ -162,6 +162,22 @@ Open http://localhost:3100, click **Create account**, and start Life Class.
 
 This database is separate from the lead generator's, so Bible study accounts are separate too.
 
+### Use Supabase as the database
+
+Supabase hosts the Postgres database; it can't run this Node server, so the app itself still runs on Render (or another Node host). Supabase's free plan replaces the paid Render database.
+
+1. In [Supabase](https://supabase.com/dashboard), click **New project**. Pick the **Southeast Asia (Singapore)** region, set a database password and save it somewhere safe.
+2. Open **SQL Editor → New query**, paste the contents of `bible-study/supabase/setup.sql` and click **Run**. It creates the tables and turns on Row Level Security, so the project's public API keys can't read accounts or progress.
+3. Click **Connect** at the top of the project. Under **Connection string → Session pooler**, copy the URI. It looks like `postgresql://postgres.abcdefgh:[YOUR-PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres`. Replace `[YOUR-PASSWORD]` with your database password. Use the session pooler, not the "Direct connection": the direct one is IPv6-only and Render can't reach it.
+4. In Render, choose **New → Blueprint**, connect this repo, set **Blueprint Path** to `bible-study/render-supabase.yaml`, paste the URI from step 3 as `DATABASE_URL`, then click **Apply**.
+5. When the deploy is green, open the app link and create the first account. In Supabase's **Table Editor** you'll see the row appear in `kam_users`.
+
+Notes:
+
+- If your password has symbols such as `@`, `#` or `/`, URL-encode them in the URI (for example `@` becomes `%40`), or choose a password of letters and numbers.
+- Supabase pauses free projects after about a week with no activity. A church using the app daily keeps it awake; otherwise un-pause it from the dashboard.
+- To run locally against Supabase, put the same URI in `bible-study/.env` as `DATABASE_URL` and run `npm run bible`.
+
 ### Other hosts
 
 **Deploy:** any Node host works, including Render, Railway, Fly.io or a VPS. Set the start command to `node bible-study/server.js` from the repo root. Then:
