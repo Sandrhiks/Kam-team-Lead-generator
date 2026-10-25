@@ -1,6 +1,6 @@
 // Kam Team Bible Study Guide — the app.
 // One state object per member, kept in localStorage for offline use and synced
-// to /api/progress. Views are rendered from that state on every hash change.
+// through window.KBS (api.js). Views are rendered from that state on every hash change.
 (function () {
   "use strict";
 
@@ -71,13 +71,10 @@
     if (syncing) { syncTimer = setTimeout(sync, 1500); return; }
     syncing = true;
     try {
-      const r = await fetch("/api/progress", {
-        method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: S, updated: S.updated }),
-      });
-      if (r.status === 401) return location.replace("/login");
-      if (r.status === 409) {
-        const j = await r.json();
-        if (j.updated > S.updated) { S = normalize(j.data); writeLocal(); render(); toast("Updated with your latest progress from another device"); }
+      const r = await KBS.putProgress(S, S.updated);
+      if (r.status === "signedOut") return location.replace(KBS.loginUrl);
+      if (r.status === "conflict" && r.updated > S.updated) {
+        S = normalize(r.data); writeLocal(); render(); toast("Updated with your latest progress from another device");
       }
     } catch { /* offline: the local copy is kept and synced next time */ }
     finally { syncing = false; }
@@ -683,7 +680,7 @@
   let swReg = null;
   async function registerSW() {
     if (!("serviceWorker" in navigator)) return null;
-    try { swReg = await navigator.serviceWorker.register("/sw.js"); } catch { swReg = null; }
+    try { swReg = await navigator.serviceWorker.register("sw.js"); } catch { swReg = null; }
     return swReg;
   }
 
@@ -698,11 +695,10 @@
     if (perm !== "granted") { render(); return toast("Notifications are off. You can allow them in browser settings."); }
     const reg = swReg || await navigator.serviceWorker.ready;
     try {
-      const { publicKey } = await (await fetch("/api/push/key")).json();
+      const publicKey = await KBS.pushKey();
       let sub = await reg.pushManager.getSubscription();
       if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(publicKey) });
-      const r = await fetch("/api/push/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ subscription: sub.toJSON() }) });
-      if (!r.ok) throw new Error("subscribe failed");
+      if (!(await KBS.subscribe(sub.toJSON()))) throw new Error("subscribe failed");
       if (!S.settings.reminders.daily.on) { S.settings.reminders.daily.on = true; }
       save(); render(); toast("\u{2705} Reminders are on for this device");
     } catch {
@@ -712,14 +708,13 @@
   }
 
   async function testPush() {
-    const r = await fetch("/api/push/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }).catch(() => null);
-    const j = r ? await r.json().catch(() => ({})) : {};
-    if (r && r.ok) return toast("Test sent — it should arrive in a few seconds");
+    const r = await KBS.testPush().catch(() => ({ ok: false }));
+    if (r.ok) return toast("Test sent — it should arrive in a few seconds");
     if (Notification.permission === "granted" && swReg) {
-      swReg.showNotification("Reminders are on \u{2705}", { body: "This is how your Bible study reminders will look.", icon: "/icon.svg", tag: "test" });
+      swReg.showNotification("Reminders are on \u{2705}", { body: "This is how your Bible study reminders will look.", icon: "icon.svg", tag: "test" });
       return;
     }
-    toast(j.error || "Couldn't send a test notification");
+    toast(r.error || "Couldn't send a test notification");
   }
 
   let localTimer;
@@ -735,7 +730,7 @@
     if (at <= new Date()) at.setDate(at.getDate() + 1);
     localTimer = setTimeout(() => {
       if (!(S.log[dateKey()] && S.log[dateKey()].read)) {
-        swReg.showNotification("Time with God \u{1F64F}", { body: `Today's reading: ${todayRef()}.`, icon: "/icon.svg", tag: "daily", data: { url: "/#today" } });
+        swReg.showNotification("Time with God \u{1F64F}", { body: `Today's reading: ${todayRef()}.`, icon: "icon.svg", tag: "daily", data: { url: "#today" } });
       }
       scheduleLocal();
     }, at - new Date());
@@ -756,21 +751,20 @@
     try {
       const sub = swReg && await swReg.pushManager.getSubscription();
       if (sub) {
-        await fetch("/api/push/unsubscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ endpoint: sub.endpoint }) });
+        await KBS.unsubscribe(sub.endpoint);
         await sub.unsubscribe();
       }
     } catch { /* ignore */ }
     try { localStorage.removeItem(storeKey()); } catch { /* ignore */ }
-    await fetch("/auth/logout", { method: "POST" }).catch(() => {});
-    location.replace("/login");
+    await KBS.logout().catch(() => {});
+    location.replace(KBS.loginUrl);
   }
 
   /* ---------------- Start ---------------- */
   async function start() {
     try {
-      const r = await fetch("/auth/me");
-      if (r.status === 401) return location.replace("/login");
-      me = await r.json();
+      me = await KBS.me();
+      if (!me) return location.replace(KBS.loginUrl);
       try { localStorage.setItem("kbs.me", JSON.stringify({ email: me.email, name: me.name })); } catch { /* ignore */ }
     } catch {
       // Offline: reuse the last signed-in member on this device, if any.
@@ -783,13 +777,11 @@
     registerSW().then(scheduleLocal);
 
     try {
-      const r = await fetch("/api/progress");
-      if (r.ok) {
-        const j = await r.json();
-        if (j.data && j.updated > S.updated) { S = normalize(j.data); writeLocal(); render(); }
-        else if (S.updated > (j.updated || 0)) sync();
-        else if (!j.data) save();
-      }
+      const j = await KBS.getProgress();
+      if (!j) return location.replace(KBS.loginUrl);
+      if (j.data && j.updated > S.updated) { S = normalize(j.data); writeLocal(); render(); }
+      else if (S.updated > (j.updated || 0)) sync();
+      else if (!j.data) save();
     } catch { /* offline */ }
   }
   start();

@@ -6,14 +6,14 @@
 <title>Bible Study Guide · Sign in</title>
 <meta name="description" content="Kam Team Bible Study Guide — Life Class, Encounter and School of Leaders workbook with daily reminders.">
 <meta name="theme-color" content="#141414">
-<link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link rel="manifest" href="/manifest.webmanifest">
-<link rel="apple-touch-icon" href="/kam-team-logo.png">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="kam-team-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400..700&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem("kbs.theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -69,6 +69,8 @@
 <p class="credit"><b>Kam Team Publishing</b><br>Powered by <b>Arty Incognito</b> &amp; <b>Sandrhiks Builder</b></p>
 </div>
 
+<script src="config.js"></script>
+<script src="api.js"></script>
 <script>
 (function(){
 "use strict";
@@ -88,14 +90,16 @@ document.querySelectorAll(".show").forEach(b=>b.onclick=()=>{
   const i=$(b.dataset.for); const vis=i.type==="password"; i.type=vis?"text":"password"; b.textContent=vis?"Hide":"Show";
 });
 if(location.hash==="#signup") show("signup");
+// The Node server redirects signed-in members itself; with Supabase the page checks.
+if(KBS.mode==="supabase") KBS.me().then(m=>{ if(m) location.replace(KBS.homeUrl); }).catch(()=>{});
 
-async function post(url,body,errEl,btn){
-  errEl.textContent=""; btn.disabled=true;
+async function submit(call,errEl,btn){
+  errEl.textContent=""; errEl.classList.remove("info"); btn.disabled=true;
   try{
-    const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    const j=await r.json().catch(()=>({}));
-    if(!r.ok||!j.ok){errEl.textContent=j.error||"Something went wrong. Try again."; return;}
-    location.replace("/");
+    const r=await call();
+    if(!r.ok){errEl.textContent=r.error||"Something went wrong. Try again."; return;}
+    if(r.confirm){errEl.classList.add("info"); errEl.textContent="Almost done: we sent you an email. Open the link in it to finish creating your account, then sign in."; return;}
+    location.replace(KBS.homeUrl);
   }catch(e){errEl.textContent="Couldn't reach the server. Check your connection.";}
   finally{btn.disabled=false;}
 }
@@ -104,7 +108,7 @@ $("fLogin").onsubmit=e=>{
   e.preventDefault();
   const email=$("lEmail").value.trim(), password=$("lPass").value;
   if(!email||!password){$("lErr").textContent="Enter your email and password."; return;}
-  post("/auth/login",{email,password},$("lErr"),e.submitter||e.target.querySelector("button[type=submit]"));
+  submit(()=>KBS.login(email,password),$("lErr"),e.submitter||e.target.querySelector("button[type=submit]"));
 };
 $("fSignup").onsubmit=e=>{
   e.preventDefault();
@@ -112,7 +116,7 @@ $("fSignup").onsubmit=e=>{
   if(!email){$("sErr").textContent="Enter your email."; return;}
   if(password.length<8){$("sErr").textContent="Password must be at least 8 characters."; return;}
   if(password!==$("sPass2").value){$("sErr").textContent="The passwords don't match."; return;}
-  post("/auth/signup",{name,email,password},$("sErr"),e.submitter||e.target.querySelector("button[type=submit]"));
+  submit(()=>KBS.signup(name,email,password),$("sErr"),e.submitter||e.target.querySelector("button[type=submit]"));
 };
 })();
 </script>

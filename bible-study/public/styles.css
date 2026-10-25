@@ -76,6 +76,7 @@ form{display:flex;flex-direction:column;gap:14px}
 .hint{font-size:12.5px;color:var(--muted)}
 .err{color:var(--danger);font-size:13.5px}
 .err:empty{display:none}
+.err.info{color:var(--ink)}
 .foot{margin-top:16px;font-size:13px;color:var(--muted);text-align:center}
 .foot button{border:0;background:none;padding:0;color:var(--ink);font-weight:600;text-decoration:underline;cursor:pointer}
 .ladder-mini{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:12px}

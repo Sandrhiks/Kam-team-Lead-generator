@@ -13,6 +13,7 @@ It installs to the phone's home screen (PWA), works offline, and syncs progress 
 - [Features](#features)
 - [Architecture](#architecture)
 - [Run it](#run-it)
+- [GitHub Pages + Supabase](#github-pages--supabase)
 - [Configuration](#configuration)
 - [Notifications](#notifications)
 - [Customising the curriculum](#customising-the-curriculum)
@@ -129,6 +130,11 @@ Phone / browser (PWA)                         bible-study/server.js (Node 18+, n
 | `public/app.js` | The single-page app (Today, Path, Lesson, Journal, Verses, Me, Certificate) |
 | `public/login.html` | Sign-in and create-account page |
 | `public/sw.js` | Service worker: offline cache, push display, notification clicks |
+| `public/api.js` | Talks to the backend: the Node server, or Supabase when `config.js` names a project |
+| `public/config.js` | Which backend to use. Empty means the Node server; the GitHub Pages workflow fills in Supabase. |
+| `supabase/pages.sql` | Supabase tables, access rules and the once-a-minute reminder job, for the GitHub Pages version |
+| `supabase/functions/kbs-push/` | Supabase Edge Function that sends push reminders for the GitHub Pages version |
+| `supabase/setup.sql` | Locks down the tables when the Node server uses a Supabase database |
 | `render.yaml` | Render Blueprint: web app + Postgres |
 | `test/` | Tests (`npm test` from the repo root; set `TEST_DATABASE_URL` to also run the Postgres test) |
 
@@ -147,6 +153,51 @@ npm test                    # runs the lead generator and Bible study tests
 ```
 
 Open http://localhost:3100, click **Create account**, and start Life Class.
+
+## GitHub Pages + Supabase
+
+This runs the app with no server of your own. GitHub Pages hosts the pages and Supabase does the rest:
+
+| Part | Where it runs |
+| --- | --- |
+| The app (pages, lessons, offline copy) | GitHub Pages |
+| Sign-in and accounts | Supabase Auth |
+| Progress and devices | Supabase database, protected by Row Level Security |
+| Reminders | A Supabase Edge Function (`kbs-push`), called once a minute by `pg_cron` |
+
+The GitHub workflow `.github/workflows/bible-study-pages.yml` publishes the app and deploys the function whenever `main` changes. GitHub Pages is free for public repositories; a private one needs a paid GitHub plan. Accounts here are Supabase accounts, separate from the Node server version's.
+
+### Set it up (about 20 minutes, once)
+
+**1. Supabase project**
+
+1. In [Supabase](https://supabase.com/dashboard), click **New project**. Pick **Southeast Asia (Singapore)** and save the database password somewhere safe.
+2. Open **SQL Editor → New query**, paste the whole of `bible-study/supabase/pages.sql`, and click **Run**.
+3. Open **Authentication → URL Configuration**. Set **Site URL** to your Pages address, `https://sandrhiks.github.io/Kam-team-Lead-generator/`, and add the same address under **Redirect URLs**. The links in sign-up emails go there.
+4. Collect three values from **Project Settings**:
+   - **Project URL**, like `https://abcdefghij.supabase.co`
+   - the **anon public** key (or the **publishable** key, `sb_publishable_…`). It's safe in the browser: the tables only allow what the app needs.
+   - the **project ref**, the `abcdefghij` part of the URL
+5. Open [Account → Access Tokens](https://supabase.com/dashboard/account/tokens) and click **Generate new token**. GitHub uses it to deploy the reminder function. Keep it private.
+
+**2. GitHub repository**
+
+1. Open **Settings → Secrets and variables → Actions**.
+   - On the **Variables** tab, add `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_PROJECT_REF`.
+   - On the **Secrets** tab, add `SUPABASE_ACCESS_TOKEN`.
+2. Open **Settings → Pages**. Under **Build and deployment → Source**, choose **GitHub Actions**.
+3. Open **Actions → Bible Study on GitHub Pages → Run workflow**. Later changes to `main` publish by themselves.
+4. When both jobs are green, open `https://sandrhiks.github.io/Kam-team-Lead-generator/` and create an account.
+5. Check reminders: **Me → Reminders → Turn on**, then **Send test**.
+
+### Good to know
+
+- **Email confirmation.** Supabase asks new members to confirm their email by default. Its built-in email sender only sends a few emails an hour, which suits a test but not a whole church. For launch, either add your own email service under **Project Settings → Authentication → SMTP**, or turn off **Confirm email** under **Authentication → Sign In / Providers → Email**.
+- **Who can sign up.** Anyone with the link. To close sign-ups, turn off **Allow new users to sign up** under **Authentication → Sign In / Providers**. (`ALLOWED_EMAILS` is for the Node server only.)
+- **Your own domain.** Add it under **Settings → Pages → Custom domain**, then update the Site URL and Redirect URLs in Supabase to match.
+- **Push keys** are made by the function on its first run and kept in the `kbs_meta` table. Don't delete that row: new keys would turn off reminders on every device.
+- **Checking reminders.** In Supabase, **Integrations → Cron → kbs-reminders** shows each minute's run, and **Edge Functions → kbs-push → Logs** shows what was sent.
+- **Free plan.** Supabase can pause a free project that sees little use. Members using the app keep it active; if it's paused, restore it from the dashboard.
 
 ### Deploy on Render
 

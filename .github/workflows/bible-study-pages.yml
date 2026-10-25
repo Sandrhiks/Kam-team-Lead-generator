@@ -1,0 +1,90 @@
+# Publishes the Kam Team Bible Study Guide to GitHub Pages, with Supabase for
+# sign-in, data and reminders. Setup: bible-study/README.md → "GitHub Pages + Supabase".
+#
+# Repository settings it reads (Settings → Secrets and variables → Actions):
+#   Variables: SUPABASE_URL          https://<project-ref>.supabase.co
+#              SUPABASE_ANON_KEY     the project's public anon (or publishable) key
+#              SUPABASE_PROJECT_REF  <project-ref>
+#   Secrets:   SUPABASE_ACCESS_TOKEN a Supabase personal access token, to deploy the function
+name: Bible Study on GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bible-study/public/**"
+      - "bible-study/supabase/functions/**"
+      - ".github/workflows/bible-study-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bible-study-pages
+  cancel-in-progress: false
+
+jobs:
+  function:
+    name: Deploy the reminder function to Supabase
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+      PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+    steps:
+      - name: Check the settings
+        run: |
+          missing=""
+          [ -n "$SUPABASE_URL" ] || missing="$missing SUPABASE_URL(variable)"
+          [ -n "$SUPABASE_ANON_KEY" ] || missing="$missing SUPABASE_ANON_KEY(variable)"
+          [ -n "$PROJECT_REF" ] || missing="$missing SUPABASE_PROJECT_REF(variable)"
+          [ -n "$SUPABASE_ACCESS_TOKEN" ] || missing="$missing SUPABASE_ACCESS_TOKEN(secret)"
+          if [ -n "$missing" ]; then
+            echo "::error::Add these in Settings → Secrets and variables → Actions:$missing"
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.120.0
+      - name: Deploy kbs-push
+        working-directory: bible-study
+        run: supabase functions deploy kbs-push --project-ref "$PROJECT_REF" --no-verify-jwt --use-api
+      # The first call makes the push keys and records the function's URL for
+      # the once-a-minute reminder job (see bible-study/supabase/pages.sql).
+      - name: Start it
+        run: |
+          curl -fsS --retry 5 --retry-delay 5 --retry-all-errors -X POST "$SUPABASE_URL/functions/v1/kbs-push" \
+            -H "Content-Type: application/json" -H "apikey: $SUPABASE_ANON_KEY" \
+            -d '{"action":"key"}' | grep -q '"publicKey"'
+
+  pages:
+    name: Publish the app to GitHub Pages
+    needs: function
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the site
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+        run: |
+          cp -r bible-study/public _site
+          node -e 'require("fs").writeFileSync("_site/config.js",
+            "// Written by the GitHub Pages workflow.\nwindow.KBS_CONFIG = " +
+            JSON.stringify({ supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY }) + ";\n")'
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
