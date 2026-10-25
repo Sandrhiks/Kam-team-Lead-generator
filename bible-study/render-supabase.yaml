@@ -1,0 +1,29 @@
+# Render Blueprint for the Kam Team Bible Study Guide, using a Supabase
+# database instead of a Render one. In Render: New → Blueprint → pick this
+# repo → set "Blueprint Path" to bible-study/render-supabase.yaml. Render asks
+# for DATABASE_URL: paste the Supabase "Session pooler" connection string
+# (see bible-study/README.md → Use Supabase as the database).
+services:
+  - type: web
+    name: kam-bible-study
+    runtime: node
+    # Paid plan so the server never sleeps: the reminder scheduler runs inside it,
+    # and a free instance that sleeps would miss reminders.
+    plan: starter
+    region: singapore
+    buildCommand: npm ci --omit=dev
+    startCommand: node bible-study/server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ALLOWED_EMAILS
+        value: "*"
+      - key: SESSION_DAYS
+        value: "30"
+      - key: VAPID_SUBJECT
+        value: mailto:team@kam-team.com
+      - key: DATABASE_URL
+        sync: false

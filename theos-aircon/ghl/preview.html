@@ -1,0 +1,1789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theo's Airconditioning Services | San Fernando, Pampanga</title>
+<style>body { margin: 0; }</style>
+</head>
+<body>
+<!-- Theo's Airconditioning Services - full website for a GoHighLevel "Custom JS/HTML" element.
+     Paste this whole file into ONE Custom JS/HTML element on a blank, full-width GHL page. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+#theo-site{
+  --navy: #082140;
+  --navy-2: #10325E;
+  --blue: #1D5FC4;
+  --sky: #3E8EE8;
+  --cyan: #34A9EB;
+  --ice: #EAF2FD;
+  --warm: #FF8A3D;
+  --bg: #F7FAFD;
+  --white: #FFFFFF;
+  --text: #0F1B2D;
+  --muted: #5B6B80;
+  --line: #E1E8F0;
+  --grad: linear-gradient(135deg, var(--blue), var(--cyan));
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow-sm: 0 2px 10px rgba(10, 31, 60, .06);
+  --shadow: 0 18px 40px -18px rgba(10, 31, 60, .25);
+  --ease: cubic-bezier(.22, .8, .25, 1);
+  --header-h: 76px;
+  --container: 1200px;
+}
+#theo-site *, #theo-site *::before, #theo-site *::after{ box-sizing: border-box; }
+#theo-site{ overflow-x: clip; scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 12px); }
+#theo-site{
+  margin: 0;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+#theo-site img{ max-width: 100%; display: block; }
+#theo-site a{ color: inherit; text-decoration: none; }
+#theo-site h1, #theo-site h2, #theo-site h3, #theo-site h4{ line-height: 1.15; margin: 0 0 .5em; letter-spacing: -.02em; }
+#theo-site h1{ font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 800; }
+#theo-site h2{ font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; }
+#theo-site h3{ font-size: 1.2rem; font-weight: 700; }
+#theo-site p{ margin: 0 0 1em; }
+#theo-site .container{ width: min(var(--container), 100% - 32px); margin-inline: auto; }
+#theo-site .section{ padding: clamp(64px, 9vw, 110px) 0; }
+#theo-site .section--alt{ background: var(--white); }
+#theo-site .section--dark{ background: var(--navy); color: #DCE7F5; }
+#theo-site .section--dark h2, #theo-site .section--dark h3{ color: var(--white); }
+#theo-site .eyebrow{
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 14px;
+}
+#theo-site .eyebrow::before{ content: ""; width: 22px; height: 2px; background: var(--grad); border-radius: 2px; }
+#theo-site .section--dark .eyebrow{ color: var(--cyan); }
+#theo-site .section-head{ max-width: 680px; margin-bottom: 48px; }
+#theo-site .section-head.center{ margin-inline: auto; text-align: center; }
+#theo-site .section-head.center .eyebrow::before{ display: none; }
+#theo-site .lead{ font-size: 1.12rem; color: var(--muted); }
+#theo-site .text-grad{ background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+#theo-site .skip-link{ position: absolute; left: -999px; top: 8px; background: var(--white); padding: 8px 14px; border-radius: 8px; z-index: 200; }
+#theo-site .skip-link:focus{ left: 8px; }
+#theo-site .btn{
+  --b: var(--blue);
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 26px; border-radius: 999px; border: 0; cursor: pointer;
+  font: inherit; font-weight: 700; font-size: .95rem;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), background .3s, color .3s;
+  white-space: nowrap;
+}
+#theo-site .btn svg{ width: 18px; height: 18px; transition: transform .3s var(--ease); }
+#theo-site .btn:hover svg{ transform: translateX(3px); }
+#theo-site .btn--primary{ background: var(--grad); color: var(--white); box-shadow: 0 10px 24px -10px rgba(29, 95, 196, .7); }
+#theo-site .btn--primary:hover{ transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(29, 95, 196, .75); }
+#theo-site .btn--ghost{ background: transparent; color: var(--navy); box-shadow: inset 0 0 0 1.5px var(--line); }
+#theo-site .btn--ghost:hover{ box-shadow: inset 0 0 0 1.5px var(--blue); color: var(--blue); }
+#theo-site .btn--light{ background: rgba(255,255,255,.14); color: var(--white); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.35); backdrop-filter: blur(6px); }
+#theo-site .btn--light:hover{ background: rgba(255,255,255,.24); }
+#theo-site .btn--sm{ padding: 10px 18px; font-size: .88rem; }
+#theo-site .btn:focus-visible, #theo-site a:focus-visible, #theo-site button:focus-visible, #theo-site input:focus-visible, #theo-site select:focus-visible, #theo-site textarea:focus-visible{
+  outline: 3px solid rgba(29, 95, 196, .4); outline-offset: 2px;
+}
+#theo-site .site-header{ position: fixed; top: 0; left: 0; right: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, .16); transition: box-shadow .35s var(--ease), border-color .35s; }
+#theo-site .site-header::before{
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(8, 33, 64, .42), rgba(8, 33, 64, .2));
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  transition: background .35s;
+}
+#theo-site .site-header.is-scrolled{ box-shadow: 0 10px 30px -18px rgba(8, 33, 64, .35); border-color: rgba(255, 255, 255, .6); }
+#theo-site .site-header.is-scrolled::before{ background: rgba(255, 255, 255, .7); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); }
+#theo-site .site-header .logo-on-dark{ display: none; }
+#theo-site .site-header:not(.is-scrolled) .logo-on-dark{ display: block; }
+#theo-site .site-header:not(.is-scrolled) .logo-on-light{ display: none; }
+#theo-site .site-header:not(.is-scrolled) .brand__name{ color: var(--white); }
+#theo-site .site-header:not(.is-scrolled) .brand__tag{ color: #A9C8F5; }
+#theo-site .site-header:not(.is-scrolled) .nav__toggle{ background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .3); }
+#theo-site .site-header:not(.is-scrolled) .nav__toggle span{ background: var(--white); }
+#theo-site.nav-open .site-header .nav__toggle{ background: var(--white); border-color: var(--line); }
+#theo-site.nav-open .site-header .nav__toggle span{ background: var(--navy); }
+@media (min-width: 961px){#theo-site .site-header:not(.is-scrolled) .nav__link{ color: rgba(255, 255, 255, .92); text-shadow: 0 1px 8px rgba(8, 33, 64, .35); }
+#theo-site .site-header:not(.is-scrolled) .nav__link:hover{ color: var(--white); background: rgba(255, 255, 255, .14); }
+#theo-site .site-header:not(.is-scrolled) .nav__link.is-active{ color: var(--white); }
+#theo-site .site-header:not(.is-scrolled) .nav__link::after{ background: var(--white); }
+}
+#theo-site .nav{ height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 20px; transition: height .35s var(--ease); }
+#theo-site .site-header.is-scrolled .nav{ height: 64px; }
+#theo-site .brand{ display: flex; align-items: center; gap: 12px; }
+#theo-site .brand img{ width: 46px; height: 42px; transition: transform .5s var(--ease); }
+#theo-site .brand:hover img{ transform: scale(1.06); }
+#theo-site .brand__text{ display: flex; flex-direction: column; line-height: 1.05; }
+#theo-site .brand__name{ font-weight: 800; font-size: 1.28rem; color: var(--navy); letter-spacing: .16em; }
+#theo-site .brand__tag{ font-size: .62rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--blue); margin-top: 4px; }
+#theo-site .brand__services{ margin-top: 14px; font-size: .66rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #7F96B5; }
+#theo-site .nav__menu{ display: flex; align-items: center; gap: 6px; list-style: none; margin: 0; padding: 0; }
+#theo-site .nav__link{
+  position: relative; display: inline-block; padding: 10px 14px; border-radius: 999px;
+  font-weight: 600; font-size: .94rem; color: var(--navy);
+  transition: color .3s var(--ease), background .3s var(--ease);
+}
+#theo-site .nav__link::after{
+  content: ""; position: absolute; left: 14px; right: 14px; bottom: 5px; height: 2px; border-radius: 2px;
+  background: var(--grad); transform: scaleX(0); transform-origin: right; transition: transform .35s var(--ease);
+}
+#theo-site .nav__link:hover{ color: var(--blue); background: var(--ice); }
+#theo-site .nav__link:hover::after, #theo-site .nav__link.is-active::after{ transform: scaleX(1); transform-origin: left; }
+#theo-site .nav__link.is-active{ color: var(--blue); }
+#theo-site .nav__cta{ margin-left: 10px; }
+#theo-site .nav__toggle{
+  display: none; width: 46px; height: 46px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--white); cursor: pointer; position: relative; z-index: 120;
+}
+#theo-site .nav__toggle span{
+  position: absolute; left: 12px; right: 12px; height: 2px; border-radius: 2px; background: var(--navy);
+  transition: transform .35s var(--ease), opacity .25s, top .35s var(--ease);
+}
+#theo-site .nav__toggle span:nth-child(1){ top: 16px; }
+#theo-site .nav__toggle span:nth-child(2){ top: 22px; }
+#theo-site .nav__toggle span:nth-child(3){ top: 28px; }
+#theo-site.nav-open .nav__toggle span:nth-child(1){ top: 22px; transform: rotate(45deg); }
+#theo-site.nav-open .nav__toggle span:nth-child(2){ opacity: 0; transform: translateX(-8px); }
+#theo-site.nav-open .nav__toggle span:nth-child(3){ top: 22px; transform: rotate(-45deg); }
+#theo-site .nav__backdrop{ display: none; }
+@media (max-width: 960px){#theo-site .nav__toggle{ display: block; }
+#theo-site .nav__panel{
+    position: fixed; inset: 0 0 0 auto; width: min(340px, 86vw); z-index: 110;
+    background: var(--white); padding: 96px 24px 32px;
+    display: flex; flex-direction: column; gap: 24px;
+    transform: translateX(100%); visibility: hidden; transition: transform .45s var(--ease), visibility .45s;
+    box-shadow: -20px 0 50px -20px rgba(10,31,60,.3);
+    overflow-y: auto;
+  }
+#theo-site.nav-open .nav__panel{ transform: none; visibility: visible; }
+#theo-site .nav__menu{ flex-direction: column; align-items: stretch; gap: 4px; }
+#theo-site .nav__link{ display: block; padding: 14px 16px; font-size: 1.05rem; border-radius: 12px; }
+#theo-site .nav__link::after{ left: 16px; right: auto; width: 24px; bottom: 8px; }
+#theo-site .nav__menu li{ opacity: 0; transform: translateX(24px); transition: opacity .4s, transform .4s var(--ease); }
+#theo-site.nav-open .nav__menu li{ opacity: 1; transform: none; }
+#theo-site.nav-open .nav__menu li:nth-child(1){ transition-delay: .08s; }
+#theo-site.nav-open .nav__menu li:nth-child(2){ transition-delay: .13s; }
+#theo-site.nav-open .nav__menu li:nth-child(3){ transition-delay: .18s; }
+#theo-site.nav-open .nav__menu li:nth-child(4){ transition-delay: .23s; }
+#theo-site.nav-open .nav__menu li:nth-child(5){ transition-delay: .28s; }
+#theo-site.nav-open .nav__menu li:nth-child(6){ transition-delay: .33s; }
+#theo-site .nav__cta{ margin: 0; width: 100%; }
+#theo-site .nav__backdrop{
+    display: block; position: fixed; inset: 0; z-index: 105; background: rgba(10,31,60,.45);
+    opacity: 0; visibility: hidden; transition: opacity .35s, visibility .35s;
+  }
+#theo-site.nav-open .nav__backdrop{ opacity: 1; visibility: visible; }
+#theo-site.nav-open{ overflow: hidden; }
+#theo-site .nav__panel-foot{ margin-top: auto; font-size: .9rem; color: var(--muted); }
+#theo-site .nav__panel-foot a{ display: block; color: var(--navy); font-weight: 600; margin-top: 4px; }
+}
+@media (min-width: 961px){#theo-site .nav__panel{ display: flex; align-items: center; }
+#theo-site .nav__panel-foot{ display: none; }
+ }
+@media (max-width: 420px){#theo-site .brand__tag{ font-size: .54rem; letter-spacing: .1em; }
+#theo-site .brand__name{ font-size: 1.1rem; letter-spacing: .12em; }
+#theo-site .brand img{ width: 40px; height: 37px; }
+ }
+#theo-site .hero{ position: relative; height: min(88vh, 760px); min-height: 560px; overflow: hidden; background: var(--navy); }
+#theo-site .slide{
+  position: absolute; inset: 0; opacity: 0; visibility: hidden;
+  transition: opacity 1s var(--ease), visibility 1s;
+}
+#theo-site .slide.is-active{ opacity: 1; visibility: visible; }
+#theo-site .slide__img{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); transition: transform 7s linear; }
+#theo-site .slide.is-active .slide__img{ transform: scale(1); }
+#theo-site .slide::after{
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(8, 24, 48, .88) 0%, rgba(8, 24, 48, .62) 42%, rgba(8, 24, 48, .05) 75%);
+}
+#theo-site .slide__content{ position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; color: var(--white); }
+#theo-site .slide__content > *{ max-width: 640px; }
+#theo-site .slide__content > *{ opacity: 0; transform: translateY(24px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+#theo-site .slide.is-active .slide__content > *{ opacity: 1; transform: none; }
+#theo-site .slide.is-active .slide__content > *:nth-child(2){ transition-delay: .12s; }
+#theo-site .slide.is-active .slide__content > *:nth-child(3){ transition-delay: .24s; }
+#theo-site .slide.is-active .slide__content > *:nth-child(4){ transition-delay: .36s; }
+#theo-site .slide__tag{
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border-radius: 999px; font-size: .8rem; font-weight: 700; letter-spacing: .04em;
+  background: rgba(18, 200, 212, .16); color: #8EF3FA; border: 1px solid rgba(142, 243, 250, .35); margin-bottom: 20px;
+}
+#theo-site .slide__tag::before{ content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 4px rgba(18,200,212,.25); }
+#theo-site .slide__content p{ font-size: 1.12rem; color: #C9D8EA; max-width: 520px; }
+#theo-site .hero__actions{ display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+#theo-site .hero__controls{
+  position: absolute; z-index: 5; bottom: 32px; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+#theo-site .hero__dots{ display: flex; gap: 10px; }
+#theo-site .hero__dot{
+  position: relative; width: 44px; height: 4px; border: 0; padding: 0; cursor: pointer; border-radius: 4px;
+  background: rgba(255,255,255,.28); overflow: hidden;
+}
+#theo-site .hero__dot::after{ content: ""; position: absolute; inset: 0; background: var(--white); transform: scaleX(0); transform-origin: left; }
+#theo-site .hero__dot.is-active::after{ animation: dotFill var(--slide-ms, 6000ms) linear forwards; }
+#theo-site .hero.is-paused .hero__dot.is-active::after{ animation-play-state: paused; }
+@keyframes dotFill{ to { transform: scaleX(1); } }
+#theo-site .hero__arrows{ display: flex; gap: 10px; }
+#theo-site .hero__arrow{
+  width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); cursor: pointer;
+  background: rgba(255,255,255,.08); color: var(--white); display: grid; place-items: center;
+  transition: background .3s, transform .3s var(--ease);
+}
+#theo-site .hero__arrow:hover{ background: rgba(255,255,255,.22); transform: scale(1.06); }
+#theo-site .hero__arrow svg{ width: 20px; height: 20px; }
+#theo-site .hero__counter{ color: rgba(255,255,255,.75); font-weight: 600; font-size: .9rem; font-variant-numeric: tabular-nums; }
+@media (max-width: 640px){#theo-site .hero{ height: auto; min-height: 640px; }
+#theo-site .slide::after{ background: linear-gradient(180deg, rgba(8,24,48,.35) 0%, rgba(8,24,48,.9) 62%); }
+#theo-site .slide__content{ justify-content: flex-end; padding-bottom: 110px; }
+#theo-site .slide__img{ object-position: 70% center; }
+#theo-site .hero__counter{ display: none; }
+#theo-site .hero__dots{ gap: 6px; }
+#theo-site .hero__dot{ width: 26px; }
+#theo-site .hero__arrow{ width: 42px; height: 42px; }
+}
+#theo-site .page-hero{
+  position: relative; overflow: hidden; color: var(--white);
+  background: radial-gradient(1200px 400px at 85% -10%, rgba(18,200,212,.35), transparent 60%), linear-gradient(135deg, var(--navy), var(--navy-2));
+  padding: calc(var(--header-h) + clamp(56px, 8vw, 100px)) 0 clamp(56px, 8vw, 90px);
+}
+#theo-site .page-hero::after{
+  content: ""; position: absolute; right: -80px; bottom: -120px; width: 420px; height: 420px; border-radius: 50%;
+  border: 60px solid rgba(255,255,255,.04);
+}
+#theo-site .page-hero p{ color: #BFD0E6; max-width: 620px; font-size: 1.1rem; }
+#theo-site .breadcrumb{ display: flex; gap: 8px; font-size: .85rem; color: #8FA6C4; margin-bottom: 18px; }
+#theo-site .breadcrumb a:hover{ color: var(--white); }
+#theo-site .trust{ background: var(--white); border-bottom: 1px solid var(--line); }
+#theo-site .trust__grid{ display: grid; grid-template-columns: repeat(4, 1fr); }
+#theo-site .trust__item{ display: flex; align-items: center; gap: 14px; padding: 26px 20px; border-right: 1px solid var(--line); }
+#theo-site .trust__item:last-child{ border-right: 0; }
+#theo-site .trust__item strong{ display: block; font-size: .98rem; color: var(--navy); }
+#theo-site .trust__item span{ font-size: .85rem; color: var(--muted); }
+@media (max-width: 860px){#theo-site .trust__grid{ grid-template-columns: repeat(2, 1fr); }
+#theo-site .trust__item:nth-child(2){ border-right: 0; }
+#theo-site .trust__item:nth-child(-n+2){ border-bottom: 1px solid var(--line); }
+ }
+@media (max-width: 480px){#theo-site .trust__item{ padding: 18px 12px; gap: 10px; }
+ }
+#theo-site .icon{
+  flex-shrink: 0; width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center;
+  background: var(--ice); color: var(--blue);
+}
+#theo-site .icon svg{ width: 24px; height: 24px; }
+#theo-site .icon--warm{ background: #FFF1E6; color: var(--warm); }
+#theo-site .icon--cyan{ background: #E3FAFB; color: #0BA5AF; }
+#theo-site .grid{ display: grid; gap: 24px; }
+#theo-site .grid--2{ grid-template-columns: repeat(2, 1fr); }
+#theo-site .grid--3{ grid-template-columns: repeat(3, 1fr); }
+#theo-site .grid--4{ grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1024px){#theo-site .grid--4{ grid-template-columns: repeat(2, 1fr); }
+#theo-site .grid--3{ grid-template-columns: repeat(2, 1fr); }
+ }
+@media (max-width: 680px){#theo-site .grid--2, #theo-site .grid--3, #theo-site .grid--4{ grid-template-columns: 1fr; }
+ }
+#theo-site .card{
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s;
+}
+#theo-site .card:hover{ transform: translateY(-6px); box-shadow: var(--shadow); border-color: transparent; }
+#theo-site .card p{ color: var(--muted); font-size: .96rem; }
+#theo-site .card .icon{ margin-bottom: 18px; }
+#theo-site .filters{ display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+#theo-site .chip{
+  padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--white);
+  font: inherit; font-weight: 600; font-size: .9rem; color: var(--muted); cursor: pointer;
+  transition: all .3s var(--ease);
+}
+#theo-site .chip:hover{ color: var(--blue); border-color: var(--blue); }
+#theo-site .chip.is-active{ background: var(--navy); color: var(--white); border-color: var(--navy); }
+#theo-site .product{ padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+#theo-site .product__media{ position: relative; background: linear-gradient(160deg, var(--ice), #F6FAFE); aspect-ratio: 4 / 3; display: grid; place-items: center; }
+#theo-site .product__media img{ width: 82%; transition: transform .6s var(--ease); }
+#theo-site .product:hover .product__media img{ transform: scale(1.06) translateY(-4px); }
+#theo-site .product__media img.is-photo{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #fff; }
+#theo-site .product:hover .product__media img.is-photo{ transform: scale(1.05); }
+#theo-site .badge{
+  position: absolute; top: 14px; left: 14px; padding: 5px 12px; border-radius: 999px;
+  font-size: .72rem; font-weight: 700; letter-spacing: .04em; background: var(--white); color: var(--blue); box-shadow: var(--shadow-sm);
+}
+#theo-site .badge--warm{ color: var(--warm); }
+#theo-site .product__body{ padding: 22px 24px 24px; display: flex; flex-direction: column; flex: 1; }
+#theo-site .product__specs{ list-style: none; padding: 0; margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 6px; }
+#theo-site .product__specs li{ font-size: .78rem; font-weight: 600; color: var(--navy); background: var(--bg); border: 1px solid var(--line); padding: 4px 10px; border-radius: 8px; }
+#theo-site .product__foot{ margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+#theo-site .price{ font-weight: 800; color: var(--navy); }
+#theo-site .price small{ display: block; font-size: .72rem; font-weight: 600; color: var(--muted); }
+#theo-site .product.is-hidden{ display: none; }
+#theo-site .split{ display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+@media (max-width: 900px){#theo-site .split{ grid-template-columns: 1fr; }
+ }
+#theo-site .media-frame{ position: relative; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); background: var(--ice); }
+#theo-site .media-frame img{ width: 100%; height: 100%; object-fit: cover; aspect-ratio: 5 / 4; }
+#theo-site .floating-card{
+  position: absolute; left: 20px; bottom: 20px; background: rgba(255,255,255,.95); backdrop-filter: blur(8px);
+  border-radius: 16px; padding: 14px 18px; display: flex; gap: 12px; align-items: center; box-shadow: var(--shadow);
+}
+#theo-site .floating-card strong{ display: block; color: var(--navy); }
+#theo-site .floating-card span{ font-size: .82rem; color: var(--muted); }
+#theo-site .checklist{ list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 12px; }
+#theo-site .checklist li{ display: flex; gap: 12px; align-items: flex-start; }
+#theo-site .checklist li::before{
+  content: ""; flex-shrink: 0; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%;
+  background: var(--grad) center / 12px no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E"), var(--grad);
+  background-size: 12px, cover; background-position: center; background-repeat: no-repeat;
+}
+#theo-site .stats{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+#theo-site .stat{ text-align: center; padding: 28px 12px; border-radius: var(--radius); background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); }
+#theo-site .stat__num{ font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; color: var(--white); line-height: 1; }
+#theo-site .stat__num span{ color: var(--cyan); }
+#theo-site .stat__label{ font-size: .9rem; color: #9FB4CF; margin-top: 8px; }
+@media (max-width: 760px){#theo-site .stats{ grid-template-columns: repeat(2, 1fr); }
+ }
+#theo-site .steps{ counter-reset: step; }
+#theo-site .step{ position: relative; padding-top: 70px; }
+#theo-site .step::before{
+  counter-increment: step; content: "0" counter(step);
+  position: absolute; top: 18px; left: 28px; font-size: 2.2rem; font-weight: 800;
+  background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+#theo-site .cta-band{
+  position: relative; overflow: hidden; border-radius: 28px; padding: clamp(36px, 6vw, 64px);
+  background: radial-gradient(600px 300px at 90% 0%, rgba(18,200,212,.45), transparent 60%), linear-gradient(135deg, var(--blue), #0D3C80);
+  color: var(--white); display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap;
+}
+#theo-site .cta-band h2{ color: var(--white); margin-bottom: 8px; }
+#theo-site .cta-band p{ color: #D6E4FF; margin: 0; max-width: 520px; }
+#theo-site .cta-band .btn--primary{ background: var(--white); color: var(--blue); }
+#theo-site .owner{ display: grid; grid-template-columns: 340px 1fr; gap: 48px; align-items: center; }
+@media (max-width: 860px){#theo-site .owner{ grid-template-columns: 1fr; }
+ }
+#theo-site .owner__photo{
+  position: relative; aspect-ratio: 4 / 5; border-radius: 28px; overflow: hidden;
+  background: radial-gradient(400px 300px at 20% 0%, rgba(62,142,232,.45), transparent 60%), linear-gradient(160deg, var(--navy-2), var(--navy)); display: grid; place-items: center;
+}
+#theo-site .owner__photo img{ width: 58%; position: relative; z-index: 1; filter: drop-shadow(0 18px 30px rgba(0,0,0,.25)); }
+#theo-site .owner__photo .monogram{ font-size: 7rem; font-weight: 800; color: rgba(255,255,255,.95); letter-spacing: -.04em; }
+#theo-site .owner__photo::after{ content: ""; position: absolute; inset: auto -40px -60px auto; width: 220px; height: 220px; border-radius: 50%; border: 36px solid rgba(255,255,255,.12); }
+#theo-site .owner__meta{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 24px 0; }
+@media (max-width: 520px){#theo-site .owner__meta{ grid-template-columns: 1fr; }
+ }
+#theo-site .meta-item{ display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); min-width: 0; }
+#theo-site .meta-item .icon{ width: 40px; height: 40px; border-radius: 12px; }
+#theo-site .meta-item small{ display: block; font-size: .74rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+#theo-site .meta-item strong{ color: var(--navy); font-size: .95rem; overflow-wrap: anywhere; }
+#theo-site .timeline{ position: relative; display: grid; gap: 28px; padding-left: 32px; }
+#theo-site .timeline::before{ content: ""; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--blue), var(--cyan)); }
+#theo-site .timeline__item{ position: relative; }
+#theo-site .timeline__item::before{ content: ""; position: absolute; left: -32px; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: var(--white); border: 5px solid var(--blue); }
+#theo-site .timeline__item small{ font-weight: 700; color: var(--blue); letter-spacing: .06em; text-transform: uppercase; font-size: .78rem; }
+#theo-site .team-card{ text-align: center; }
+#theo-site .avatar{ width: 88px; height: 88px; border-radius: 50%; margin: 0 auto 16px; display: grid; place-items: center; font-weight: 800; font-size: 1.6rem; color: var(--white); background: var(--grad); }
+#theo-site .avatar--alt{ background: linear-gradient(135deg, var(--navy-2), var(--sky)); }
+#theo-site .avatar--warm{ background: linear-gradient(135deg, var(--warm), #FFB65C); }
+#theo-site .role{ font-size: .85rem; font-weight: 700; color: var(--blue); margin-bottom: 10px; display: block; }
+#theo-site .service-detail{ display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; padding: 48px 0; border-bottom: 1px solid var(--line); }
+#theo-site .service-detail:last-child{ border-bottom: 0; }
+#theo-site .service-detail:nth-child(even) .service-detail__media{ order: 2; }
+@media (max-width: 860px){#theo-site .service-detail{ grid-template-columns: 1fr; }
+#theo-site .service-detail:nth-child(even) .service-detail__media{ order: 0; }
+ }
+#theo-site .service-detail__media{ border-radius: 24px; aspect-ratio: 4 / 3; display: grid; place-items: center; position: relative; overflow: hidden; }
+#theo-site .service-detail__media svg.big{ width: 38%; height: auto; }
+#theo-site .service-detail__media--cool{ background: linear-gradient(150deg, #DDF0FF, #F2FAFF); color: var(--blue); }
+#theo-site .service-detail__media--warm{ background: linear-gradient(150deg, #FFE7D6, #FFF6EF); color: var(--warm); }
+#theo-site .service-detail__media--cyan{ background: linear-gradient(150deg, #D7F7F9, #F0FCFD); color: #0BA5AF; }
+#theo-site .service-detail__media--navy{ background: linear-gradient(150deg, var(--navy), var(--navy-2)); color: var(--cyan); }
+#theo-site .service-detail__media .pill{ position: absolute; top: 18px; left: 18px; background: var(--white); color: var(--navy); font-weight: 700; font-size: .8rem; padding: 6px 14px; border-radius: 999px; box-shadow: var(--shadow-sm); }
+#theo-site .tags{ display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 24px; }
+#theo-site .tag{ font-size: .82rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; background: var(--ice); color: var(--navy); }
+#theo-site .price-line{ display: flex; align-items: baseline; gap: 8px; margin-bottom: 18px; color: var(--muted); font-size: .9rem; }
+#theo-site .price-line strong{ font-size: 1.5rem; color: var(--navy); }
+#theo-site .plan{ position: relative; display: flex; flex-direction: column; }
+#theo-site .plan--featured{ background: var(--navy); color: #C9D8EA; border-color: var(--navy); }
+#theo-site .plan--featured h3, #theo-site .plan--featured .plan__price{ color: var(--white); }
+#theo-site .plan--featured p{ color: #9FB4CF; }
+#theo-site .plan__ribbon{ position: absolute; top: -12px; right: 24px; background: var(--grad); color: var(--white); padding: 5px 14px; font-size: .75rem; font-weight: 700; border-radius: 999px; }
+#theo-site .plan__price{ font-size: 2.2rem; font-weight: 800; color: var(--navy); margin: 8px 0 4px; }
+#theo-site .plan__price small{ font-size: .9rem; font-weight: 600; color: var(--muted); }
+#theo-site .plan .checklist{ margin: 20px 0 28px; font-size: .94rem; }
+#theo-site .plan .btn{ margin-top: auto; }
+#theo-site .gallery{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+@media (max-width: 960px){#theo-site .gallery{ grid-template-columns: repeat(2, 1fr); }
+ }
+@media (max-width: 600px){#theo-site .gallery{ grid-template-columns: 1fr; }
+ }
+#theo-site .work{ position: relative; border-radius: var(--radius); overflow: hidden; background: var(--white); border: 1px solid var(--line); cursor: pointer; transition: transform .4s var(--ease), box-shadow .4s var(--ease); }
+#theo-site .work:hover{ transform: translateY(-6px); box-shadow: var(--shadow); }
+#theo-site .work__img{ aspect-ratio: 16 / 11; overflow: hidden; }
+#theo-site .work__img img{ width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease); }
+#theo-site .work:hover .work__img img{ transform: scale(1.07); }
+#theo-site .work__body{ padding: 18px 20px 20px; }
+#theo-site .work__body h3{ font-size: 1.05rem; margin-bottom: 4px; }
+#theo-site .work__meta{ display: flex; justify-content: space-between; font-size: .84rem; color: var(--muted); }
+#theo-site .work .badge, #theo-site .product__media .badge{ z-index: 2; }
+#theo-site .work.is-hidden{ display: none; }
+#theo-site .lightbox{ position: fixed; inset: 0; z-index: 300; background: rgba(6,16,32,.86); display: grid; place-items: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity .35s, visibility .35s; }
+#theo-site .lightbox.is-open{ opacity: 1; visibility: visible; }
+#theo-site .lightbox__inner{ position: relative; width: min(900px, 100%); background: var(--white); border-radius: 22px; overflow: hidden; transform: scale(.94); transition: transform .4s var(--ease); }
+#theo-site .lightbox.is-open .lightbox__inner{ transform: none; }
+#theo-site .lightbox__inner img{ width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+#theo-site .lightbox__caption{ padding: 20px 24px; }
+#theo-site .lightbox__caption p{ color: var(--muted); margin: 0; }
+#theo-site .lightbox__close{ position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; border-radius: 50%; border: 0; background: var(--white); cursor: pointer; font-size: 1.4rem; line-height: 1; box-shadow: var(--shadow-sm); }
+#theo-site .cred{ display: flex; gap: 16px; align-items: flex-start; }
+#theo-site .cred h3{ font-size: 1.02rem; margin-bottom: 4px; }
+#theo-site .cred p{ margin: 0; font-size: .9rem; }
+#theo-site .cred__status{ display: inline-block; margin-top: 8px; font-size: .74rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #E8F8EE; color: #1E8E4E; }
+#theo-site .cred__status--pending{ background: #FFF4E5; color: #B86200; }
+#theo-site .widgets{ display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
+@media (max-width: 900px){#theo-site .widgets{ grid-template-columns: 1fr; }
+ }
+#theo-site .widget{ background: var(--white); border: 1px solid var(--line); border-radius: 22px; padding: 28px; box-shadow: var(--shadow-sm); }
+#theo-site .widget__head{ display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+#theo-site .widget__head h3{ margin: 0; }
+#theo-site .live{ display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; background: #E8F8EE; color: #1E8E4E; }
+#theo-site .live::before{ content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.6s infinite; }
+#theo-site .live--closed{ background: #FDECEC; color: #C2362B; }
+@keyframes pulse{ 0% { box-shadow: 0 0 0 0 currentColor; } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+#theo-site .estimator{ display: grid; gap: 16px; }
+#theo-site .estimator__row{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px){#theo-site .estimator__row{ grid-template-columns: 1fr; }
+ }
+#theo-site .estimator__result{ margin-top: 6px; padding: 20px; border-radius: 16px; background: linear-gradient(135deg, var(--ice), #F3FCFD); border: 1px dashed #B9D8F5; }
+#theo-site .estimator__result small{ color: var(--muted); font-weight: 600; }
+#theo-site .estimator__total{ font-size: 2rem; font-weight: 800; color: var(--navy); line-height: 1.2; }
+#theo-site .estimator__note{ font-size: .8rem; color: var(--muted); margin: 6px 0 0; }
+#theo-site .qty{ display: flex; align-items: center; border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--white); }
+#theo-site .qty button{ width: 44px; height: 46px; border: 0; background: var(--bg); font-size: 1.2rem; cursor: pointer; color: var(--navy); }
+#theo-site .qty button:hover{ background: var(--ice); }
+#theo-site .qty input{ flex: 1; min-width: 0; text-align: center; border: 0 !important; font-weight: 700; padding: 0 !important; height: 46px; }
+#theo-site .hours{ list-style: none; margin: 0; padding: 0; }
+#theo-site .hours li{ display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px dashed var(--line); font-size: .95rem; }
+#theo-site .hours li:last-child{ border-bottom: 0; }
+#theo-site .hours li.is-today{ color: var(--blue); font-weight: 700; }
+#theo-site .hours li span:last-child{ font-variant-numeric: tabular-nums; }
+#theo-site .contact-grid{ display: grid; grid-template-columns: 1.35fr 1fr; gap: 28px; align-items: start; }
+@media (max-width: 960px){#theo-site .contact-grid{ grid-template-columns: 1fr; }
+ }
+#theo-site .form{ display: grid; gap: 18px; }
+#theo-site .form__row{ display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 600px){#theo-site .form__row{ grid-template-columns: 1fr; }
+ }
+#theo-site .field{ display: grid; gap: 7px; }
+#theo-site .field label{ font-size: .88rem; font-weight: 700; color: var(--navy); }
+#theo-site .field label .req{ color: var(--blue); }
+#theo-site input, #theo-site select, #theo-site textarea{
+  width: 100%; font: inherit; font-size: .96rem; color: var(--text);
+  padding: 13px 15px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--white);
+  transition: border-color .25s, box-shadow .25s;
+}
+#theo-site textarea{ resize: vertical; min-height: 120px; }
+#theo-site select{ appearance: none; background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B6B80' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") right 14px center / 16px no-repeat; padding-right: 40px; }
+#theo-site input:focus, #theo-site select:focus, #theo-site textarea:focus{ outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(29,95,196,.12); }
+#theo-site .field.is-invalid input, #theo-site .field.is-invalid select, #theo-site .field.is-invalid textarea{ border-color: #E5484D; }
+#theo-site .field__error{ font-size: .8rem; color: #D1343A; min-height: 0; display: none; }
+#theo-site .field.is-invalid .field__error{ display: block; }
+#theo-site .service-picks{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 480px){#theo-site .service-picks{ grid-template-columns: 1fr; }
+ }
+#theo-site .pick{ position: relative; }
+#theo-site .pick input{ position: absolute; opacity: 0; pointer-events: none; }
+#theo-site .pick label{
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--line);
+  font-weight: 600; font-size: .9rem; color: var(--navy); cursor: pointer; transition: all .25s var(--ease); background: var(--white);
+}
+#theo-site .pick label::before{ content: ""; width: 18px; height: 18px; border-radius: 6px; border: 2px solid #B7C4D3; flex-shrink: 0; transition: all .25s; }
+#theo-site .pick input:checked + label{ border-color: var(--blue); background: var(--ice); }
+#theo-site .pick input:checked + label::before{ border-color: var(--blue); background: var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center / 12px no-repeat; }
+#theo-site .pick input:focus-visible + label{ box-shadow: 0 0 0 4px rgba(29,95,196,.15); }
+#theo-site .form__note{ font-size: .82rem; color: var(--muted); margin: 0; }
+#theo-site .form-status{ display: none; padding: 16px 18px; border-radius: 14px; font-weight: 600; }
+#theo-site .form-status.is-success{ display: block; background: #E8F8EE; color: #1A7A44; }
+#theo-site .form-status.is-error{ display: block; background: #FDECEC; color: #B3261E; }
+#theo-site .btn.is-loading{ pointer-events: none; opacity: .75; }
+#theo-site .btn.is-loading::after{ content: ""; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); border-top-color: var(--white); animation: spin .8s linear infinite; }
+@keyframes spin{ to { transform: rotate(360deg); } }
+#theo-site .info-list{ display: grid; gap: 14px; }
+#theo-site .info-item{ display: flex; gap: 14px; align-items: center; }
+#theo-site .info-item small{ display: block; font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--muted); }
+#theo-site .info-item a, #theo-site .info-item span{ color: var(--navy); font-weight: 600; overflow-wrap: anywhere; }
+#theo-site .info-item a:hover{ color: var(--blue); }
+#theo-site .map{ border-radius: 22px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-sm); background: var(--ice); }
+#theo-site .map iframe{ display: block; width: 100%; height: 420px; border: 0; }
+#theo-site .site-footer{ background: var(--navy); color: #A9BBD3; padding-top: 72px; font-size: .94rem; }
+#theo-site .footer__grid{ display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 40px; padding-bottom: 48px; }
+@media (max-width: 960px){#theo-site .footer__grid{ grid-template-columns: 1fr 1fr; }
+ }
+@media (max-width: 560px){#theo-site .footer__grid{ grid-template-columns: 1fr; }
+ }
+#theo-site .site-footer .brand__name{ color: var(--white); }
+#theo-site .site-footer .brand__tag{ color: #8DB4F0; }
+#theo-site .site-footer h4{ color: var(--white); font-size: 1rem; margin-bottom: 18px; }
+#theo-site .footer__links{ list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+#theo-site .footer__links a{ transition: color .25s, padding .25s var(--ease); }
+#theo-site .footer__links a:hover{ color: var(--white); padding-left: 4px; }
+#theo-site .footer__contact li{ display: flex; gap: 10px; align-items: flex-start; }
+#theo-site .footer__contact svg{ width: 18px; height: 18px; color: var(--cyan); flex-shrink: 0; margin-top: 4px; }
+#theo-site .footer__contact a{ overflow-wrap: anywhere; }
+#theo-site .socials{ display: flex; gap: 10px; margin-top: 22px; }
+#theo-site .socials a{
+  width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: var(--white);
+  transition: background .3s, transform .3s var(--ease);
+}
+#theo-site .socials a:hover{ background: var(--blue); transform: translateY(-3px); }
+#theo-site .socials svg{ width: 18px; height: 18px; }
+#theo-site .footer__bottom{ border-top: 1px solid rgba(255,255,255,.08); padding: 22px 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: .85rem; color: #7F96B5; }
+#theo-site .fab{ position: fixed; right: 20px; bottom: 20px; z-index: 90; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+#theo-site .fab__btn{
+  width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer; color: var(--white); background: var(--grad);
+  box-shadow: 0 14px 30px -10px rgba(29,95,196,.8); display: grid; place-items: center; transition: transform .35s var(--ease);
+}
+#theo-site .fab__btn svg{ width: 26px; height: 26px; transition: transform .35s var(--ease); }
+#theo-site .fab.is-open .fab__btn svg{ transform: rotate(135deg); }
+#theo-site .fab__menu{ display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+#theo-site .fab__item{
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; background: var(--white);
+  font-weight: 700; font-size: .88rem; color: var(--navy); box-shadow: var(--shadow);
+  opacity: 0; transform: translateY(10px) scale(.95); pointer-events: none; transition: all .3s var(--ease);
+}
+#theo-site .fab__item svg{ width: 18px; height: 18px; color: var(--blue); }
+#theo-site .fab.is-open .fab__item{ opacity: 1; transform: none; pointer-events: auto; }
+#theo-site .fab.is-open .fab__item:nth-child(2){ transition-delay: .05s; }
+#theo-site .fab.is-open .fab__item:nth-child(3){ transition-delay: .1s; }
+#theo-site .reveal{ opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+#theo-site .reveal.is-visible{ opacity: 1; transform: none; }
+#theo-site .reveal-delay-1{ transition-delay: .1s; }
+#theo-site .reveal-delay-2{ transition-delay: .2s; }
+#theo-site .reveal-delay-3{ transition-delay: .3s; }
+@media (prefers-reduced-motion: reduce){#theo-site *, #theo-site *::before, #theo-site *::after{ animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+#theo-site .reveal{ opacity: 1; transform: none; }
+}
+#theo-site .section--cinema{
+  position: relative; overflow: hidden; color: #C9D8EA;
+  background:
+    radial-gradient(900px 520px at 8% -10%, rgba(29, 95, 196, .45), transparent 60%),
+    radial-gradient(760px 520px at 105% 110%, rgba(52, 169, 235, .28), transparent 60%),
+    linear-gradient(180deg, #05132B 0%, #082140 55%, #061733 100%);
+}
+#theo-site .section--cinema::before{
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
+}
+#theo-site .section--cinema::after{
+  content: ""; position: absolute; left: 50%; top: -1px; width: min(900px, 90%); height: 1px; transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(143, 208, 255, .8), transparent);
+}
+#theo-site .section--cinema > .container{ position: relative; z-index: 1; }
+#theo-site .section--cinema .section-head h2, #theo-site .section--cinema .widget h3{ color: var(--white); }
+#theo-site .section--cinema .lead{ color: #9FB4CF; }
+#theo-site .section--cinema .eyebrow{ color: #8FD0FF; }
+#theo-site .section--cinema .widget{
+  position: relative; color: #C9D8EA;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .025));
+  border: 1px solid rgba(255, 255, 255, .1);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .75), inset 0 1px 0 rgba(255, 255, 255, .08);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+#theo-site .section--cinema .widget::before{
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(135deg, rgba(110, 170, 255, .85), rgba(110, 170, 255, 0) 35%, rgba(52, 169, 235, 0) 65%, rgba(52, 169, 235, .6));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+#theo-site .section--cinema .widget:hover{ transform: translateY(-4px); box-shadow: 0 50px 100px -40px rgba(0, 0, 0, .8), 0 0 60px -20px rgba(52, 169, 235, .45), inset 0 1px 0 rgba(255, 255, 255, .1); }
+#theo-site .section--cinema .tag{ background: rgba(52, 169, 235, .15); color: #8FD0FF; border: 1px solid rgba(143, 208, 255, .25); }
+#theo-site .section--cinema .field label, #theo-site .section--cinema legend{ color: #DCE7F5 !important; }
+#theo-site .section--cinema .field label .req, #theo-site .section--cinema legend .req{ color: #8FD0FF !important; }
+#theo-site .section--cinema input, #theo-site .section--cinema select, #theo-site .section--cinema textarea{
+  color: var(--white); background-color: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .14); color-scheme: dark;
+}
+#theo-site .section--cinema input::placeholder, #theo-site .section--cinema textarea::placeholder{ color: rgba(220, 231, 245, .4); }
+#theo-site .section--cinema input:focus, #theo-site .section--cinema select:focus, #theo-site .section--cinema textarea:focus{ border-color: #5DB8F5; box-shadow: 0 0 0 4px rgba(52, 169, 235, .2), 0 0 24px -6px rgba(52, 169, 235, .6); }
+#theo-site .section--cinema option{ color: var(--text); background: var(--white); }
+#theo-site .section--cinema .field.is-invalid input, #theo-site .section--cinema .field.is-invalid select, #theo-site .section--cinema .field.is-invalid textarea{ border-color: #FF6B6B; }
+#theo-site .section--cinema .field__error{ color: #FF9A94; }
+#theo-site .section--cinema .pick label{ color: #EAF2FD; background: rgba(255, 255, 255, .04); border-color: rgba(255, 255, 255, .14); }
+#theo-site .section--cinema .pick label::before{ border-color: rgba(220, 231, 245, .45); }
+#theo-site .section--cinema .pick input:checked + label{ background: rgba(29, 95, 196, .3); border-color: #5DB8F5; box-shadow: 0 0 20px -8px rgba(52, 169, 235, .7); }
+#theo-site .section--cinema .form__note{ color: #8FA6C4; }
+#theo-site .section--cinema .form-status.is-success{ background: rgba(46, 204, 113, .14); color: #8EF0B5; }
+#theo-site .section--cinema .form-status.is-error{ background: rgba(255, 107, 107, .14); color: #FFB3AE; }
+#theo-site .section--cinema .form-status a{ color: var(--white); }
+#theo-site .section--cinema .estimator__result{ background: linear-gradient(135deg, rgba(29, 95, 196, .4), rgba(52, 169, 235, .12)); border: 1px solid rgba(143, 208, 255, .3); }
+#theo-site .section--cinema .estimator__result small, #theo-site .section--cinema .estimator__note{ color: #9FB4CF; }
+#theo-site .section--cinema .estimator__total{ color: var(--white); text-shadow: 0 0 34px rgba(52, 169, 235, .65); }
+#theo-site .section--cinema .qty{ background: transparent; border-color: rgba(255, 255, 255, .14); }
+#theo-site .section--cinema .qty button{ background: rgba(255, 255, 255, .06); color: var(--white); }
+#theo-site .section--cinema .qty button:hover{ background: rgba(255, 255, 255, .14); }
+#theo-site .section--cinema .qty input{ background: transparent; }
+#theo-site .section--cinema .hours li{ border-bottom-color: rgba(255, 255, 255, .1); color: #C9D8EA; }
+#theo-site .section--cinema .hours li.is-today{ color: #8FD0FF; }
+#theo-site .section--cinema .btn--ghost{ color: var(--white); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .25); }
+#theo-site .section--cinema .btn--ghost:hover{ color: var(--white); box-shadow: inset 0 0 0 1.5px #8FD0FF, 0 0 24px -8px rgba(52, 169, 235, .7); }
+#theo-site .section--cinema .info-item small{ color: #8FA6C4; }
+#theo-site .section--cinema .info-item a, #theo-site .section--cinema .info-item span{ color: var(--white); }
+#theo-site .section--cinema .info-item a:hover{ color: #8FD0FF; }
+#theo-site .section--cinema .icon{ background: rgba(255, 255, 255, .08); color: #8FD0FF; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+#theo-site .section--cinema .icon--warm{ color: #FFB27A; }
+#theo-site .section--cinema .socials a{ border-color: rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .06) !important; }
+#theo-site { position: relative; font-size: 16px; text-align: left; overflow-x: clip; }
+#theo-site .site-header { position: fixed; left: 0; right: 0; top: 0; }
+#theo-site .page { display: none; }
+#theo-site .page.is-current { display: block; animation: theoFade .5s var(--ease); }
+#theo-site a { text-decoration: none; }
+#theo-site :is(h1, h2, h3, h4, h5, h6, p, li, span, label, small, strong, legend, input, select, textarea, button) { font-family: inherit; }
+#theo-site :is(h1, h2, h3, h4, h5, h6) { color: inherit; }
+#theo-site :is(.section, .section--alt, .widget, .card:not(.plan--featured)) :is(h1, h2, h3, h4) { color: var(--navy); }
+#theo-site :is(.section--dark, .cta-band, .page-hero, .slide__content, .site-footer) :is(h1, h2, h3, h4) { color: var(--white); }
+#theo-site .section--dark .card h3 { color: var(--white); }
+#theo-site .section--cinema .section-head h2, #theo-site .section--cinema .widget h3 { color: var(--white); }
+#theo-site { width: 100%; }
+#theo-site ul { margin-top: 0; }
+#theo-site button { font-family: inherit; }
+@keyframes theoFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+</style>
+<div id="theo-site">
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="#home" aria-label="Theo's Airconditioning Services &#8212; Home">
+      <img class="logo-on-light" data-img="logo" alt="Theo's logo" width="46" height="42"><img class="logo-on-dark" data-img="logo-light" alt="" width="46" height="42">
+      <span class="brand__text"><span class="brand__name">THEO&#8217;S</span><span class="brand__tag">Airconditioning Services</span></span>
+    </a>
+    <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-panel"><span></span><span></span><span></span></button>
+    <nav class="nav__panel" id="nav-panel" aria-label="Main">
+      <ul class="nav__menu">
+          <li><a class="nav__link" data-page="home" href="#home">Home</a></li>
+          <li><a class="nav__link" data-page="about" href="#about">About Us</a></li>
+          <li><a class="nav__link" data-page="products" href="#products">Products</a></li>
+          <li><a class="nav__link" data-page="services" href="#services">Services</a></li>
+          <li><a class="nav__link" data-page="portfolio" href="#portfolio">Portfolio</a></li>
+          <li><a class="nav__link" data-page="contact" href="#contact">Contact Us</a></li>
+      </ul>
+      <a class="btn btn--primary btn--sm nav__cta" href="#contact">Book a Service <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <div class="nav__panel-foot">Call or text us<a href="tel:+639756501762">0975 650 1762</a><a href="mailto:theoacservices2026@gmail.com">theoacservices2026@gmail.com</a></div>
+    </nav>
+  </div>
+  <div class="nav__backdrop"></div>
+</header>
+<main class="site-main">
+<div class="page is-current" id="home" data-route="home">
+<section class="hero" aria-roledescription="carousel" aria-label="Aircon products installed in modern homes" tabindex="0">
+    <div class="slide is-active" role="group" aria-roledescription="slide" aria-label="1 of 5">
+      <img class="slide__img" data-img="slide-living" alt="Inverter Split-Type &#183; Living Room aircon installation in a modern home" fetchpriority="high">
+      <div class="container slide__content">
+        <span class="slide__tag">Inverter Split-Type &#183; Living Room</span>
+        <h1 style="font-size:clamp(2.2rem,5vw,3.8rem)">Cool comfort,<br><span class="text-grad">installed right.</span></h1>
+        <p>Quiet, energy-saving inverter split-types fitted cleanly into modern living spaces &#8212; neat piping, no mess.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#contact">Book a Service <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn--light" href="#products">View Products</a>
+        </div>
+      </div>
+    </div>
+    <div class="slide" role="group" aria-roledescription="slide" aria-label="2 of 5">
+      <img class="slide__img" data-img="slide-bedroom" alt="Wall-Mounted Inverter &#183; Bedroom aircon installation in a modern home" loading="lazy">
+      <div class="container slide__content">
+        <span class="slide__tag">Wall-Mounted Inverter &#183; Bedroom</span>
+        <h2 style="font-size:clamp(2.2rem,5vw,3.8rem)">Sleep cool all night,<br>pay less every month.</h2>
+        <p>Whisper-quiet bedroom units with sleep mode and smart temperature control for restful Pampanga nights.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#contact">Book a Service <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn--light" href="#products">View Products</a>
+        </div>
+      </div>
+    </div>
+    <div class="slide" role="group" aria-roledescription="slide" aria-label="3 of 5">
+      <img class="slide__img" data-img="slide-dining" alt="Clean Installs &#183; Modern Homes aircon installation in a modern home" loading="lazy">
+      <div class="container slide__content">
+        <span class="slide__tag">Clean Installs &#183; Modern Homes</span>
+        <h2 style="font-size:clamp(2.2rem,5vw,3.8rem)">Neat work<br>you can see.</h2>
+        <p>Level mounting, hidden piping and tidy finishing &#8212; every unit tested before we leave your home.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#contact">Book a Service <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn--light" href="#products">View Products</a>
+        </div>
+      </div>
+    </div>
+    <div class="slide" role="group" aria-roledescription="slide" aria-label="4 of 5">
+      <img class="slide__img" data-img="slide-office" alt="Lofts, Studios and Home Offices aircon installation in a modern home" loading="lazy">
+      <div class="container slide__content">
+        <span class="slide__tag">Lofts, Studios &amp; Home Offices</span>
+        <h2 style="font-size:clamp(2.2rem,5vw,3.8rem)">Quiet cooling<br>for work and rest.</h2>
+        <p>Right-sized inverter units for condos, lofts and home offices &#8212; cool, quiet and easy on your electric bill.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#contact">Book a Service <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn--light" href="#products">View Products</a>
+        </div>
+      </div>
+    </div>
+    <div class="slide" role="group" aria-roledescription="slide" aria-label="5 of 5">
+      <img class="slide__img" data-img="slide-office" alt="Floor-Standing &#183; Offices and Shops aircon installation in a modern home" loading="lazy">
+      <div class="container slide__content">
+        <span class="slide__tag">Floor-Standing &#183; Offices &amp; Shops</span>
+        <h2 style="font-size:clamp(2.2rem,5vw,3.8rem)">Big rooms.<br>Strong, steady cooling.</h2>
+        <p>High-capacity floor-standing units for offices, shops, clinics and function rooms &#8212; supplied and installed by our team.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#contact">Book a Service <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn--light" href="#products">View Products</a>
+        </div>
+      </div>
+    </div>
+  <div class="container hero__controls">
+    <div class="hero__dots" role="tablist" aria-label="Choose slide">
+      <button class="hero__dot" type="button" role="tab" aria-label="Slide 1"></button><button class="hero__dot" type="button" role="tab" aria-label="Slide 2"></button><button class="hero__dot" type="button" role="tab" aria-label="Slide 3"></button><button class="hero__dot" type="button" role="tab" aria-label="Slide 4"></button><button class="hero__dot" type="button" role="tab" aria-label="Slide 5"></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <span class="hero__counter">01 / 05</span>
+      <div class="hero__arrows">
+        <button class="hero__arrow hero__arrow--prev" type="button" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button class="hero__arrow hero__arrow--next" type="button" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust" aria-label="Why customers choose us">
+  <div class="container trust__grid">
+    <div class="trust__item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><div><strong>Service Warranty</strong><span>On every job we do</span></div></div>
+    <div class="trust__item"><span class="icon icon--cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg></span><div><strong>Same-Day Service</strong><span>Around San Fernando</span></div></div>
+    <div class="trust__item"><span class="icon icon--warm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><div><strong>Free Assessment</strong><span>Honest, upfront quotes</span></div></div>
+    <div class="trust__item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l6-6M14.5 4.5l5 5M12 7l5 5-8 8-5-5z"/></svg></span><div><strong>Trained Technicians</strong><span>Clean, careful work</span></div></div>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Our Products</span>
+      <h2>Aircon units for every room and budget</h2>
+      <p class="lead">Sample units we supply and install &#8212; brand-new, with manufacturer warranty and professional installation by our own team.</p>
+    </div>
+    <div class="filters" data-filter-group="#product-grid" aria-label="Filter products">
+      <button class="chip is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-filter="split" aria-pressed="false">Split-Type</button>
+      <button class="chip" type="button" data-filter="window" aria-pressed="false">Window-Type</button>
+      <button class="chip" type="button" data-filter="commercial" aria-pressed="false">Commercial</button>
+      <button class="chip" type="button" data-filter="portable" aria-pressed="false">Portable</button>
+    </div>
+    <div class="grid grid--3" id="product-grid">
+      <article class="card product reveal" data-cat="split">
+        <div class="product__media" data-product="split"><span class="badge">Best Seller</span><img data-img="prod-split" alt="Inverter Split-Type" loading="lazy"></div>
+        <div class="product__body">
+          <h3>Inverter Split-Type</h3>
+          <p>Quiet wall-mounted unit with up to 60% energy savings vs. non-inverter.</p>
+          <ul class="product__specs"><li>1.0 &#8211; 2.5 HP</li><li>Inverter</li><li>R32</li></ul>
+          <div class="product__foot">
+            <div class="price"><small>Starts at</small>&#8369;28,500</div>
+            <a class="btn btn--ghost btn--sm" href="#contact" data-service="Installation">Inquire</a>
+          </div>
+        </div>
+      </article>
+      <article class="card product reveal" data-cat="window">
+        <div class="product__media" data-product="window"><span class="badge">Budget Pick</span><img data-img="prod-window" alt="Window-Type Aircon" loading="lazy"></div>
+        <div class="product__body">
+          <h3>Window-Type Aircon</h3>
+          <p>Easy to install, simple to maintain &#8212; ideal for bedrooms and small rooms.</p>
+          <ul class="product__specs"><li>0.6 &#8211; 1.5 HP</li><li>Remote</li><li>Timer</li></ul>
+          <div class="product__foot">
+            <div class="price"><small>Starts at</small>&#8369;15,900</div>
+            <a class="btn btn--ghost btn--sm" href="#contact" data-service="Installation">Inquire</a>
+          </div>
+        </div>
+      </article>
+      <article class="card product reveal" data-cat="commercial">
+        <div class="product__media" data-product="cassette"><span class="badge">Commercial</span><img data-img="prod-cassette" alt="Ceiling Cassette" loading="lazy"></div>
+        <div class="product__body">
+          <h3>Ceiling Cassette</h3>
+          <p>4-way 360&#176; airflow, hidden in the ceiling for clean, modern interiors.</p>
+          <ul class="product__specs"><li>2.0 &#8211; 5.0 HP</li><li>4-way flow</li><li>Inverter</li></ul>
+          <div class="product__foot">
+            <div class="price"><small>Starts at</small>&#8369;68,000</div>
+            <a class="btn btn--ghost btn--sm" href="#contact" data-service="Installation">Inquire</a>
+          </div>
+        </div>
+      </article>
+      <article class="card product reveal" data-cat="commercial">
+        <div class="product__media" data-product="floor"><span class="badge">Commercial</span><img data-img="prod-floor" alt="Floor-Standing Unit" loading="lazy"></div>
+        <div class="product__body">
+          <h3>Floor-Standing Unit</h3>
+          <p>High-capacity cooling for offices, shops, halls and function rooms.</p>
+          <ul class="product__specs"><li>3.0 &#8211; 5.0 HP</li><li>Auto swing</li><li>LED panel</li></ul>
+          <div class="product__foot">
+            <div class="price"><small>Starts at</small>&#8369;75,000</div>
+            <a class="btn btn--ghost btn--sm" href="#contact" data-service="Installation">Inquire</a>
+          </div>
+        </div>
+      </article>
+      <article class="card product reveal" data-cat="portable">
+        <div class="product__media" data-product="portable"><span class="badge">Plug &amp; Play</span><img data-img="prod-portable" alt="Portable Aircon" loading="lazy"></div>
+        <div class="product__body">
+          <h3>Portable Aircon</h3>
+          <p>No installation needed &#8212; roll it to any room. Great for renters.</p>
+          <ul class="product__specs"><li>1.0 &#8211; 1.5 HP</li><li>Dehumidifier</li><li>Wheels</li></ul>
+          <div class="product__foot">
+            <div class="price"><small>Starts at</small>&#8369;18,500</div>
+            <a class="btn btn--ghost btn--sm" href="#contact" data-service="Installation">Inquire</a>
+          </div>
+        </div>
+      </article>
+      <article class="card product reveal" data-cat="split commercial">
+        <div class="product__media" data-product="outdoor"><span class="badge badge--warm">Heat Pump</span><img data-img="prod-outdoor" alt="Inverter Heat Pump / Multi-Split" loading="lazy"></div>
+        <div class="product__body">
+          <h3>Inverter Heat Pump / Multi-Split</h3>
+          <p>One outdoor unit, multiple rooms. Cooling and heating in a single system.</p>
+          <ul class="product__specs"><li>2.0 &#8211; 4.0 HP</li><li>Cool + Heat</li><li>Multi-zone</li></ul>
+          <div class="product__foot">
+            <div class="price"><small>Starts at</small>&#8369;85,000</div>
+            <a class="btn btn--ghost btn--sm" href="#contact" data-service="Installation">Inquire</a>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p class="form__note" style="margin-top:20px">Prices are sample starting prices for the unit only and may change with brand, capacity and supplier stock. Installation quoted separately after a free site check.</p>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">What We Do</span>
+      <h2>Complete HVAC care, from one local team</h2>
+      <p class="lead">Cleaning, heating, ventilating and air conditioning &#8212; done right the first time.</p>
+    </div>
+    <div class="grid grid--4">
+      <a class="card reveal" href="#cleaning"><span class="icon icon--cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7l5.7 5.6a8 8 0 1 1-11.3 0z"/></svg></span><h3>Aircon Cleaning</h3><p>Deep chemical wash and general cleaning to restore cooling and airflow.</p></a>
+      <a class="card reveal reveal-delay-1" href="#heating"><span class="icon icon--warm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.4 1.4 2.8 2.5 2.8z"/></svg></span><h3>Heating</h3><p>Heat pump and water heater installation, servicing and repair.</p></a>
+      <a class="card reveal reveal-delay-2" href="#ventilation"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7A2.5 2.5 0 1 1 19.5 12H2M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></span><h3>Ventilation</h3><p>Exhaust, fresh-air and duct systems for healthier indoor air.</p></a>
+      <a class="card reveal reveal-delay-3" href="#aircon"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></svg></span><h3>Air Conditioning</h3><p>Installation, repair, freon recharge and preventive maintenance.</p></a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div class="media-frame reveal">
+      <img data-img="slide-bedroom" alt="Bedroom with a newly installed inverter split-type aircon" loading="lazy">
+      <div class="floating-card"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><div><strong>Clean installs</strong><span>Neat piping &#183; tested before we leave</span></div></div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <span class="eyebrow">Why Theo's</span>
+      <h2>Local, reliable and easy to reach</h2>
+      <p class="lead">We are a San Fernando-based team. That means faster response, fair prices and a technician who actually picks up the phone.</p>
+      <ul class="checklist">
+        <li>Free on-site assessment and transparent, itemized quotes</li>
+        <li>On-time arrival with SMS updates before every visit</li>
+        <li>We protect your floors and walls and clean up after the job</li>
+        <li>After-service warranty and friendly follow-up</li>
+      </ul>
+      <a class="btn btn--primary" href="#about">Meet the Team <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">How It Works</span>
+      <h2>Book in minutes. Cool in hours.</h2>
+    </div>
+    <div class="grid grid--3 steps">
+      <div class="card step reveal" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><h3>Send a request</h3><p style="color:#9FB4CF">Fill in the form, call or message us. Tell us your unit type and the problem.</p></div>
+      <div class="card step reveal reveal-delay-1" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><h3>Get a clear quote</h3><p style="color:#9FB4CF">We confirm the schedule and give you an upfront price &#8212; no hidden charges.</p></div>
+      <div class="card step reveal reveal-delay-2" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><h3>Enjoy the cool</h3><p style="color:#9FB4CF">Our technician arrives on time, does the work, tests it and cleans up.</p></div>
+    </div>
+  </div>
+</section>
+</div>
+<div class="page" id="about" data-route="about">
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="#home">Home</a><span>/</span><span>About Us</span></div>
+    <span class="eyebrow">About Us</span>
+    <h1>Built on honest work<br>and cool homes.</h1>
+    <p>Theo's Airconditioning Services is a local HVAC team in San Fernando, Pampanga &#8212; started in May 2026 to give families and businesses aircon service they can rely on.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div class="reveal">
+      <span class="eyebrow">Our Story</span>
+      <h2>From one technician to your go-to aircon team</h2>
+      <p class="lead">Theo saw the same thing again and again around Pampanga: late technicians, unclear prices and units that broke down again a month after "repair".</p>
+      <p>So in May 2026 he started Theo's Airconditioning Services with a simple promise &#8212; show up on time, explain the problem in plain words, charge a fair price and do the job properly. Every unit we touch is cleaned, tested and checked before we leave.</p>
+      <p>Today we help homeowners, renters, small offices and shops across San Fernando and nearby towns keep cool through the hottest months of the year.</p>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="timeline">
+        <div class="timeline__item"><small>May 2026</small><h3>Theo's opens for business</h3><p>Started serving homes in San Fernando with cleaning and repair.</p></div>
+        <div class="timeline__item"><small>2026</small><h3>Installation &amp; product supply</h3><p>Added brand-new unit supply and full installation packages.</p></div>
+        <div class="timeline__item"><small>Next</small><h3>Commercial &amp; HVAC maintenance</h3><p>Growing into maintenance plans for offices, shops and clinics.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" id="owner">
+  <div class="container owner">
+    <div class="owner__photo reveal" role="img" aria-label="Theo, owner of Theo's Airconditioning Services"><img data-img="logo-light" alt=""></div>
+    <div class="reveal reveal-delay-1">
+      <span class="eyebrow">Owner Profile</span>
+      <h2>Theo</h2>
+      <span class="role">Founder &amp; Owner &#183; Lead Technician</span>
+      <p class="lead">"I treat every home like it's my own family's. If I wouldn't be happy with the work, I won't leave it that way."</p>
+      <p>Theo personally handles quotations, checks every installation and stays in touch with clients after the job. When you call, you talk to the owner.</p>
+      <div class="owner__meta">
+        <div class="meta-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><div><small>Owner</small><strong>Theo</strong></div></div>
+        <div class="meta-item"><span class="icon icon--cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><div><small>Started</small><strong>May 2026</strong></div></div>
+        <div class="meta-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><div><small>Contact</small><strong><a href="tel:+639756501762">0975 650 1762</a></strong></div></div>
+        <div class="meta-item"><span class="icon icon--warm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></span><div><small>Gmail</small><strong><a href="mailto:theoacservices2026@gmail.com">theoacservices2026@gmail.com</a></strong></div></div>
+      </div>
+      <a class="btn btn--primary" href="#contact">Talk to Theo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">Our Values</span>
+      <h2>What we stand for</h2>
+    </div>
+    <div class="grid grid--4">
+      <div class="card reveal"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><h3>On Time</h3><p>We respect your schedule. If we are running late, you'll hear it from us first.</p></div>
+      <div class="card reveal reveal-delay-1"><span class="icon icon--cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><h3>Transparent</h3><p>Clear, itemized quotes before any work begins. No surprise charges.</p></div>
+      <div class="card reveal reveal-delay-2"><span class="icon icon--warm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/></svg></span><h3>Customer First</h3><p>Friendly service, clean work areas and honest advice &#8212; even if it means a smaller job.</p></div>
+      <div class="card reveal reveal-delay-3"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span><h3>Energy Smart</h3><p>We recommend efficient inverter units and maintenance that lowers your electric bill.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">Our Team</span>
+      <h2>The people behind the cool</h2>
+      <p class="lead">A small, hands-on crew that takes pride in clean, careful work.</p>
+    </div>
+    <div class="grid grid--3">
+      <div class="card team-card reveal"><div class="avatar">T</div><h3>Theo</h3><span class="role">Owner &amp; Lead Technician</span><p>Quotations, installations and quality checks on every job.</p></div>
+      <div class="card team-card reveal reveal-delay-1"><div class="avatar avatar--alt"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l6-6M14.5 4.5l5 5M12 7l5 5-8 8-5-5z"/></svg></div><h3>Service Technicians</h3><span class="role">Cleaning &#183; Repair &#183; Installation</span><p>Trained hands for chemical washes, troubleshooting and neat installs.</p></div>
+      <div class="card team-card reveal reveal-delay-2"><div class="avatar avatar--warm"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5h.5a8.5 8.5 0 0 1 8 8z"/></svg></div><h3>Customer Care</h3><span class="role">Bookings &amp; Follow-ups</span><p>Confirms your schedule, sends reminders and checks in after service.</p></div>
+    </div>
+  </div>
+</section>
+</div>
+<div class="page" id="services" data-route="services">
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="#home">Home</a><span>/</span><span>Services</span></div>
+    <span class="eyebrow">Our Services</span>
+    <h1>Cleaning, Heating,<br>Ventilating &amp; Air Conditioning</h1>
+    <p>Everything your home or business needs to stay comfortable &#8212; done by trained technicians with clear pricing and a service warranty.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <article class="service-detail" id="cleaning">
+      <div class="service-detail__media service-detail__media--cyan reveal"><span class="pill">Most booked</span><svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7l5.7 5.6a8 8 0 1 1-11.3 0z"/></svg></div>
+      <div class="reveal reveal-delay-1">
+        <span class="eyebrow">Cleaning</span>
+        <h2>Aircon Cleaning &amp; Chemical Wash</h2>
+        <p class="lead">Dirty coils and filters make your aircon work harder and cool less. Our deep cleaning restores airflow, removes odor and helps cut your electric bill.</p>
+        <div class="tags"><span class="tag">General cleaning</span><span class="tag">Chemical wash</span><span class="tag">Coil &amp; filter cleaning</span><span class="tag">Drain line flushing</span><span class="tag">Odor &amp; mold removal</span><span class="tag">Performance check</span></div>
+        <div class="price-line">Starts at <strong>&#8369;800</strong> / window-type unit</div>
+        <a class="btn btn--primary" href="#contact" data-service="Cleaning">Book Cleaning <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </article>
+    <article class="service-detail" id="heating">
+      <div class="service-detail__media service-detail__media--warm reveal"><span class="pill">Cool + Heat</span><svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.4 1.4 2.8 2.5 2.8z"/></svg></div>
+      <div class="reveal reveal-delay-1">
+        <span class="eyebrow">Heating</span>
+        <h2>Heating Systems &amp; Heat Pumps</h2>
+        <p class="lead">For cooler months, early mornings and hot-water needs: we install and service heat-pump aircons and water heaters for homes and small businesses.</p>
+        <div class="tags"><span class="tag">Heat pump aircon</span><span class="tag">Water heater installation</span><span class="tag">Thermostat setup</span><span class="tag">Heating repair</span><span class="tag">Safety inspection</span></div>
+        <div class="price-line">Starts at <strong>&#8369;1,500</strong> / service visit</div>
+        <a class="btn btn--primary" href="#contact" data-service="Heating">Book Heating <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </article>
+    <article class="service-detail" id="ventilation">
+      <div class="service-detail__media service-detail__media--cool reveal"><span class="pill">Fresh air</span><svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7A2.5 2.5 0 1 1 19.5 12H2M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
+      <div class="reveal reveal-delay-1">
+        <span class="eyebrow">Ventilation</span>
+        <h2>Ventilation &amp; Air Quality</h2>
+        <p class="lead">Good airflow keeps kitchens, bathrooms and offices fresh and less humid. We design and install exhaust and fresh-air systems that actually move air.</p>
+        <div class="tags"><span class="tag">Exhaust fan installation</span><span class="tag">Kitchen &amp; range hood ducting</span><span class="tag">Fresh-air systems</span><span class="tag">Duct cleaning</span><span class="tag">Humidity control</span></div>
+        <div class="price-line">Starts at <strong>&#8369;1,200</strong> / exhaust install</div>
+        <a class="btn btn--primary" href="#contact" data-service="Ventilation">Book Ventilation <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </article>
+    <article class="service-detail" id="aircon">
+      <div class="service-detail__media service-detail__media--navy reveal"><span class="pill">Full service</span><svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></svg></div>
+      <div class="reveal reveal-delay-1">
+        <span class="eyebrow">Air Conditioning</span>
+        <h2>Installation, Repair &amp; Maintenance</h2>
+        <p class="lead">Brand-new unit supply and installation, fast troubleshooting and repair, freon recharge, relocation and preventive maintenance plans for every aircon type.</p>
+        <div class="tags"><span class="tag">Unit installation</span><span class="tag">Repair &amp; troubleshooting</span><span class="tag">Freon recharge</span><span class="tag">Relocation / dismantling</span><span class="tag">PMS contracts</span><span class="tag">Window, split, cassette, floor-standing</span></div>
+        <div class="price-line">Starts at <strong>&#8369;1,500</strong> / installation (window-type)</div>
+        <a class="btn btn--primary" href="#contact" data-service="Installation">Book Air Conditioning <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">Maintenance Plans</span>
+      <h2>Keep it cool all year</h2>
+      <p class="lead">Regular cleaning keeps units efficient and prevents costly breakdowns.</p>
+    </div>
+    <div class="grid grid--3" style="align-items:stretch">
+      <div class="card plan reveal"><h3>Basic Care</h3><p>For 1&#8211;2 units at home</p><div class="plan__price">&#8369;1,500 <small>/ visit</small></div>
+        <ul class="checklist"><li>General cleaning</li><li>Filter &amp; drain check</li><li>Cooling performance test</li></ul>
+        <a class="btn btn--ghost" href="#contact" data-service="Cleaning">Choose Basic</a></div>
+      <div class="card plan plan--featured reveal reveal-delay-1"><span class="plan__ribbon">Most Popular</span><h3>Home Plus</h3><p>Twice a year, up to 3 units</p><div class="plan__price">&#8369;4,500 <small style="color:#9FB4CF">/ year</small></div>
+        <ul class="checklist"><li>2 chemical washes per unit</li><li>Freon pressure check</li><li>Priority scheduling</li><li>10% off repairs</li></ul>
+        <a class="btn btn--primary" href="#contact" data-service="Cleaning">Choose Home Plus</a></div>
+      <div class="card plan reveal reveal-delay-2"><h3>Business PMS</h3><p>Offices, shops &amp; clinics</p><div class="plan__price">Custom <small>quote</small></div>
+        <ul class="checklist"><li>Quarterly preventive maintenance</li><li>Service reports per unit</li><li>Emergency call priority</li></ul>
+        <a class="btn btn--ghost" href="#contact" data-service="Maintenance">Request Quote</a></div>
+    </div>
+    <p class="form__note" style="text-align:center;margin-top:20px">Sample rates &#8212; final price depends on unit type, capacity and condition. Assessment is free.</p>
+  </div>
+</section>
+</div>
+<div class="page" id="portfolio" data-route="portfolio">
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="#home">Home</a><span>/</span><span>Portfolio</span></div>
+    <span class="eyebrow">Portfolio</span>
+    <h1>Our work speaks<br>for itself.</h1>
+    <p>A look at sample finished services and units we have sold and installed around San Fernando, Pampanga &#8212; plus our business credentials.</p>
+  </div>
+</section>
+
+<section class="section section--dark" style="padding:56px 0">
+  <div class="container stats">
+    <div class="stat"><div class="stat__num"><b data-count="8">0</b></div><div class="stat__label">Services offered</div></div>
+    <div class="stat"><div class="stat__num"><b data-count="6">0</b></div><div class="stat__label">Aircon types we handle</div></div>
+    <div class="stat"><div class="stat__num"><b data-count="6">0</b><span> days</span></div><div class="stat__label">Open every week</div></div>
+    <div class="stat"><div class="stat__num"><b data-count="24">0</b><span>h</span></div><div class="stat__label">Target response time</div></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Finished Services &amp; Sold Products</span>
+      <h2>Recent projects</h2>
+      <p class="lead">A sample showcase of the jobs we do and units we supply. Tap any project to see the details.</p>
+    </div>
+    <div class="filters" data-filter-group="#gallery" aria-label="Filter projects">
+      <button class="chip is-active" type="button" data-filter="all" aria-pressed="true">All Work</button>
+      <button class="chip" type="button" data-filter="install" aria-pressed="false">Installations</button>
+      <button class="chip" type="button" data-filter="cleaning" aria-pressed="false">Cleaning &amp; Repair</button>
+      <button class="chip" type="button" data-filter="product" aria-pressed="false">Sold Products</button>
+      <button class="chip" type="button" data-filter="commercial" aria-pressed="false">Commercial</button>
+    </div>
+    <div class="gallery" id="gallery">
+      <article class="work reveal" data-cat="install" data-desc="Supply and installation of a 2.0 HP inverter split-type with concealed piping and a clean wall finish." tabindex="0" role="button" aria-label="View project: 2.0 HP Inverter Split-Type">
+        <span class="badge">Installation</span>
+        <div class="work__img"><img data-img="slide-living" alt="2.0 HP Inverter Split-Type" loading="lazy"></div>
+        <div class="work__body"><h3>2.0 HP Inverter Split-Type</h3><div class="work__meta"><span>Living room &#183; Dolores</span><span>Installed</span></div></div>
+      </article>
+      <article class="work reveal" data-cat="cleaning" data-desc="Full chemical wash of a 1.0 HP wall-mounted unit &#8212; cooling restored and musty odor removed." tabindex="0" role="button" aria-label="View project: Bedroom Chemical Wash">
+        <span class="badge">Cleaning</span>
+        <div class="work__img"><img data-img="slide-bedroom" alt="Bedroom Chemical Wash" loading="lazy"></div>
+        <div class="work__body"><h3>Bedroom Chemical Wash</h3><div class="work__meta"><span>Sindalan</span><span>Serviced</span></div></div>
+      </article>
+      <article class="work reveal" data-cat="install commercial" data-desc="Two 3.0 HP ceiling cassette units for an open dining area with even 360&#176; airflow." tabindex="0" role="button" aria-label="View project: Ceiling Cassette Fit-Out">
+        <span class="badge">Commercial</span>
+        <div class="work__img"><img data-img="slide-dining" alt="Ceiling Cassette Fit-Out" loading="lazy"></div>
+        <div class="work__body"><h3>Ceiling Cassette Fit-Out</h3><div class="work__meta"><span>Restaurant &#183; Sto. Ni&#241;o</span><span>Installed</span></div></div>
+      </article>
+      <article class="work reveal" data-cat="product commercial" data-desc="Supplied and installed a 5.0 HP floor-standing unit for a small office and reception area." tabindex="0" role="button" aria-label="View project: Floor-Standing Unit">
+        <span class="badge">Sold Unit</span>
+        <div class="work__img"><img data-img="slide-office" alt="Floor-Standing Unit" loading="lazy"></div>
+        <div class="work__body"><h3>Floor-Standing Unit</h3><div class="work__meta"><span>Office &#183; City of San Fernando</span><span>Sold &amp; installed</span></div></div>
+      </article>
+      <article class="work reveal" data-cat="product" data-desc="Multi-room inverter system with two outdoor condensers on a raised, ventilated mounting." tabindex="0" role="button" aria-label="View project: Whole-Home Multi-Split">
+        <span class="badge">Sold Units</span>
+        <div class="work__img"><img data-img="slide-exterior" alt="Whole-Home Multi-Split" loading="lazy"></div>
+        <div class="work__body"><h3>Whole-Home Multi-Split</h3><div class="work__meta"><span>Modern home &#183; Telabastagan</span><span>Sold &amp; installed</span></div></div>
+      </article>
+      <article class="work reveal" data-cat="cleaning" data-desc="Diagnosed a failed capacitor and recharged freon &#8212; unit back to full cooling in one visit." tabindex="0" role="button" aria-label="View project: Window-Type Repair">
+        <span class="badge">Repair</span>
+        <div class="work__img"><img data-img="prod-window" alt="Window-Type Repair" loading="lazy" style="object-fit:contain;background:linear-gradient(160deg,#EAF5FE,#F6FAFE);padding:24px"></div>
+        <div class="work__body"><h3>Window-Type Repair</h3><div class="work__meta"><span>Apartment &#183; Del Pilar</span><span>Repaired</span></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cinema">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Tools for You</span>
+      <h2>Quick quote &amp; availability</h2>
+      <p class="lead">Get an instant price range for your job and check if we're open right now.</p>
+    </div>
+    <div class="widgets">
+      <div class="widget reveal" id="estimator">
+        <div class="widget__head"><h3>Instant Quote Estimator</h3><span class="tag">Free</span></div>
+        <div class="estimator">
+          <div class="estimator__row">
+            <div class="field"><label for="est-service">Service</label>
+              <select id="est-service"><option value="cleaning">Cleaning / Chemical wash</option><option value="repair">Repair &amp; troubleshooting</option><option value="installation">Installation (labor)</option><option value="freon">Freon recharge</option></select></div>
+            <div class="field"><label for="est-type">Aircon type</label>
+              <select id="est-type"><option value="window">Window-type</option><option value="split" selected>Split-type</option><option value="cassette">Ceiling cassette</option><option value="floor">Floor-standing</option></select></div>
+          </div>
+          <div class="field"><label for="est-qty">Number of units</label>
+            <div class="qty"><button type="button" data-step="-1" aria-label="Fewer units">&#8722;</button><input id="est-qty" type="number" min="1" max="20" value="1" inputmode="numeric"><button type="button" data-step="1" aria-label="More units">+</button></div></div>
+          <div class="estimator__result" aria-live="polite">
+            <small>Estimated cost</small>
+            <div class="estimator__total" id="est-total">&#8369;0</div>
+            <p class="estimator__note"><span id="est-disc" hidden><strong style="color:#1E8E4E">10% multi-unit discount applied.</strong> </span>Indicative range only &#8212; final price after a free assessment.</p>
+          </div>
+          <a class="btn btn--primary" href="#contact">Book This Service <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+      <div class="widget reveal reveal-delay-1">
+        <div class="widget__head"><h3>Opening Hours</h3><span class="live" data-open-status>Open now</span></div>
+        <ul class="hours" data-hours></ul>
+        <p class="form__note" style="margin-top:14px">Philippine Time (GMT+8). Emergency calls answered when available.</p>
+        <a class="btn btn--ghost" style="margin-top:16px;width:100%" href="tel:+639756501762"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg> Call 0975 650 1762</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Business Credentials</span>
+      <h2>Registered, trained and accountable</h2>
+      <p class="lead">We are completing our local business registrations. Reference numbers will be posted here once issued &#8212; ask us anytime for copies.</p>
+    </div>
+    <div class="grid grid--3">
+      <div class="card cred reveal"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></span><div><h3>DTI Business Name Registration</h3><p>Theo's Airconditioning Services</p><span class="cred__status cred__status--pending">Reg. no. to be posted</span></div></div>
+      <div class="card cred reveal reveal-delay-1"><span class="icon icon--cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/></svg></span><div><h3>Mayor's / Business Permit</h3><p>City of San Fernando, Pampanga</p><span class="cred__status cred__status--pending">Permit no. to be posted</span></div></div>
+      <div class="card cred reveal reveal-delay-2"><span class="icon icon--warm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></span><div><h3>BIR Certificate of Registration</h3><p>Official receipts available on request</p><span class="cred__status cred__status--pending">TIN to be posted</span></div></div>
+      <div class="card cred reveal"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></svg></span><div><h3>TESDA RAC Servicing NC II</h3><p>Refrigeration &amp; Air-conditioning servicing skills</p><span class="cred__status cred__status--pending">Certificate details to be posted</span></div></div>
+      <div class="card cred reveal reveal-delay-1"><span class="icon icon--cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><div><h3>Service Warranty</h3><p>Written warranty on workmanship for every job</p><span class="cred__status">Included</span></div></div>
+      <div class="card cred reveal reveal-delay-2"><span class="icon icon--warm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><div><h3>Free Assessment</h3><p>No-obligation site check and itemized quote</p><span class="cred__status">Always</span></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="lightbox" role="dialog" aria-modal="true" aria-label="Project details">
+  <div class="lightbox__inner">
+    <button class="lightbox__close" type="button" aria-label="Close">&#215;</button>
+    <img src="" alt="">
+    <div class="lightbox__caption"><h3></h3><p></p></div>
+  </div>
+</div>
+</div>
+<div class="page" id="contact" data-route="contact">
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="#home">Home</a><span>/</span><span>Contact Us</span></div>
+    <span class="eyebrow">Contact Us</span>
+    <h1>Let's get your space<br>cool again.</h1>
+    <p>Send us your request and we'll reply with a schedule and quote &#8212; usually within the day.</p>
+  </div>
+</section>
+
+<section class="section section--cinema">
+  <div class="container contact-grid">
+    <div class="widget reveal">
+      <div class="widget__head"><h3>Request a Service</h3><span class="tag">Free quote</span></div>
+      <form class="form" id="contact-form" novalidate>
+        <div class="field"><label for="name">Full name <span class="req">*</span></label>
+          <input id="name" name="name" type="text" autocomplete="name" placeholder="Juan Dela Cruz" required><span class="field__error"></span></div>
+        <div class="field"><label for="address">Address <span class="req">*</span></label>
+          <input id="address" name="address" type="text" autocomplete="street-address" placeholder="House no., street, barangay, San Fernando" required><span class="field__error"></span></div>
+        <div class="form__row">
+          <div class="field"><label for="phone">Contact number <span class="req">*</span></label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="09XX XXX XXXX" required><span class="field__error"></span></div>
+          <div class="field"><label for="email">Email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@email.com" required><span class="field__error"></span></div>
+        </div>
+        <fieldset class="field service-field" style="border:0;padding:0;margin:0">
+          <legend style="font-size:.88rem;font-weight:700;color:var(--navy);margin-bottom:7px">Service needed <span class="req" style="color:var(--blue)">*</span></legend>
+          <div class="service-picks">
+            <div class="pick"><input type="checkbox" id="svc-0" name="service" value="Cleaning"><label for="svc-0">Cleaning</label></div>
+            <div class="pick"><input type="checkbox" id="svc-1" name="service" value="Repair"><label for="svc-1">Repair</label></div>
+            <div class="pick"><input type="checkbox" id="svc-2" name="service" value="Installation"><label for="svc-2">Installation</label></div>
+            <div class="pick"><input type="checkbox" id="svc-3" name="service" value="Freon Recharge"><label for="svc-3">Freon Recharge</label></div>
+            <div class="pick"><input type="checkbox" id="svc-4" name="service" value="Heating"><label for="svc-4">Heating</label></div>
+            <div class="pick"><input type="checkbox" id="svc-5" name="service" value="Ventilation"><label for="svc-5">Ventilation</label></div>
+            <div class="pick"><input type="checkbox" id="svc-6" name="service" value="Maintenance (PMS)"><label for="svc-6">Maintenance (PMS)</label></div>
+            <div class="pick"><input type="checkbox" id="svc-7" name="service" value="Buy a Unit"><label for="svc-7">Buy a Unit</label></div>
+          </div>
+          <span class="field__error"></span>
+        </fieldset>
+        <div class="form__row">
+          <div class="field"><label for="units">Number of units</label>
+            <select id="units" name="units"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+          <div class="field"><label for="schedule">Preferred date</label>
+            <input id="schedule" name="schedule" type="date"></div>
+        </div>
+        <div class="field"><label for="message">Details (optional)</label>
+          <textarea id="message" name="message" placeholder="Aircon brand, HP, type, and what's wrong &#8212; e.g. 'Split-type 1.5 HP, not cooling, dripping water.'"></textarea></div>
+        <div class="form-status" role="status" aria-live="polite"></div>
+        <button class="btn btn--primary" type="submit" style="justify-self:start">Send Request <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <p class="form__note">By sending, you agree to be contacted by Theo's Airconditioning Services about your request. We never share your details.</p>
+      </form>
+    </div>
+
+    <div style="display:grid;gap:24px">
+      <div class="widget reveal reveal-delay-1">
+        <h3 style="margin-bottom:20px">Contact details</h3>
+        <div class="info-list">
+          <div class="info-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><div><small>Call / Text</small><a href="tel:+639756501762">0975 650 1762</a></div></div>
+          <div class="info-item"><span class="icon icon--warm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></span><div><small>Gmail</small><a href="mailto:theoacservices2026@gmail.com">theoacservices2026@gmail.com</a></div></div>
+          <div class="info-item"><span class="icon icon--cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span><div><small>Location</small><span>San Fernando, Pampanga, Philippines</span></div></div>
+          <div class="info-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><div><small>Owner</small><span>Theo</span></div></div>
+        </div>
+        <div class="socials" style="margin-top:22px">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook" style="background:var(--navy)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9V7c0-.9.6-1 1-1h3V2h-4c-3.3 0-4 2.4-4 4v3H7v4h3v9h4v-9h3.5l.5-4z"/></svg></a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram" style="background:var(--navy)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></a>
+          <a href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok" style="background:var(--navy)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.3v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.5a6 6 0 1 0 5.1 5.9V9a7.6 7.6 0 0 0 4.5 1.4V7.1a4.3 4.3 0 0 1-3.4-1.3z"/></svg></a>
+          <a href="https://m.me/" target="_blank" rel="noopener" aria-label="Messenger" style="background:var(--navy)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.1 2 11.3c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.9c.9.3 1.9.4 2.9.4 5.5 0 10-4.1 10-9.3S17.5 2 12 2zm1 12.5-2.6-2.7-5 2.7 5.5-5.8 2.6 2.7 5-2.7z"/></svg></a>
+        </div>
+      </div>
+      <div class="widget reveal reveal-delay-2">
+        <div class="widget__head"><h3>Opening Hours</h3><span class="live" data-open-status>Open now</span></div>
+        <ul class="hours" data-hours></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="map reveal">
+      <iframe title="Map of San Fernando, Pampanga" src="https://www.google.com/maps?q=City+of+San+Fernando,+Pampanga,+Philippines&amp;z=13&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+    <p class="form__note" style="margin-top:12px">Service area: City of San Fernando and nearby towns &#8212; Angeles, Bacolor, Mexico, Sta. Ana, Guagua and more. <a style="color:var(--blue);font-weight:600" href="https://maps.google.com/?q=San+Fernando,+Pampanga" target="_blank" rel="noopener">Open in Google Maps &#8594;</a></p>
+  </div>
+</section>
+</div>
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="cta-band reveal">
+      <div>
+        <h2>Feeling the Pampanga heat?</h2>
+        <p>Get a free on-site check and an honest quote. Same-day service around San Fernando when slots are open.</p>
+      </div>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#contact">Request a Quote <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn--light" href="tel:+639756501762"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg> 0975 650 1762</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <a class="brand" href="#home" aria-label="Theo's Airconditioning Services &#8212; Home">
+      <img data-img="logo-light" alt="Theo's logo" width="46" height="42">
+      <span class="brand__text"><span class="brand__name">THEO&#8217;S</span><span class="brand__tag">Airconditioning Services</span></span>
+    </a>
+        <div class="brand__services">Supply &middot; Installation &middot; Maintenance &middot; Repair</div>
+        <p style="margin-top:14px;max-width:300px">Cleaning, repair, installation and HVAC care for homes and businesses in San Fernando, Pampanga and nearby towns.</p>
+        <div class="socials">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9V7c0-.9.6-1 1-1h3V2h-4c-3.3 0-4 2.4-4 4v3H7v4h3v9h4v-9h3.5l.5-4z"/></svg></a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></a>
+          <a href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.3v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.5a6 6 0 1 0 5.1 5.9V9a7.6 7.6 0 0 0 4.5 1.4V7.1a4.3 4.3 0 0 1-3.4-1.3z"/></svg></a>
+          <a href="https://m.me/" target="_blank" rel="noopener" aria-label="Messenger"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.1 2 11.3c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.9c.9.3 1.9.4 2.9.4 5.5 0 10-4.1 10-9.3S17.5 2 12 2zm1 12.5-2.6-2.7-5 2.7 5.5-5.8 2.6 2.7 5-2.7z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul class="footer__links">
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul class="footer__links">
+          <li><a href="#cleaning">Aircon Cleaning</a></li>
+          <li><a href="#heating">Heating</a></li>
+          <li><a href="#ventilation">Ventilation</a></li>
+          <li><a href="#aircon">Installation &amp; Repair</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get in touch</h4>
+        <ul class="footer__links footer__contact">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span>San Fernando, Pampanga, Philippines</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><a href="tel:+639756501762">0975 650 1762</a></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg><a href="mailto:theoacservices2026@gmail.com">theoacservices2026@gmail.com</a></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Mon&#8211;Fri 8AM&#8211;6PM &#183; Sat 8AM&#8211;5PM</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>&#169; <span data-year>2026</span> Theo's Airconditioning Services. All rights reserved.</span>
+      <span>Serving San Fernando, Pampanga since May 2026</span>
+    </div>
+  </div>
+</footer>
+
+<div class="fab">
+  <div class="fab__menu">
+    <a class="fab__item" href="tel:+639756501762"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg> Call us</a>
+    <a class="fab__item" href="https://m.me/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5h.5a8.5 8.5 0 0 1 8 8z"/></svg> Messenger</a>
+    <a class="fab__item" href="#contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Book a service</a>
+  </div>
+  <button class="fab__btn" type="button" aria-label="Quick contact" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+</div>
+
+
+</div>
+<script>
+/* Theo's Airconditioning Services \u2014 site interactions */
+(function () {
+  "use strict";
+
+  const BUSINESS_EMAIL = "theoacservices2026@gmail.com";
+  // Optional: paste a GHL Workflow "Inbound Webhook" URL here to send form leads straight into your GHL CRM.
+  const GHL_WEBHOOK_URL = "";
+  const site = document.getElementById("theo-site");
+  // Break out of the GHL section/row/column padding so the site runs edge to edge.
+  for (let el = site.parentElement; el && el !== document.body; el = el.parentElement) {
+    ["max-width", "width", "padding", "margin", "transform"].forEach((prop, i) =>
+      el.style.setProperty(prop, ["none", "100%", "0", "0", "none"][i], "important"));
+  }
+  // Opening hours in Philippine time (24h). null = closed.
+  const HOURS = [
+    { day: "Sunday", open: null, close: null, label: "By appointment" },
+    { day: "Monday", open: 8, close: 18 },
+    { day: "Tuesday", open: 8, close: 18 },
+    { day: "Wednesday", open: 8, close: 18 },
+    { day: "Thursday", open: 8, close: 18 },
+    { day: "Friday", open: 8, close: 18 },
+    { day: "Saturday", open: 8, close: 17 }
+  ];
+
+  const $ = (sel, root = site) => root.querySelector(sel);
+  const $$ = (sel, root = site) => Array.from(root.querySelectorAll(sel));
+
+  /* ---------- Inline images ---------- */
+  const IMAGES = {
+    "logo-light": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 342 314"><defs><linearGradient id="g" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A8BF0"/><stop offset="1" stop-color="#1D5FC4"/></linearGradient></defs><path d="M0 0H330L255 75H179V151L104 226V75H0Z" fill="#FFFFFF"/><path d="M310 57V302H68Z" fill="url(#g)"/><path d="M248 202L248.0 152.0M248.0 181.0L260.0 169.0M248.0 181.0L236.0 169.0M248.0 166.0L257.2 156.8M248.0 166.0L238.8 156.8M248 202L204.7 177.0M229.8 191.5L225.4 175.1M229.8 191.5L213.4 195.9M216.8 184.0L213.5 171.4M216.8 184.0L204.3 187.4M248 202L204.7 227.0M229.8 212.5L213.4 208.1M229.8 212.5L225.4 228.9M216.8 220.0L204.3 216.6M216.8 220.0L213.5 232.6M248 202L248.0 252.0M248.0 223.0L236.0 235.0M248.0 223.0L260.0 235.0M248.0 238.0L238.8 247.2M248.0 238.0L257.2 247.2M248 202L291.3 227.0M266.2 212.5L270.6 228.9M266.2 212.5L282.6 208.1M279.2 220.0L282.5 232.6M279.2 220.0L291.7 216.6M248 202L291.3 177.0M266.2 191.5L282.6 195.9M266.2 191.5L270.6 175.1M279.2 184.0L291.7 187.4M279.2 184.0L282.5 171.4" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round"/></svg>`,
+    "logo": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 342 314"><defs><linearGradient id="g" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A6FD6"/><stop offset="1" stop-color="#0D3C80"/></linearGradient></defs><path d="M0 0H330L255 75H179V151L104 226V75H0Z" fill="#082140"/><path d="M310 57V302H68Z" fill="url(#g)"/><path d="M248 202L248.0 152.0M248.0 181.0L260.0 169.0M248.0 181.0L236.0 169.0M248.0 166.0L257.2 156.8M248.0 166.0L238.8 156.8M248 202L204.7 177.0M229.8 191.5L225.4 175.1M229.8 191.5L213.4 195.9M216.8 184.0L213.5 171.4M216.8 184.0L204.3 187.4M248 202L204.7 227.0M229.8 212.5L213.4 208.1M229.8 212.5L225.4 228.9M216.8 220.0L204.3 216.6M216.8 220.0L213.5 232.6M248 202L248.0 252.0M248.0 223.0L236.0 235.0M248.0 223.0L260.0 235.0M248.0 238.0L238.8 247.2M248.0 238.0L257.2 247.2M248 202L291.3 227.0M266.2 212.5L270.6 228.9M266.2 212.5L282.6 208.1M279.2 220.0L282.5 232.6M279.2 220.0L291.7 216.6M248 202L291.3 177.0M266.2 191.5L282.6 195.9M266.2 191.5L270.6 175.1M279.2 184.0L291.7 187.4M279.2 184.0L282.5 171.4" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round"/></svg>`,
+    "prod-cassette": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#E1E8EF"/></linearGradient></defs><path d="M200 60l150 70-150 70-150-70z" fill="url(#a)" stroke="#CFD9E3" stroke-width="2"/><path d="M200 92l82 38-82 38-82-38z" fill="#E6ECF2" stroke="#C3CFDB" stroke-width="2"/><g stroke="#B9C6D3" stroke-width="3"><path d="M150 130l50 23 50-23M170 130l30 14 30-14"/></g><path d="M50 130v14l150 70 150-70v-14l-150 70z" fill="#D5DEE7"/><g fill="none" stroke="#5CC8FF" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M90 170q-10 30-30 44"/><path d="M310 170q10 30 30 44"/><path d="M200 222v40"/></g></svg>`,
+    "prod-floor": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#DCE4EB"/></linearGradient></defs><rect x="150" y="30" width="100" height="250" rx="18" fill="url(#a)" stroke="#CFD9E3" stroke-width="2"/><rect x="164" y="48" width="72" height="100" rx="10" fill="#E8EEF4"/><g stroke="#C3CFDB" stroke-width="4" stroke-linecap="round"><path d="M174 64h52M174 82h52M174 100h52M174 118h52M174 136h52"/></g><rect x="172" y="160" width="56" height="22" rx="6" fill="#0E2A47"/><text x="180" y="176" font-family="Arial" font-size="13" font-weight="700" fill="#5CE1FF">22\u00b0C</text><circle cx="200" cy="200" r="4" fill="#12C8D4"/><g fill="none" stroke="#5CC8FF" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M140 70q-20 10-40 0"/><path d="M140 100q-20 10-40 0"/><path d="M260 70q20 10 40 0"/><path d="M260 100q20 10 40 0"/></g></svg>`,
+    "prod-outdoor": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#DCE4EB"/></linearGradient></defs><rect x="80" y="70" width="240" height="170" rx="14" fill="url(#a)" stroke="#CFD9E3" stroke-width="2"/><circle cx="170" cy="155" r="62" fill="#E6ECF2" stroke="#C3CFDB" stroke-width="4"/><g stroke="#9DAEBF" stroke-width="4" fill="none"><circle cx="170" cy="155" r="44"/><circle cx="170" cy="155" r="26"/><path d="M108 155h124M170 93v124"/></g><g stroke="#C3CFDB" stroke-width="5" stroke-linecap="round"><path d="M262 100h40M262 124h40M262 148h40M262 172h40M262 196h40"/></g><rect x="100" y="240" width="20" height="16" fill="#2B3A4A"/><rect x="280" y="240" width="20" height="16" fill="#2B3A4A"/></svg>`,
+    "prod-portable": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#DCE4EB"/></linearGradient></defs><path d="M250 80c60 0 80 30 90 80" fill="none" stroke="#B9C6D3" stroke-width="18" stroke-linecap="round" stroke-dasharray="4 6"/><rect x="140" y="60" width="120" height="200" rx="22" fill="url(#a)" stroke="#CFD9E3" stroke-width="2"/><rect x="156" y="76" width="88" height="28" rx="8" fill="#0E2A47"/><text x="176" y="96" font-family="Arial" font-size="15" font-weight="700" fill="#5CE1FF">20\u00b0C</text><rect x="156" y="120" width="88" height="96" rx="10" fill="#E8EEF4"/><g stroke="#C3CFDB" stroke-width="4" stroke-linecap="round"><path d="M166 136h68M166 154h68M166 172h68M166 190h68"/></g><circle cx="160" cy="266" r="8" fill="#2B3A4A"/><circle cx="240" cy="266" r="8" fill="#2B3A4A"/></svg>`,
+    "prod-split": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#E1E8EF"/></linearGradient></defs><rect x="40" y="96" width="320" height="96" rx="24" fill="#0B1F35" opacity=".07" transform="translate(4 8)"/><rect x="40" y="96" width="320" height="96" rx="24" fill="url(#a)" stroke="#CFD9E3" stroke-width="2"/><rect x="58" y="160" width="284" height="14" rx="7" fill="#C6D2DE"/><circle cx="330" cy="122" r="5" fill="#12C8D4"/><rect x="262" y="114" width="54" height="16" rx="5" fill="#0E2A47"/><text x="268" y="127" font-family="Arial" font-size="12" font-weight="700" fill="#5CE1FF">24\u00b0C</text><g fill="none" stroke="#5CC8FF" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M120 206q14 18 0 36"/><path d="M200 206q14 18 0 36"/><path d="M280 206q14 18 0 36"/></g></svg>`,
+    "prod-window": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#E1E8EF"/></linearGradient></defs><rect x="110" y="70" width="190" height="170" rx="14" fill="#0B1F35" opacity=".07" transform="translate(4 8)"/><rect x="110" y="70" width="190" height="170" rx="14" fill="url(#a)" stroke="#CFD9E3" stroke-width="2"/><rect x="124" y="86" width="118" height="138" rx="8" fill="#E9EFF5"/><g stroke="#C3CFDB" stroke-width="5" stroke-linecap="round"><path d="M136 104h94M136 124h94M136 144h94M136 164h94M136 184h94M136 204h94"/></g><rect x="254" y="92" width="34" height="18" rx="4" fill="#0E2A47"/><circle cx="262" cy="130" r="7" fill="#DCE3EA" stroke="#B9C6D3" stroke-width="2"/><circle cx="280" cy="130" r="7" fill="#DCE3EA" stroke="#B9C6D3" stroke-width="2"/><circle cx="271" cy="160" r="4" fill="#12C8D4"/></svg>`,
+    "slide-bedroom": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9EEF5"/><stop offset="1" stop-color="#D8E1EB"/></linearGradient><linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C7CED6"/><stop offset="1" stop-color="#AEB7C1"/></linearGradient><linearGradient id="n" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16294A"/><stop offset="1" stop-color="#3B5C8C"/></linearGradient><linearGradient id="ac" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E4EAF0"/></linearGradient><linearGradient id="air" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7AD4FF" stop-opacity=".5"/><stop offset="1" stop-color="#7AD4FF" stop-opacity="0"/></linearGradient></defs><rect width="1600" height="900" fill="url(#w)"/><rect x="820" y="0" width="780" height="760" fill="#A9BCCF"/><g stroke="#9AAFC3" stroke-width="3"><path d="M880 0v760M940 0v760M1000 0v760M1060 0v760M1120 0v760M1180 0v760M1240 0v760M1300 0v760M1360 0v760M1420 0v760M1480 0v760M1540 0v760"/></g><rect y="760" width="1600" height="140" fill="url(#f)"/><!-- night window --><rect x="200" y="170" width="340" height="440" rx="8" fill="url(#n)"/><circle cx="460" cy="250" r="34" fill="#FFF3C4"/><circle cx="447" cy="242" r="30" fill="#1C3359"/><g fill="#FFFFFF" opacity=".8"><circle cx="270" cy="230" r="3"/><circle cx="330" cy="300" r="2"/><circle cx="250" cy="380" r="2"/><circle cx="400" cy="340" r="3"/></g><rect x="180" y="150" width="380" height="490" rx="10" fill="none" stroke="#F4F6F9" stroke-width="20"/><rect x="150" y="140" width="70" height="520" fill="#DCE4EC"/><rect x="520" y="140" width="70" height="520" fill="#DCE4EC"/><!-- AC --><g transform="translate(1000 120)"><rect x="6" y="10" width="440" height="122" rx="28" fill="#0B1F35" opacity=".1"/><rect width="440" height="120" rx="28" fill="url(#ac)" stroke="#D2DCE6" stroke-width="2"/><rect x="24" y="86" width="392" height="16" rx="8" fill="#C9D4DF"/><rect x="320" y="30" width="80" height="26" rx="8" fill="#0E2A47"/><text x="332" y="50" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#5CE1FF">24\u00b0C</text></g><path d="M1020 240q200 280 400 0z" fill="url(#air)"/><!-- bed --><rect x="900" y="430" width="640" height="200" rx="20" fill="#2C4766"/><rect x="860" y="600" width="720" height="150" rx="24" fill="#F4F7FA"/><path d="M860 640h720v90a24 24 0 0 1-24 24H884a24 24 0 0 1-24-24z" fill="#3BB3F5" opacity=".9"/><rect x="920" y="560" width="200" height="70" rx="24" fill="#FFFFFF"/><rect x="1150" y="560" width="200" height="70" rx="24" fill="#FFFFFF"/><rect x="1360" y="575" width="150" height="55" rx="20" fill="#FFB65C"/><!-- side table & lamp --><rect x="690" y="640" width="140" height="120" rx="10" fill="#1B2B3C"/><rect x="752" y="560" width="16" height="80" fill="#C9A27E"/><path d="M705 560h110l-20-70h-70z" fill="#FFE2B3"/><ellipse cx="760" cy="520" rx="120" ry="90" fill="#FFE2B3" opacity=".25"/></svg>`,
+    "slide-dining": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6F4F0"/><stop offset="1" stop-color="#E7E2DA"/></linearGradient><linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9E5DF"/><stop offset="1" stop-color="#D6D0C7"/></linearGradient><linearGradient id="air" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5CC8FF" stop-opacity=".45"/><stop offset="1" stop-color="#5CC8FF" stop-opacity="0"/></linearGradient></defs><rect width="1600" height="900" fill="url(#w)"/><rect width="1600" height="90" fill="#FFFFFF"/><rect y="88" width="1600" height="6" fill="#E0DBD3"/><rect y="740" width="1600" height="160" fill="url(#f)"/><!-- ceiling cassette --><g transform="translate(1030 90)"><rect x="-20" y="0" width="340" height="22" rx="4" fill="#F1F4F7" stroke="#D2DCE6" stroke-width="2"/><rect x="70" y="4" width="160" height="12" rx="3" fill="#CBD5DF"/><rect x="-20" y="4" width="60" height="12" rx="3" fill="#DCE3EA"/><rect x="260" y="4" width="60" height="12" rx="3" fill="#DCE3EA"/></g><path d="M990 112l-120 260h300zM1390 112l120 260h-300z" fill="url(#air)"/><g fill="none" stroke="#5CC8FF" stroke-width="5" stroke-linecap="round" opacity=".6"><path d="M1000 140q-30 40-70 60"/><path d="M1380 140q30 40 70 60"/></g><!-- kitchen cabinets left --><rect x="80" y="180" width="560" height="200" rx="8" fill="#FFFFFF" stroke="#E0DBD3" stroke-width="3"/><path d="M220 180v200M360 180v200M500 180v200" stroke="#E0DBD3" stroke-width="3"/><rect x="80" y="500" width="560" height="240" rx="8" fill="#22384F"/><rect x="70" y="480" width="580" height="26" rx="6" fill="#F2EFEA"/><path d="M220 520v200M360 520v200M500 520v200" stroke="#2F4A63" stroke-width="3"/><!-- pendant lights --><g stroke="#2B3A4A" stroke-width="3"><path d="M1100 94v190M1200 94v170M1300 94v190"/></g><g fill="#1B2B3C"><path d="M1070 284h60l-10-30h-40z"/><path d="M1170 264h60l-10-30h-40z"/><path d="M1270 284h60l-10-30h-40z"/></g><g fill="#FFD9A0" opacity=".35"><ellipse cx="1100" cy="320" rx="60" ry="30"/><ellipse cx="1300" cy="320" rx="60" ry="30"/></g><!-- dining table --><rect x="900" y="560" width="560" height="22" rx="10" fill="#B98F6A"/><rect x="950" y="582" width="16" height="170" fill="#8A6444"/><rect x="1394" y="582" width="16" height="170" fill="#8A6444"/><g fill="#FFFFFF"><ellipse cx="1060" cy="555" rx="40" ry="8"/><ellipse cx="1300" cy="555" rx="40" ry="8"/></g><path d="M1170 560c0-50 20-80 10-110M1190 560c0-40 20-70 30-90" stroke="#3E9B63" stroke-width="5" fill="none"/><rect x="1160" y="520" width="40" height="40" rx="8" fill="#FFFFFF"/><!-- chairs --><g fill="#2F4A63"><rect x="860" y="500" width="20" height="250" rx="6"/><rect x="820" y="620" width="120" height="16" rx="6"/><rect x="1480" y="500" width="20" height="250" rx="6"/><rect x="1420" y="620" width="120" height="16" rx="6"/></g></svg>`,
+    "slide-exterior": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7CC7F5"/><stop offset="1" stop-color="#E3F4FF"/></linearGradient><linearGradient id="cu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DCE4EB"/></linearGradient></defs><rect width="1600" height="900" fill="url(#sky)"/><circle cx="300" cy="170" r="70" fill="#FFF1B8" opacity=".9"/><g fill="#FFFFFF" opacity=".85"><ellipse cx="520" cy="150" rx="90" ry="26"/><ellipse cx="580" cy="130" rx="60" ry="26"/><ellipse cx="1300" cy="110" rx="110" ry="28"/></g><rect y="760" width="1600" height="140" fill="#7DBE8E"/><rect y="780" width="1600" height="120" fill="#6AAE7C"/><!-- modern house --><rect x="640" y="260" width="900" height="30" fill="#1B2B3C"/><rect x="680" y="290" width="820" height="200" fill="#FFFFFF"/><rect x="600" y="490" width="980" height="24" fill="#1B2B3C"/><rect x="620" y="514" width="940" height="246" fill="#F2F4F7"/><rect x="1180" y="290" width="320" height="200" fill="#C9A27E"/><g stroke="#B08562" stroke-width="4"><path d="M1180 320h320M1180 350h320M1180 380h320M1180 410h320M1180 440h320M1180 470h320"/></g><rect x="720" y="320" width="420" height="140" fill="#2B4A6A"/><path d="M860 320v140M1000 320v140" stroke="#1B2B3C" stroke-width="6"/><g fill="#9FD7FF" opacity=".45"><path d="M730 450l100-120h30L760 450z"/></g><rect x="660" y="550" width="460" height="210" fill="#2B4A6A"/><path d="M813 550v210M966 550v210" stroke="#1B2B3C" stroke-width="6"/><rect x="1180" y="560" width="120" height="200" rx="4" fill="#1B2B3C"/><circle cx="1280" cy="660" r="5" fill="#C9A27E"/><!-- outdoor condensing units --><g transform="translate(1340 620)"><rect width="190" height="140" rx="10" fill="url(#cu)" stroke="#C8D3DD" stroke-width="2"/><circle cx="70" cy="70" r="50" fill="#E6ECF2" stroke="#C3CFDB" stroke-width="4"/><g stroke="#9DAEBF" stroke-width="4"><circle cx="70" cy="70" r="36" fill="none"/><circle cx="70" cy="70" r="22" fill="none"/><path d="M20 70h100M70 20v100"/></g><g stroke="#C3CFDB" stroke-width="4"><path d="M140 30h34M140 50h34M140 70h34M140 90h34M140 110h34"/></g></g><g transform="translate(1340 330) scale(.8)"><rect width="190" height="140" rx="10" fill="url(#cu)" stroke="#C8D3DD" stroke-width="2"/><circle cx="70" cy="70" r="50" fill="#E6ECF2" stroke="#C3CFDB" stroke-width="4"/><g stroke="#9DAEBF" stroke-width="4"><circle cx="70" cy="70" r="36" fill="none"/><circle cx="70" cy="70" r="22" fill="none"/><path d="M20 70h100M70 20v100"/></g><g stroke="#C3CFDB" stroke-width="4"><path d="M140 30h34M140 50h34M140 70h34M140 90h34M140 110h34"/></g></g><rect x="1330" y="442" width="172" height="8" fill="#1B2B3C"/><!-- trees --><g><rect x="470" y="560" width="16" height="200" fill="#6B4E36"/><circle cx="478" cy="520" r="90" fill="#4E9E68"/><circle cx="430" cy="570" r="60" fill="#5FAF78"/></g><g fill="#3E9B63"><ellipse cx="200" cy="740" rx="120" ry="40"/><ellipse cx="1560" cy="760" rx="80" ry="30"/></g></svg>`,
+    "slide-living": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2F5F8"/><stop offset="1" stop-color="#E2E9F0"/></linearGradient><linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D4B392"/><stop offset="1" stop-color="#B98F6A"/></linearGradient><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FD3FF"/><stop offset="1" stop-color="#DFF3FF"/></linearGradient><linearGradient id="ac" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E4EAF0"/></linearGradient><linearGradient id="air" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5CC8FF" stop-opacity=".55"/><stop offset="1" stop-color="#5CC8FF" stop-opacity="0"/></linearGradient></defs><rect width="1600" height="900" fill="url(#w)"/><rect x="0" y="0" width="560" height="900" fill="#E7EDF3"/><rect y="740" width="1600" height="160" fill="url(#f)"/><g opacity=".18" stroke="#8A6444" stroke-width="2"><path d="M0 790H1600M0 845H1600"/></g><!-- window --><rect x="150" y="150" width="380" height="520" rx="6" fill="url(#s)"/><g fill="#7DBE8E"><circle cx="220" cy="560" r="80"/><circle cx="330" cy="590" r="70"/><circle cx="460" cy="560" r="90"/></g><g fill="#5FA673"><circle cx="270" cy="620" r="60"/><circle cx="420" cy="630" r="60"/></g><path d="M150 150h380v520H150z M340 150v520 M150 410h380" fill="none" stroke="#2B3A4A" stroke-width="10"/><rect x="130" y="668" width="420" height="14" rx="3" fill="#CDD6DF"/><!-- art --><rect x="1040" y="380" width="150" height="110" rx="4" fill="#0E2A47"/><path d="M1052 470l40-48 30 30 22-20 34 38z" fill="#3BB3F5"/><rect x="1210" y="380" width="110" height="110" rx="4" fill="#FFFFFF" stroke="#D3DBE3" stroke-width="3"/><circle cx="1265" cy="435" r="30" fill="#12C8D4" opacity=".75"/><!-- AC split unit --><g transform="translate(990 150)"><rect x="6" y="10" width="420" height="120" rx="26" fill="#0B1F35" opacity=".08"/><rect width="420" height="118" rx="26" fill="url(#ac)" stroke="#D2DCE6" stroke-width="2"/><rect x="22" y="84" width="376" height="16" rx="8" fill="#C9D4DF"/><circle cx="380" cy="34" r="5" fill="#12C8D4"/><rect x="300" y="28" width="60" height="12" rx="6" fill="#E3EAF1"/><text x="30" y="48" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#9AA9B8" letter-spacing="2">INVERTER</text></g><path d="M1010 270q200 300 400 0z" fill="url(#air)"/><g fill="none" stroke="#5CC8FF" stroke-width="5" stroke-linecap="round" opacity=".7"><path d="M1080 300q30 40 0 80q-30 40 0 80"/><path d="M1200 300q30 40 0 80q-30 40 0 80"/><path d="M1320 300q30 40 0 80q-30 40 0 80"/></g><!-- sofa --><ellipse cx="1210" cy="805" rx="380" ry="40" fill="#E9DCCD" opacity=".9"/><rect x="930" y="560" width="560" height="120" rx="30" fill="#2F4A63"/><rect x="900" y="620" width="620" height="110" rx="34" fill="#3A5876"/><rect x="980" y="590" width="120" height="70" rx="18" fill="#FFB65C"/><rect x="1320" y="590" width="120" height="70" rx="18" fill="#E8F4FD"/><rect x="940" y="728" width="14" height="30" fill="#2B3A4A"/><rect x="1470" y="728" width="14" height="30" fill="#2B3A4A"/><!-- coffee table --><rect x="1090" y="770" width="240" height="18" rx="9" fill="#1B2B3C"/><rect x="1120" y="788" width="10" height="40" fill="#1B2B3C"/><rect x="1290" y="788" width="10" height="40" fill="#1B2B3C"/><!-- plant --><rect x="1515" y="640" width="70" height="100" rx="10" fill="#F3F6F9" stroke="#CAD3DC" stroke-width="3"/><g fill="#3E9B63"><ellipse cx="1550" cy="560" rx="22" ry="80"/><ellipse cx="1515" cy="590" rx="18" ry="60" transform="rotate(-25 1515 590)"/><ellipse cx="1585" cy="590" rx="18" ry="60" transform="rotate(25 1585 590)"/></g><!-- lamp --><path d="M640 740V420" stroke="#1B2B3C" stroke-width="6"/><path d="M580 420h120l-30-90h-60z" fill="#FFD9A0"/></svg>`,
+    "slide-office": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EDF2F6"/><stop offset="1" stop-color="#DCE5ED"/></linearGradient><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#BFE6FF"/><stop offset="1" stop-color="#EAF7FF"/></linearGradient><linearGradient id="fs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DDE5EC"/></linearGradient><linearGradient id="air" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#5CC8FF" stop-opacity=".5"/><stop offset="1" stop-color="#5CC8FF" stop-opacity="0"/></linearGradient></defs><rect width="1600" height="900" fill="url(#w)"/><!-- glass wall with city --><rect x="120" y="100" width="1000" height="640" fill="url(#g)"/><g fill="#9CC3DE"><rect x="160" y="420" width="90" height="320"/><rect x="270" y="360" width="70" height="380"/><rect x="360" y="460" width="110" height="280"/><rect x="500" y="320" width="80" height="420"/><rect x="600" y="430" width="120" height="310"/><rect x="760" y="380" width="80" height="360"/><rect x="870" y="470" width="110" height="270"/><rect x="1000" y="400" width="90" height="340"/></g><path d="M120 100h1000v640H120zM370 100v640M620 100v640M870 100v640" fill="none" stroke="#2B3A4A" stroke-width="8"/><rect y="740" width="1600" height="160" fill="#C2CBD4"/><!-- desk --><rect x="300" y="600" width="560" height="20" rx="6" fill="#F4F6F9"/><rect x="320" y="620" width="14" height="130" fill="#1B2B3C"/><rect x="826" y="620" width="14" height="130" fill="#1B2B3C"/><rect x="470" y="490" width="200" height="110" rx="8" fill="#1B2B3C"/><rect x="480" y="500" width="180" height="90" rx="4" fill="#3BB3F5"/><rect x="555" y="600" width="30" height="6" fill="#1B2B3C"/><!-- chair --><rect x="520" y="640" width="120" height="20" rx="8" fill="#2F4A63"/><rect x="570" y="660" width="16" height="70" fill="#2F4A63"/><rect x="530" y="730" width="100" height="10" rx="5" fill="#2F4A63"/><!-- floor standing AC --><g transform="translate(1240 230)"><rect x="10" y="12" width="200" height="510" rx="26" fill="#0B1F35" opacity=".08"/><rect width="200" height="510" rx="26" fill="url(#fs)" stroke="#D2DCE6" stroke-width="2"/><rect x="28" y="40" width="144" height="200" rx="14" fill="#E8EEF4"/><g stroke="#C3CFDB" stroke-width="6" stroke-linecap="round"><path d="M44 70h112M44 100h112M44 130h112M44 160h112M44 190h112M44 220h112"/></g><rect x="58" y="270" width="84" height="34" rx="8" fill="#0E2A47"/><text x="70" y="294" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#5CE1FF">22\u00b0C</text><circle cx="100" cy="340" r="5" fill="#12C8D4"/></g><path d="M1240 300q-260 120 0 260z" fill="url(#air)"/><g fill="none" stroke="#5CC8FF" stroke-width="5" stroke-linecap="round" opacity=".65"><path d="M1210 330q-60 20-120 0q-60-20-120 0"/><path d="M1210 410q-60 20-120 0q-60-20-120 0"/><path d="M1210 490q-60 20-120 0q-60-20-120 0"/></g><!-- plant --><rect x="1480" y="640" width="70" height="100" rx="10" fill="#1B2B3C"/><g fill="#3E9B63"><ellipse cx="1515" cy="570" rx="22" ry="75"/><ellipse cx="1485" cy="600" rx="16" ry="55" transform="rotate(-25 1485 600)"/><ellipse cx="1545" cy="600" rx="16" ry="55" transform="rotate(25 1545 600)"/></g></svg>`
+  };
+  $$("img[data-img]").forEach((img) => {
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(IMAGES[img.dataset.img]);
+  });
+
+  /* ---------- Header: scroll state, mobile menu, active link ---------- */
+  const header = $(".site-header");
+  const onScroll = () => header && header.classList.toggle("is-scrolled", window.scrollY > 10);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  const toggle = $(".nav__toggle");
+  const setMenu = (open) => {
+    site.classList.toggle("nav-open", open);
+    document.body.style.overflow = open ? "hidden" : "";
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    }
+  };
+  if (toggle) toggle.addEventListener("click", () => setMenu(!site.classList.contains("nav-open")));
+  $$(".nav__backdrop, .nav__panel a").forEach((el) => el.addEventListener("click", () => setMenu(false)));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+  window.addEventListener("resize", () => { if (window.innerWidth > 960) setMenu(false); });
+
+  /* ---------- Pages: hash router (#home, #about, #services, #portfolio, #contact, or any section id) ---------- */
+  const pages = $$(".page");
+  const headerOffset = () => (header ? header.offsetHeight : 0) + 12;
+  const route = (smooth) => {
+    const id = decodeURIComponent(location.hash.slice(1)) || "home";
+    const target = document.getElementById(id);
+    const page = target && site.contains(target) ? (target.classList.contains("page") ? target : target.closest(".page")) : pages[0];
+    if (!page) return;
+    pages.forEach((p) => p.classList.toggle("is-current", p === page));
+    $$(".nav__link").forEach((link) => {
+      const active = link.dataset.page === (id === "products" ? "products" : page.id);
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
+    });
+    const y = target && target !== page ? target.getBoundingClientRect().top + window.scrollY - headerOffset() : site.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: Math.max(0, y), behavior: smooth ? "smooth" : "auto" });
+  };
+  window.addEventListener("hashchange", () => route(false));
+  // Re-clicking the link for the current hash should still scroll.
+  site.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    if (a.dataset.service) {
+      $$("input[name=service]").forEach((c) => (c.checked = c.value.toLowerCase().startsWith(a.dataset.service.toLowerCase())));
+    }
+    if (a.getAttribute("href") === location.hash) { e.preventDefault(); route(true); }
+  });
+  route(false);
+  // The browser's own jump-to-anchor runs after this on first load; re-apply our offset.
+  window.addEventListener("load", () => route(false));
+
+  /* ---------- Hero slider ---------- */
+  // Real photos for the hero slides, in slide order (1: living room, 2: bedroom, 3: close-up, 4: loft, 5: floor-standing).
+  // A slide keeps its illustration until its photo loads, and if the photo is missing.
+  // Paste the photo links from your GHL Media Library between the quotes.
+  const HERO_PHOTOS = ["https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab85436f78fefb5ef77e.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab46f9a985d42cdb9530.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab513cacdd91178d05e5.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3ab3a989628c77a436aba.jpg", "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b25e3cacdd91178dde61.jpg"];
+  const hero = $(".hero");
+  if (hero) {
+    const slides = $$(".slide", hero);
+    slides.forEach((slide, i) => {
+      const url = HERO_PHOTOS[i];
+      if (!url) return;
+      const photo = new Image();
+      photo.onload = () => { $(".slide__img", slide).src = url; };
+      photo.src = url;
+    });
+    const dots = $$(".hero__dot", hero);
+    const counter = $(".hero__counter", hero);
+    const DURATION = 6000;
+    let index = 0;
+    let timer = null;
+    hero.style.setProperty("--slide-ms", DURATION + "ms");
+
+    const go = (i) => {
+      index = (i + slides.length) % slides.length;
+      slides.forEach((s, n) => {
+        const active = n === index;
+        s.classList.toggle("is-active", active);
+        s.setAttribute("aria-hidden", String(!active));
+        $$("a, button", s).forEach((el) => (el.tabIndex = active ? 0 : -1));
+      });
+      dots.forEach((d, n) => {
+        d.classList.remove("is-active");
+        d.setAttribute("aria-selected", String(n === index));
+      });
+      // Restart the progress animation on the active dot.
+      void dots[index].offsetWidth;
+      dots[index].classList.add("is-active");
+      if (counter) counter.textContent = String(index + 1).padStart(2, "0") + " / " + String(slides.length).padStart(2, "0");
+    };
+    const play = () => { stop(); timer = setInterval(() => go(index + 1), DURATION); hero.classList.remove("is-paused"); };
+    const stop = () => { clearInterval(timer); timer = null; };
+    const restart = () => { if (!hero.classList.contains("is-paused")) play(); };
+
+    dots.forEach((d, n) => d.addEventListener("click", () => { go(n); restart(); }));
+    $(".hero__arrow--prev", hero).addEventListener("click", () => { go(index - 1); restart(); });
+    $(".hero__arrow--next", hero).addEventListener("click", () => { go(index + 1); restart(); });
+    hero.addEventListener("mouseenter", () => { stop(); hero.classList.add("is-paused"); });
+    hero.addEventListener("mouseleave", play);
+    hero.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { go(index + 1); restart(); }
+      if (e.key === "ArrowLeft") { go(index - 1); restart(); }
+    });
+    let startX = null;
+    hero.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    hero.addEventListener("touchend", (e) => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 45) { go(index + (dx < 0 ? 1 : -1)); play(); }
+      startX = null;
+    });
+    document.addEventListener("visibilitychange", () => (document.hidden ? stop() : play()));
+    go(0);
+    play();
+  }
+
+  /* ---------- Product photos ---------- */
+  // Paste a photo link between the quotes to replace a product's illustration.
+  const PRODUCT_PHOTOS = {
+    split: "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b1a1f9a985d42cdc5032.jpg",     // Inverter Split-Type
+    window: "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b1afcd7225ed37b1ecad.jpg",    // Window-Type Aircon
+    cassette: "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b24b3cacdd91178ddc69.jpg",  // Ceiling Cassette
+    floor: "https://assets.cdn.filesafe.space/QeRTt8xtFFFgXPKx0qyt/media/6ad3b25e3cacdd91178dde61.jpg",     // Floor-Standing Unit
+    portable: "",  // Portable Aircon
+    outdoor: ""    // Inverter Heat Pump / Multi-Split
+  };
+  $$("[data-product]").forEach((media) => {
+    const url = PRODUCT_PHOTOS[media.dataset.product];
+    if (!url) return;
+    const photo = new Image();
+    photo.onload = () => {
+      const img = $("img", media);
+      img.src = url;
+      img.classList.add("is-photo");
+    };
+    photo.src = url;
+  });
+
+  /* ---------- Filters (products & portfolio) ---------- */
+  $$("[data-filter-group]").forEach((group) => {
+    const target = $(group.dataset.filterGroup);
+    if (!target) return;
+    const items = $$("[data-cat]", target);
+    $$(".chip", group).forEach((chip) => {
+      chip.addEventListener("click", () => {
+        $$(".chip", group).forEach((c) => { c.classList.remove("is-active"); c.setAttribute("aria-pressed", "false"); });
+        chip.classList.add("is-active");
+        chip.setAttribute("aria-pressed", "true");
+        const f = chip.dataset.filter;
+        items.forEach((it) => {
+          const show = f === "all" || it.dataset.cat.split(" ").includes(f);
+          it.classList.toggle("is-hidden", !show);
+          if (show) it.classList.add("is-visible");
+        });
+      });
+    });
+  });
+
+  /* ---------- Reveal on scroll + counters ---------- */
+  const animateCount = (el) => {
+    const end = parseFloat(el.dataset.count);
+    const dur = 1400;
+    const t0 = performance.now();
+    const step = (t) => {
+      const p = Math.min((t - t0) / dur, 1);
+      el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        $$("[data-count]", entry.target).forEach(animateCount);
+        if (entry.target.dataset.count) animateCount(entry.target);
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+    $$(".reveal, .stats").forEach((el) => io.observe(el));
+  } else {
+    $$(".reveal").forEach((el) => el.classList.add("is-visible"));
+    $$("[data-count]").forEach((el) => (el.textContent = el.dataset.count));
+  }
+
+  /* ---------- Opening hours + live "open now" widget ---------- */
+  const manilaNow = () => {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Manila", weekday: "long", hour: "numeric", minute: "numeric", hour12: false
+    }).formatToParts(new Date());
+    const get = (t) => (parts.find((p) => p.type === t) || {}).value;
+    return { day: get("weekday"), hour: (parseInt(get("hour"), 10) % 24) + parseInt(get("minute"), 10) / 60 };
+  };
+  const fmt = (h) => {
+    const suffix = h >= 12 ? "PM" : "AM";
+    const hr = h % 12 === 0 ? 12 : h % 12;
+    return hr + ":00 " + suffix;
+  };
+  $$("[data-hours]").forEach((list) => {
+    const now = manilaNow();
+    list.innerHTML = HOURS.slice(1).concat(HOURS[0]).map((h) =>
+      '<li class="' + (h.day === now.day ? "is-today" : "") + '"><span>' + h.day + "</span><span>" +
+      (h.open === null ? h.label : fmt(h.open) + " \u2013 " + fmt(h.close)) + "</span></li>"
+    ).join("");
+  });
+  $$("[data-open-status]").forEach((el) => {
+    const now = manilaNow();
+    const today = HOURS.find((h) => h.day === now.day);
+    const open = today && today.open !== null && now.hour >= today.open && now.hour < today.close;
+    el.textContent = open ? "Open now" : "Closed now";
+    el.classList.toggle("live--closed", !open);
+  });
+
+  /* ---------- Quote estimator widget ---------- */
+  const est = $("#estimator");
+  if (est) {
+    // Indicative price ranges in PHP per unit.
+    const RATES = {
+      cleaning: { window: [800, 1200], split: [1500, 2500], cassette: [3000, 4500], floor: [2800, 4000] },
+      repair: { window: [1000, 3500], split: [1500, 5000], cassette: [2500, 7000], floor: [2500, 6500] },
+      installation: { window: [1500, 2500], split: [4500, 7500], cassette: [9000, 15000], floor: [7000, 12000] },
+      freon: { window: [1500, 2500], split: [2500, 4500], cassette: [4500, 7000], floor: [4000, 6500] }
+    };
+    const qty = $("#est-qty", est);
+    const out = $("#est-total", est);
+    const update = () => {
+      const svc = $("#est-service", est).value;
+      const type = $("#est-type", est).value;
+      const n = Math.max(1, Math.min(20, parseInt(qty.value, 10) || 1));
+      qty.value = n;
+      // 10% multi-unit discount from 3 units up.
+      const disc = n >= 3 ? 0.9 : 1;
+      const [lo, hi] = RATES[svc][type].map((v) => Math.round((v * n * disc) / 50) * 50);
+      out.textContent = "\u20b1" + lo.toLocaleString() + " \u2013 \u20b1" + hi.toLocaleString();
+      $("#est-disc", est).hidden = n < 3;
+    };
+    $$("select, input", est).forEach((el) => el.addEventListener("input", update));
+    $$("[data-step]", est).forEach((b) => b.addEventListener("click", () => {
+      qty.value = (parseInt(qty.value, 10) || 1) + parseInt(b.dataset.step, 10);
+      update();
+    }));
+    update();
+  }
+
+  /* ---------- Portfolio lightbox ---------- */
+  const lb = $(".lightbox");
+  if (lb) {
+    const close = () => lb.classList.remove("is-open");
+    $$(".work").forEach((w) => {
+      const open = () => {
+        $("img", lb).src = $("img", w).src;
+        $("img", lb).alt = $("img", w).alt;
+        $("h3", lb).textContent = $("h3", w).textContent;
+        $("p", lb).textContent = w.dataset.desc || "";
+        lb.classList.add("is-open");
+        $(".lightbox__close", lb).focus();
+      };
+      w.addEventListener("click", open);
+      w.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+    });
+    lb.addEventListener("click", (e) => { if (e.target === lb) close(); });
+    $(".lightbox__close", lb).addEventListener("click", close);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  }
+
+  /* ---------- Contact form ---------- */
+  const form = $("#contact-form");
+  if (form) {
+    const status = $(".form-status", form);
+    const submitBtn = $("button[type=submit]", form);
+    const rules = {
+      name: (v) => v.trim().length >= 2 || "Please enter your full name.",
+      address: (v) => v.trim().length >= 5 || "Please enter your address (barangay, city).",
+      phone: (v) => /^(\+?63|0)9\d{9}$/.test(v.replace(/[\s-]/g, "")) || "Enter a valid PH mobile number, e.g. 0975 650 1762.",
+      email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) || "Enter a valid email address."
+    };
+    const setError = (field, msg) => {
+      const wrap = field.closest(".field");
+      wrap.classList.toggle("is-invalid", !!msg);
+      field.setAttribute("aria-invalid", String(!!msg));
+      $(".field__error", wrap).textContent = msg || "";
+    };
+    const validateField = (field) => {
+      const rule = rules[field.name];
+      if (!rule) return true;
+      const res = rule(field.value);
+      setError(field, res === true ? "" : res);
+      return res === true;
+    };
+    Object.keys(rules).forEach((name) => {
+      const f = form.elements[name];
+      f.addEventListener("blur", () => validateField(f));
+      f.addEventListener("input", () => { if (f.closest(".field").classList.contains("is-invalid")) validateField(f); });
+    });
+
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.className = "form-status";
+      let ok = Object.keys(rules).map((n) => validateField(form.elements[n])).every(Boolean);
+      const services = $$("input[name=service]:checked", form).map((c) => c.value);
+      const svcWrap = $(".service-field", form);
+      svcWrap.classList.toggle("is-invalid", services.length === 0);
+      $(".field__error", svcWrap).textContent = services.length ? "" : "Pick at least one service.";
+      if (!services.length) ok = false;
+      if (!ok) {
+        const first = $(".is-invalid input, .is-invalid select, .is-invalid textarea", form);
+        if (first) first.focus();
+        return;
+      }
+
+      const data = {
+        name: form.elements.name.value.trim(),
+        address: form.elements.address.value.trim(),
+        phone: form.elements.phone.value.trim(),
+        email: form.elements.email.value.trim(),
+        service: services.join(", "),
+        units: form.elements.units.value,
+        schedule: form.elements.schedule.value || "Flexible",
+        message: form.elements.message.value.trim(),
+        _subject: "New service request \u2014 " + services.join(", "),
+        _template: "table",
+        _captcha: "false"
+      };
+
+      submitBtn.classList.add("is-loading");
+      try {
+        if (GHL_WEBHOOK_URL) {
+          // GHL inbound webhooks don't send CORS headers, so post as a simple form request and assume success.
+          const fields = Object.assign({}, data, { first_name: data.name.split(" ")[0], source: "Website form" });
+          await fetch(GHL_WEBHOOK_URL, { method: "POST", mode: "no-cors", body: new URLSearchParams(fields) });
+        }
+        // FormSubmit relays the request to the business Gmail (no backend needed).
+        const res = await fetch("https://formsubmit.co/ajax/" + BUSINESS_EMAIL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        status.className = "form-status is-success";
+        status.textContent = "Salamat, " + data.name.split(" ")[0] + "! Your request was sent. Theo's team will call or text you within the day.";
+        form.reset();
+      } catch (err) {
+        // Fallback: open the visitor's email app with the request pre-filled.
+        const body = Object.entries(data).filter(([k]) => !k.startsWith("_"))
+          .map(([k, v]) => k.charAt(0).toUpperCase() + k.slice(1) + ": " + v).join("\n");
+        location.href = "mailto:" + BUSINESS_EMAIL + "?subject=" + encodeURIComponent(data._subject) + "&body=" + encodeURIComponent(body);
+        status.className = "form-status is-error";
+        status.innerHTML = 'We opened your email app so you can send the request. You can also call or text <a href="tel:+639756501762"><strong>0975 650 1762</strong></a>.';
+      } finally {
+        submitBtn.classList.remove("is-loading");
+        status.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+  }
+
+  /* ---------- Floating contact widget ---------- */
+  const fab = $(".fab");
+  if (fab) {
+    const btn = $(".fab__btn", fab);
+    btn.addEventListener("click", () => {
+      const open = fab.classList.toggle("is-open");
+      btn.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", (e) => { if (!fab.contains(e.target)) { fab.classList.remove("is-open"); btn.setAttribute("aria-expanded", "false"); } });
+  }
+
+  $$("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
+})();
+</script>
+</body>
+</html>

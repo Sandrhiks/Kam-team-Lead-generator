@@ -1,0 +1,14 @@
+{
+  "name": "Kam Team Bible Study Guide",
+  "short_name": "Bible Study",
+  "description": "A G12-patterned Bible study workbook: Life Class, Encounter, School of Leaders and more, with daily reminders.",
+  "start_url": "/#today",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/kam-team-logo.png", "sizes": "2000x2000", "type": "image/png", "purpose": "any" }
+  ]
+}
