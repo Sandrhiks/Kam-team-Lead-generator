@@ -52,7 +52,7 @@ async function initVapid() {
 // Pages and files anyone may load without signing in.
 const PUBLIC_PATHS = new Set([
   "/login", "/login.html", "/kam-team-logo.png", "/styles.css", "/icon.svg",
-  "/manifest.webmanifest", "/sw.js", "/api/health",
+  "/manifest.webmanifest", "/sw.js", "/config.js", "/api.js", "/api/health",
 ]);
 
 const MIME = {
