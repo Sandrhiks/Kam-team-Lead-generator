@@ -132,6 +132,18 @@ Optional integrations, all set up in **Settings**:
 2. Fill in `GHL_WEBHOOK_URL`, `ALLOWED_EMAILS`, `DATABASE_URL` and, for chat support, `ANTHROPIC_API_KEY` (plus `SUPPORT_EMAIL` if you like). Render generates `SESSION_SECRET` for you. `ALLOWED_ORIGINS` and `API_KEY` are optional.
 3. Deploy. Render checks `/api/health` to confirm the app is up.
 
+### Supabase as the database
+
+Supabase's free plan works well for `DATABASE_URL`. The app still runs on Render; Supabase only holds the data. Use a separate Supabase project from the Bible Study app, so the two keep separate accounts.
+
+1. In [Supabase](https://supabase.com/dashboard), click **New project**. Pick the **Southeast Asia (Singapore)** region and a database password made of letters and numbers.
+2. Open **SQL Editor → New query**, paste the contents of `supabase/setup.sql` and click **Run**. It creates the tables and turns on Row Level Security, so the project's public API keys can't read accounts or leads.
+3. Click **Connect** at the top of the project. Under **Session pooler**, copy the URI and replace `[YOUR-PASSWORD]` with your password. Use the session pooler, not the "Direct connection": the direct one is IPv6-only and Render can't reach it.
+4. Paste that URI as `DATABASE_URL` in step 2 of the Render steps above.
+5. After the first deploy, sign up in the app. The account shows up in Supabase's **Table Editor → kam_users**.
+
+The Starter plan keeps the app awake. The Free web plan also works, since this app has no scheduled jobs, but it sleeps when idle, so the first visit after a quiet spell takes about a minute.
+
 ### Docker
 
 ```bash
