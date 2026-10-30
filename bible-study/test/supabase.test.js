@@ -32,3 +32,19 @@ test("config.js defaults to the Node server", () => {
   new Function("window", read("public/config.js"))(window);
   assert.deepStrictEqual(window.KBS_CONFIG, {});
 });
+
+test("leader and admin functions require two-step sign-in", () => {
+  const sql = read("supabase/leaders.sql");
+  for (const fn of ["kbs_my_members", "kbs_remove_member", "kbs_team", "kbs_set_role"]) {
+    const body = sql.split(`FUNCTION public.${fn}(`)[1].split("END $$;")[0];
+    assert.match(body, /PERFORM public\.kbs_require_role\(/, `${fn} must call kbs_require_role`);
+  }
+  assert.match(sql, /'aal2'/);
+  // Nothing in leaders.sql is callable without signing in.
+  assert.match(sql, /REVOKE EXECUTE[\s\S]+FROM PUBLIC, anon;/);
+});
+
+test("the Pages workflow refuses a secret key as the public key", () => {
+  const wf = fs.readFileSync(path.join(root, "..", ".github/workflows/bible-study-pages.yml"), "utf8");
+  assert.match(wf, /sb_secret_\*\)/);
+});
