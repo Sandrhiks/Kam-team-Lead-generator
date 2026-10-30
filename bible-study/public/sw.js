@@ -4,7 +4,7 @@
 // Node server) or in a folder (GitHub Pages: /<repo>/).
 "use strict";
 
-const CACHE = "kbs-v2";
+const CACHE = "kbs-v3";
 const SHELL = ["./", "app.js", "api.js", "config.js", "curriculum.js", "styles.css", "icon.svg", "kam-team-logo.png", "manifest.webmanifest"];
 const SCOPE = new URL("./", self.location).pathname;
 // The Supabase client library, loaded from a CDN when the app uses Supabase.

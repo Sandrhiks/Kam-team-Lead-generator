@@ -155,7 +155,55 @@
       },
       async unsubscribe(endpoint) { await ready; await sb.rpc("kbs_remove_push", { p_endpoint: endpoint }); },
       async testPush() { await ready; return fn({ action: "test" }); },
+
+      /* ---- Cells, leaders and two-step sign-in (bible-study/supabase/leaders.sql) ---- */
+      leaders: true,
+      // { role: null | "leader" | "admin", code, leader: { name } | null }
+      async myRole() { return call("kbs_me"); },
+      async joinLeader(code) {
+        try { return { ok: true, leader: await call("kbs_join_leader", { p_code: code }) }; }
+        catch (e) { return { ok: false, error: /unknown code/.test(e.message) ? "No cell has that code. Check it with your leader." : /own code/.test(e.message) ? "That's your own cell code." : "Couldn't join. Try again." }; }
+      },
+      async leaveLeader() { return call("kbs_leave_leader"); },
+      async members() { return call("kbs_my_members"); },
+      async removeMember(id) { return call("kbs_remove_member", { p_member: id }); },
+      async team() { return call("kbs_team"); },
+      async setRole(email, role) {
+        try { await call("kbs_set_role", { p_email: email, p_role: role }); return { ok: true }; }
+        catch (e) { return { ok: false, error: /no account/.test(e.message) ? "No account uses that email yet. Ask them to sign up first." : /own role/.test(e.message) ? "You can't change your own role." : "Couldn't save. Try again." }; }
+      },
+      // { level: "aal1" | "aal2", needed: true when a verified authenticator exists but this session hasn't used it, factorId }
+      async twoStep() {
+        await ready;
+        const [{ data: aal, error: e1 }, { data: f, error: e2 }] = await Promise.all([
+          sb.auth.mfa.getAuthenticatorAssuranceLevel(), sb.auth.mfa.listFactors()]);
+        if (e1 || e2) throw fail(e1 || e2);
+        const verified = ((f && f.totp) || []).filter(x => x.status === "verified");
+        return { level: aal.currentLevel, needed: aal.nextLevel === "aal2" && aal.currentLevel !== "aal2", factorId: verified.length ? verified[0].id : null };
+      },
+      // Starts adding an authenticator app: { ok, factorId, qr (image URL), secret }
+      async twoStepEnroll() {
+        await ready;
+        const { data: f } = await sb.auth.mfa.listFactors();
+        for (const x of ((f && f.all) || []).filter(x => x.status !== "verified")) await sb.auth.mfa.unenroll({ factorId: x.id }).catch(() => {});
+        const { data, error } = await sb.auth.mfa.enroll({ factorType: "totp", friendlyName: "Kam Team " + new Date().toISOString().slice(0, 16) });
+        if (error) return { ok: false, error: /not enabled|disabled/i.test(error.message) ? "Two-step sign-in isn't turned on for this app yet. Ask your admin." : "Couldn't start the setup. Try again." };
+        return { ok: true, factorId: data.id, qr: data.totp.qr_code, secret: data.totp.secret };
+      },
+      async twoStepVerify(factorId, code) {
+        await ready;
+        const { error } = await sb.auth.mfa.challengeAndVerify({ factorId, code: String(code).replace(/\D/g, "") });
+        if (!error) return { ok: true };
+        return { ok: false, error: /invalid|expired|code/i.test(error.message) ? "That code didn't work. Use the newest 6-digit code and check your phone's clock is set automatically." : "Couldn't check the code. Try again." };
+      },
     };
+
+    async function call(name, args) {
+      await ready;
+      const { data, error } = await sb.rpc(name, args || {});
+      if (error) throw fail(error);
+      return data;
+    }
   }
 
   const api = cfg.supabaseUrl && cfg.supabaseKey ? supabaseBackend() : server;
