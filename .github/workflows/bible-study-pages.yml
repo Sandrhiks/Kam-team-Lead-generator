@@ -41,6 +41,10 @@ jobs:
           [ -n "$SUPABASE_ANON_KEY" ] || missing="$missing SUPABASE_ANON_KEY(variable)"
           [ -n "$PROJECT_REF" ] || missing="$missing SUPABASE_PROJECT_REF(variable)"
           [ -n "$SUPABASE_ACCESS_TOKEN" ] || missing="$missing SUPABASE_ACCESS_TOKEN(secret)"
+          # The anon/publishable key ends up in the public site; a secret key must never go there.
+          case "$SUPABASE_ANON_KEY" in
+            sb_secret_*) echo "::error::SUPABASE_ANON_KEY holds a SECRET key. Delete that key in Supabase (Project Settings → API Keys) and use the publishable key (sb_publishable_…) instead."; exit 1 ;;
+          esac
           if [ -n "$missing" ]; then
             echo "::error::Add these in Settings → Secrets and variables → Actions:$missing"
             exit 1

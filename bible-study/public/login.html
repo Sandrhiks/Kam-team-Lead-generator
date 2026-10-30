@@ -65,6 +65,17 @@
     </form>
     <p class="foot">Already have an account? <button type="button" data-go="login">Sign in</button></p>
   </section>
+
+  <section id="twostep" class="hidden">
+    <form id="fCode" novalidate>
+      <h2 style="margin:0 0 6px;font-size:18px">Two-step sign-in</h2>
+      <p class="hint" style="margin:0 0 12px">Open your authenticator app and enter the 6-digit code for Kam Team.</p>
+      <div class="field"><label for="cCode">6-digit code</label><input type="text" id="cCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" required></div>
+      <div class="err" id="cErr" role="alert"></div>
+      <button class="btn primary" type="submit">Verify</button>
+    </form>
+    <p class="foot"><button type="button" id="cCancel">Use a different account</button></p>
+  </section>
 </main>
 <p class="credit"><b>Kam Team Publishing</b><br>Powered by <b>Arty Incognito</b> &amp; <b>Sandrhiks Builder</b></p>
 </div>
@@ -90,8 +101,35 @@ document.querySelectorAll(".show").forEach(b=>b.onclick=()=>{
   const i=$(b.dataset.for); const vis=i.type==="password"; i.type=vis?"text":"password"; b.textContent=vis?"Hide":"Show";
 });
 if(location.hash==="#signup") show("signup");
+// Leaders who set up an authenticator app enter its code after their password.
+let factorId=null;
+async function finish(){
+  if(KBS.twoStep){
+    const t=await KBS.twoStep().catch(()=>null);
+    if(t&&t.needed&&t.factorId){
+      factorId=t.factorId;
+      ["login","signup"].forEach(id=>$(id).classList.add("hidden"));
+      document.querySelector(".tabs").classList.add("hidden");
+      $("twostep").classList.remove("hidden"); $("cCode").focus();
+      return;
+    }
+  }
+  location.replace(KBS.homeUrl);
+}
+$("cCancel").onclick=async()=>{ await KBS.logout(); location.replace(KBS.loginUrl); };
+$("fCode").onsubmit=async e=>{
+  e.preventDefault();
+  const btn=e.submitter||e.target.querySelector("button[type=submit]");
+  $("cErr").textContent=""; btn.disabled=true;
+  try{
+    const r=await KBS.twoStepVerify(factorId,$("cCode").value);
+    if(r.ok) location.replace(KBS.homeUrl); else $("cErr").textContent=r.error;
+  }catch{ $("cErr").textContent="Couldn't reach the server. Check your connection."; }
+  finally{ btn.disabled=false; }
+};
+
 // The Node server redirects signed-in members itself; with Supabase the page checks.
-if(KBS.mode==="supabase") KBS.me().then(m=>{ if(m) location.replace(KBS.homeUrl); }).catch(()=>{});
+if(KBS.mode==="supabase") KBS.me().then(m=>{ if(m) finish(); }).catch(()=>{});
 
 async function submit(call,errEl,btn){
   errEl.textContent=""; errEl.classList.remove("info"); btn.disabled=true;
@@ -99,7 +137,7 @@ async function submit(call,errEl,btn){
     const r=await call();
     if(!r.ok){errEl.textContent=r.error||"Something went wrong. Try again."; return;}
     if(r.confirm){errEl.classList.add("info"); errEl.textContent="Almost done: we sent you an email. Open the link in it to finish creating your account, then sign in."; return;}
-    location.replace(KBS.homeUrl);
+    await finish();
   }catch(e){errEl.textContent="Couldn't reach the server. Check your connection.";}
   finally{btn.disabled=false;}
 }

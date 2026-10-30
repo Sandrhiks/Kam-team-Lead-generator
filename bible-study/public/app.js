@@ -503,6 +503,8 @@
         <div class="switch" style="margin-top:8px"><div><span>Unlock all lessons</span><small>For members who already finished classes at church</small></div><input type="checkbox" id="setUnlock" ${S.settings.unlockAll ? "checked" : ""}></div>
       </section>
 
+      ${cellSection()}
+
       <h2 class="sec">Account</h2>
       <section class="panel row">
         <button class="btn" data-act="export">Download my data</button>
@@ -515,6 +517,157 @@
         <p class="muted" style="margin:0;font-size:13.5px">Memory verses: King James Version (public domain). Reading links open BibleGateway in your chosen version.</p>
       </section>
       ${credit()}`;
+  }
+
+  /* ---------------- Cell leaders ---------------- */
+  // ROLE comes from the server (null until loaded, or when the backend has no leaders).
+  // L holds the Leader tab's state: two-step setup, then the dashboard.
+  let ROLE = null;
+  const L = { status: "idle" };
+  const isLeader = () => !!(ROLE && ROLE.role);
+  const ago = t => {
+    if (!t) return "never";
+    const d = Math.floor((Date.now() - t) / 864e5);
+    return d <= 0 ? "today" : d === 1 ? "yesterday" : `${d} days ago`;
+  };
+  // Highest level whose tracks are all done, from a list of finished lesson ids.
+  function levelOf(doneIds) {
+    const done = new Set(doneIds || []);
+    let n = 0;
+    for (const lv of C.LEVELS) {
+      if (levelTracks(lv.level).every(t => t.lessons.every(l => done.has(l.id)))) n = lv.level; else break;
+    }
+    return C.LEVELS[Math.min(n, C.LEVELS.length - 1)];
+  }
+
+  async function loadRole() {
+    if (!KBS.leaders) return;
+    try { ROLE = await KBS.myRole(); } catch { return; }
+    $("#leaderTab").classList.toggle("hidden", !isLeader());
+    const tab = location.hash.replace(/^#/, "").split("/")[0];
+    if (tab === "me" || tab === "leader") render();
+  }
+
+  async function loadLeader() {
+    L.status = "loading"; L.error = "";
+    try {
+      const t = await KBS.twoStep();
+      if (!t.factorId) { L.status = "setup"; return; }
+      if (t.level !== "aal2") { L.status = "verify"; L.factorId = t.factorId; return; }
+      ROLE = await KBS.myRole();
+      if (!isLeader()) { L.status = "none"; return; }
+      L.members = await KBS.members();
+      L.team = ROLE.role === "admin" ? await KBS.team() : null;
+      L.status = "ready";
+    } catch { L.status = "error"; }
+    finally { if (location.hash.startsWith("#leader")) render(); }
+  }
+
+  function viewLeader() {
+    if (!KBS.leaders) return `<p class="empty">The leader dashboard needs the Supabase version of the app.</p>`;
+    if (ROLE && !isLeader()) return `<p class="empty">This page is for cell leaders. Ask your church admin if you lead a cell.</p>`;
+    if (L.status === "idle") { setTimeout(loadLeader, 0); L.status = "loading"; }
+    const head = `<h1 class="page">Leader</h1>`;
+    if (L.status === "loading") return head + `<p class="empty">Loading…</p>`;
+    if (L.status === "error") return head + `<p class="empty">Couldn't load the dashboard. Check your connection. <button class="btn small" data-act="leader-reload">Try again</button></p>`;
+    if (L.status === "none") return head + `<p class="empty">This page is for cell leaders. Ask your church admin if you lead a cell.</p>`;
+
+    if (L.status === "setup") return head + `
+      <p class="lede">Leaders can see their members' progress, so the dashboard is protected with two-step sign-in.</p>
+      <section class="panel">
+        <h3 style="margin-top:0">Set up two-step sign-in</h3>
+        <ol style="margin:0 0 12px;padding-left:20px;line-height:1.6">
+          <li>Install an authenticator app on your phone: Google Authenticator, Microsoft Authenticator or Authy.</li>
+          <li>Tap <b>Start</b>, then scan the QR code with the app.</li>
+          <li>Type the 6-digit code it shows.</li>
+        </ol>
+        <p class="muted" style="font-size:13px;margin:0 0 12px">From then on, signing in asks for your password and the code from the app.</p>
+        <button class="btn primary" data-act="mfa-start">Start</button>
+      </section>`;
+
+    if (L.status === "enroll" || L.status === "verify") {
+      const enrolling = L.status === "enroll";
+      return head + `
+      <section class="panel">
+        <h3 style="margin-top:0">${enrolling ? "Scan this code" : "Enter your code"}</h3>
+        ${enrolling ? `<p class="muted" style="margin:0">In your authenticator app, tap <b>+</b> and scan:</p>
+          <img class="qr" src="${esc(L.qr)}" alt="QR code for your authenticator app">
+          <p class="muted" style="font-size:13px;margin:0 0 6px">Can't scan? Enter this key in the app instead:</p>
+          <div class="secret">${esc(L.secret)}</div>` : `<p class="muted" style="margin:0">Open your authenticator app and type the 6-digit code for Kam Team.</p>`}
+        <form id="fMfa" style="margin-top:14px">
+          <div class="field"><label for="mfaCode">6-digit code</label><input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" required></div>
+          ${L.error ? `<p class="err" role="alert">${esc(L.error)}</p>` : ""}
+          <button class="btn primary" type="submit" style="margin-top:10px">${enrolling ? "Turn on two-step sign-in" : "Verify"}</button>
+        </form>
+      </section>`;
+    }
+
+    const ms = L.members || [];
+    const week = Date.now() - 7 * 864e5;
+    const active = ms.filter(m => m.updated && m.updated >= week).length;
+    const quiet = ms.length - active;
+    const members = ms.map(m => {
+      const lv = levelOf(m.done);
+      const q = !m.updated || m.updated < week;
+      return `<li>
+        <div class="medal" style="background:${lv.color};width:30px;height:30px;font-size:14px">${lv.level}</div>
+        <div class="t"><b>${esc(m.name || m.email)}</b>
+          <div class="muted" style="font-size:12.5px">${esc(lv.rank)} · ${plural(m.done.length, "lesson")} · ${plural(m.read, "chapter")} · streak ${m.streak}</div>
+          <div class="muted" style="font-size:12.5px">Last active ${ago(m.updated)}</div></div>
+        ${q ? `<span class="pill warn">Quiet</span>` : `<span class="pill ok">Active</span>`}
+        <button class="btn small" data-member="${esc(m.id)}" data-name="${esc(m.name || m.email)}" aria-label="Remove ${esc(m.name || m.email)}">Remove</button>
+      </li>`;
+    }).join("");
+
+    const team = L.team ? `
+      <h2 class="sec">Leaders &amp; admins</h2>
+      <section class="panel">
+        <ul class="mlist">${L.team.map(p => `<li>
+          <div class="t"><b>${esc(p.name || p.email)}</b><div class="muted" style="font-size:12.5px">${esc(p.email)} · ${plural(p.members, "member")}</div></div>
+          <span class="pill">${p.role === "admin" ? "Admin" : "Leader"}</span>
+          ${p.twoStep ? `<span class="pill ok">Two-step on</span>` : `<span class="pill warn">No two-step</span>`}
+          ${p.self ? "" : `<button class="btn small" data-unrole="${esc(p.email)}">Remove</button>`}</li>`).join("")}</ul>
+        <form id="fRole" class="grid2" style="margin-top:12px;align-items:end">
+          <div class="field"><label for="roleEmail">Member's email</label><input id="roleEmail" type="email" required placeholder="They need an account first"></div>
+          <div class="field"><label for="roleWhich">Role</label><select id="roleWhich"><option value="leader">Cell leader</option><option value="admin">Admin</option></select></div>
+          <button class="btn primary" type="submit">Save role</button>
+        </form>
+        <p class="muted" style="font-size:12.5px;margin:10px 0 0">New leaders set up two-step sign-in the first time they open the Leader tab.</p>
+      </section>` : "";
+
+    return head + `
+      <p class="lede">Consolidation made visible: see who is growing and who needs a call.</p>
+      <section class="panel" style="text-align:center">
+        <div class="muted" style="font-size:13px">Your cell code</div>
+        <div class="cellcode">${esc(ROLE.code || "—")}</div>
+        <p class="muted" style="font-size:13px;margin:4px 0 0">Members enter it under <b>Me → My cell leader</b> to join your cell.</p>
+      </section>
+      <div class="stats">
+        <div class="stat"><b>${ms.length}</b><span>members</span></div>
+        <div class="stat"><b>${active}</b><span>active this week</span></div>
+        <div class="stat"><b>${quiet}</b><span>quiet 7+ days</span></div>
+      </div>
+      <h2 class="sec">My cell</h2>
+      <section class="panel">${ms.length ? `<ul class="mlist">${members}</ul>` : `<p class="empty">No members yet. Share your cell code with them.</p>`}</section>
+      <p class="muted" style="font-size:12.5px">Leaders see levels, lessons finished, reading and last activity — not members' answers, journal or prayers.</p>
+      ${team}
+      ${credit()}`;
+  }
+
+  function cellSection() {
+    if (!KBS.leaders || !ROLE) return "";
+    const body = ROLE.leader
+      ? `<div class="row between"><div><b>${esc(ROLE.leader.name)}</b><div class="muted" style="font-size:13px">Your cell leader can see your level, lessons finished and last activity.</div></div>
+          <button class="btn small" data-act="leave-leader">Leave</button></div>`
+      : `<form id="fJoin" class="row" style="align-items:end">
+          <div class="field" style="flex:1"><label for="joinCode">Cell code from your leader</label><input id="joinCode" maxlength="12" autocomplete="off" style="text-transform:uppercase" required></div>
+          <button class="btn primary" type="submit">Join</button></form>
+         <p class="muted" style="font-size:12.5px;margin:8px 0 0">Your leader will see your level, lessons finished and last activity — not your answers, journal or prayers.</p>`;
+    return `<h2 class="sec">My cell leader</h2><section class="panel">${body}</section>`;
+  }
+
+  async function leaderAction(fn, ok) {
+    try { await fn(); if (ok) toast(ok); } catch { toast("Couldn't save. Check your connection."); }
   }
 
   function viewCert(n) {
@@ -545,7 +698,7 @@
     const [tab, arg] = (location.hash.replace(/^#/, "") || "today").split("/");
     const views = {
       today: viewToday, path: viewPath, lesson: () => viewLesson(arg), journal: () => viewJournal(arg),
-      verses: viewVerses, me: () => viewMe(arg), cert: () => viewCert(Number(arg)),
+      verses: viewVerses, me: () => viewMe(arg), cert: () => viewCert(Number(arg)), leader: viewLeader,
     };
     view.innerHTML = (views[tab] || viewToday)();
     const active = tab === "lesson" || tab === "cert" ? (tab === "cert" ? "me" : "path") : (views[tab] ? tab : "today");
@@ -553,7 +706,11 @@
     renderChip();
     if (tab === "journal" && arg === "new") { const el = $("#jS"); if (el) el.focus(); }
   }
-  window.addEventListener("hashchange", () => { render(); window.scrollTo(0, 0); });
+  window.addEventListener("hashchange", () => {
+    // Fresh numbers each time a leader opens the dashboard.
+    if (location.hash.startsWith("#leader") && L.status === "ready") L.status = "idle";
+    render(); window.scrollTo(0, 0);
+  });
 
   /* ---------------- Actions ---------------- */
   function celebrate(before) {
@@ -567,12 +724,24 @@
   }
 
   view.addEventListener("click", e => {
-    const t = e.target.closest("[data-act],[data-go],[data-mode],[data-card],[data-unpray],[data-unsoap]");
+    const t = e.target.closest("[data-act],[data-go],[data-mode],[data-card],[data-unpray],[data-unsoap],[data-member],[data-unrole]");
     if (!t) return;
     if (t.dataset.go) { location.hash = t.dataset.go; return; }
     if (t.dataset.mode) { card.mode = t.dataset.mode; card.shown = false; render(); return; }
     if (t.dataset.card) { card.i = Number(t.dataset.card); card.shown = false; render(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
     if (t.dataset.unpray) { if (confirm("Delete this prayer request?")) { S.prayers = S.prayers.filter(p => p.id !== t.dataset.unpray); save(); render(); } return; }
+    if (t.dataset.member) {
+      if (confirm(`Remove ${t.dataset.name} from your cell? They can join again with your code.`)) {
+        leaderAction(() => KBS.removeMember(t.dataset.member), "Removed from your cell").then(loadLeader);
+      }
+      return;
+    }
+    if (t.dataset.unrole) {
+      if (confirm(`Remove the leader/admin role from ${t.dataset.unrole}? Their members leave the cell and can join another.`)) {
+        KBS.setRole(t.dataset.unrole, null).then(r => { toast(r.ok ? "Role removed" : r.error); loadLeader(); });
+      }
+      return;
+    }
     if (t.dataset.unsoap) { if (confirm("Delete this journal entry?")) { S.journal = S.journal.filter(j => j.id !== t.dataset.unsoap); save(); render(); } return; }
 
     const act = t.dataset.act;
@@ -602,6 +771,16 @@
     else if (act === "export") exportData();
     else if (act === "signout") signOut();
     else if (act === "print") window.print();
+    else if (act === "leader-reload") { L.status = "idle"; render(); }
+    else if (act === "mfa-start") {
+      t.disabled = true;
+      KBS.twoStepEnroll().then(r => {
+        if (!r.ok) { toast(r.error, 4000); t.disabled = false; return; }
+        Object.assign(L, { status: "enroll", factorId: r.factorId, qr: r.qr, secret: r.secret, error: "" }); render();
+      });
+    } else if (act === "leave-leader") {
+      if (confirm("Leave your cell? You can join again with a cell code.")) leaderAction(() => KBS.leaveLeader(), "You left the cell").then(loadRole);
+    }
   });
 
   view.addEventListener("keydown", e => {
@@ -664,6 +843,24 @@
       if (!text) return;
       S.prayers.unshift({ id: uid(), text, cat: $("#pCat").value, created: Date.now(), answered: 0 });
       save(); render();
+    } else if (e.target.id === "fMfa") {
+      const btn = e.target.querySelector("button[type=submit]");
+      btn.disabled = true;
+      KBS.twoStepVerify(L.factorId, $("#mfaCode").value).then(r => {
+        if (!r.ok) { L.error = r.error; render(); return; }
+        toast("\u{1F512} Two-step sign-in is on"); loadLeader();
+      }).catch(() => { L.error = "Couldn't reach the server. Check your connection."; render(); });
+    } else if (e.target.id === "fJoin") {
+      const btn = e.target.querySelector("button[type=submit]");
+      btn.disabled = true;
+      KBS.joinLeader($("#joinCode").value).then(r => {
+        if (!r.ok) { toast(r.error, 3500); btn.disabled = false; return; }
+        toast(`Joined ${r.leader.name}'s cell`); loadRole();
+      }).catch(() => { toast("Couldn't reach the server. Check your connection."); btn.disabled = false; });
+    } else if (e.target.id === "fRole") {
+      KBS.setRole($("#roleEmail").value.trim(), $("#roleWhich").value).then(r => {
+        toast(r.ok ? "Role saved" : r.error, 3500); if (r.ok) loadLeader();
+      });
     }
   });
 
@@ -775,6 +972,7 @@
     S = normalize(loadLocal());
     render();
     registerSW().then(scheduleLocal);
+    loadRole();
 
     try {
       const j = await KBS.getProgress();
