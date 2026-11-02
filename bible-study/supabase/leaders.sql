@@ -161,3 +161,6 @@ GRANT EXECUTE ON FUNCTION public.kbs_me(), public.kbs_join_leader(TEXT), public.
   public.kbs_my_members(), public.kbs_remove_member(UUID), public.kbs_team(),
   public.kbs_set_role(TEXT, TEXT) TO authenticated;
 -- kbs_aal2 and kbs_require_role run inside the functions above, as their owner.
+-- Supabase grants EXECUTE on new public functions to "authenticated" directly,
+-- so revoking from PUBLIC alone isn't enough: take the helpers away from it too.
+REVOKE EXECUTE ON FUNCTION public.kbs_aal2(), public.kbs_require_role(BOOLEAN) FROM authenticated;
