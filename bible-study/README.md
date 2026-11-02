@@ -4,7 +4,7 @@
 
 A Bible study workbook app built on the G12 *Ladder of Success*: **Win → Consolidate → Disciple → Send**. Members sign in, work through Life Class, Pre-Encounter, Encounter, Post-Encounter, School of Leaders (SOL) 1–3, Re-Encounter and the Send practicum, and climb five levels from **Seeker** to **Multiplier**. Daily reading, S.O.A.P. journaling, a prayer list, memory-verse practice and push reminders keep them in the Word between classes.
 
-It installs to the phone's home screen (PWA), works offline, and syncs progress across devices.
+It installs to the phone's home screen (PWA), works offline, and syncs progress across devices. Android users can also install it as an app: **[download the APK](https://github.com/Sandrhiks/Kam-team-Lead-generator/releases/latest/download/kam-bible-study.apk)** (setup in [android/README.md](android/README.md)).
 
 ## Contents
 
@@ -135,6 +135,7 @@ Phone / browser (PWA)                         bible-study/server.js (Node 18+, n
 | `supabase/pages.sql` | Supabase tables, access rules and the once-a-minute reminder job, for the GitHub Pages version |
 | `supabase/functions/kbs-push/` | Supabase Edge Function that sends push reminders for the GitHub Pages version |
 | `supabase/setup.sql` | Locks down the tables when the Node server uses a Supabase database |
+| `android/` | Android app (APK): a Trusted Web Activity that opens the GitHub Pages site. See [android/README.md](android/README.md) |
 | `render.yaml` | Render Blueprint: web app + Postgres |
 | `test/` | Tests (`npm test` from the repo root; set `TEST_DATABASE_URL` to also run the Postgres test) |
 
