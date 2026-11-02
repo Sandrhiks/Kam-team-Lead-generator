@@ -190,6 +190,85 @@
   }
   $("#rankChip").onclick = () => { location.hash = "#me"; };
 
+  /* ---------------- Level map ---------------- */
+  // Where each level stands: earned, the one the member is on now, or still ahead.
+  function levelStates() {
+    const r = rankInfo();
+    return C.LEVELS.map(lv => {
+      const lessons = levelTracks(lv.level).flatMap(t => t.lessons);
+      const done = lessons.filter(l => lessonDone(l.id)).length;
+      const state = levelDone(lv.level) ? "earned" : !r.complete && lv.level === r.at.level ? "current" : "locked";
+      return { lv, done, total: lessons.length, pct: lessons.length ? Math.round(done / lessons.length * 100) : 0, state };
+    });
+  }
+
+  // The whole ladder as a winding road: Level 1 at the top, Multiplier at the end.
+  function levelMap() {
+    const st = levelStates();
+    const xs = st.map((_, i) => (i % 2 ? 78 : 22));
+    const y = i => i * 100 + 50;
+    const seg = i => ` C ${xs[i]} ${y(i) + 50} ${xs[i + 1]} ${y(i + 1) - 50} ${xs[i + 1]} ${y(i + 1)}`;
+    const road = n => `M ${xs[0]} ${y(0)}` + st.slice(0, n).map((_, i) => seg(i)).join("");
+    const reached = Math.max(0, st.findIndex(x => x.state !== "earned"));
+    const upTo = st.every(x => x.state === "earned") ? st.length - 1 : reached;
+    return `<section class="panel lmap-wrap" aria-label="Level map">
+      <div class="lmap-end">\u{1F6A9} <b>Start</b> · Say yes to Jesus</div>
+      <div class="lmap" style="--rows:${st.length}">
+        <svg class="lmap-road" viewBox="0 0 100 ${st.length * 100}" preserveAspectRatio="none" aria-hidden="true">
+          <path class="road-base" d="${road(st.length - 1)}" vector-effect="non-scaling-stroke"/>
+          ${upTo > 0 ? `<path class="road-done" d="${road(upTo)}" vector-effect="non-scaling-stroke"/>` : ""}
+        </svg>
+        <ol class="lmap-stops">${st.map((x, i) => {
+          const tracks = levelTracks(x.lv.level);
+          const label = x.state === "earned" ? "Completed" : x.state === "current" ? "You are here" : "Locked";
+          return `<li class="stop ${i % 2 ? "right" : "left"} ${x.state}" style="--c:${x.lv.color}">
+            <a class="stop-node" href="#path/${x.lv.level}" aria-label="Level ${x.lv.level} ${esc(x.lv.rank)}: ${label}, ${x.pct}%">
+              ${x.state === "earned" ? "✓" : x.state === "locked" ? "\u{1F512}" : x.lv.level}
+            </a>
+            <div class="stop-card">
+              <span class="stop-tag">${label}</span>
+              <small>${esc(x.lv.stage)}</small>
+              <b>Level ${x.lv.level} · ${esc(x.lv.rank)}</b>
+              ${bar(x.done, x.total)}
+              <div class="stop-tracks">${tracks.map(t => {
+                const d = t.lessons.filter(l => lessonDone(l.id)).length;
+                return `<span class="${d === t.lessons.length ? "full" : ""}">${esc(t.code)} ${d}/${t.lessons.length}</span>`;
+              }).join("")}</div>
+            </div>
+          </li>`;
+        }).join("")}</ol>
+      </div>
+      <div class="lmap-end">\u{1F3C6} <b>Finish</b> · Multiply and form your twelve</div>
+    </section>`;
+  }
+
+  // A one-line version of the map for the Today dashboard.
+  function levelStrip() {
+    return `<a class="lstrip" href="#path" aria-label="Open the level map">${levelStates().map(x =>
+      `<span class="lstrip-dot ${x.state}" style="--c:${x.lv.color}"><i>${x.state === "earned" ? "✓" : x.lv.level}</i><small>${esc(x.lv.rank)}</small></span>`
+    ).join("")}</a>`;
+  }
+
+  // Today's four habits, each a big button that goes straight to it.
+  function todayGoals() {
+    const log = S.log[dateKey()] || {};
+    const nl = nextLesson();
+    const goals = [
+      { k: "read", ic: "\u{1F4D6}", t: "Read", sub: planFinished() ? "Plan finished" : todayRef(), href: "" },
+      { k: "lesson", ic: "\u{1F393}", t: "Study", sub: nl ? `${nl.track.code} ${nl.index + 1}` : "All done", href: nl ? `#lesson/${nl.id}` : "#path" },
+      { k: "journal", ic: "\u{270D}\u{FE0F}", t: "Journal", sub: "S.O.A.P. note", href: "#journal/new" },
+      { k: "verse", ic: "\u{2728}", t: "Memorize", sub: "Memory verse", href: "#verses" },
+    ];
+    const n = goals.filter(g => log[g.k]).length;
+    return `<div class="row between" style="margin:22px 0 10px"><h2 class="sec" style="margin:0">Today's goals</h2><span class="pill ${n === 4 ? "ok" : ""}">${n}/4 done</span></div>
+      <div class="goals">${goals.map(g => {
+        const inner = `<span class="ic">${log[g.k] ? "✓" : g.ic}</span><b>${g.t}</b><small>${esc(g.sub)}</small>`;
+        const cls = `goal ${log[g.k] ? "done" : ""}`;
+        // The reading is on this page, so that goal scrolls down to it.
+        return g.href ? `<a class="${cls}" href="${g.href}">${inner}</a>` : `<button type="button" class="${cls}" data-act="goto-read">${inner}</button>`;
+      }).join("")}</div>`;
+  }
+
   /* ---------------- Views ---------------- */
   function viewToday() {
     const r = rankInfo();
@@ -219,8 +298,11 @@
             <h3>Level ${r.at.level} · ${esc(r.at.rank)}</h3>
             <p>${esc(r.complete ? "You've completed the whole ladder. Keep multiplying!" : r.at.blurb)}</p>
             ${bar(r.done, r.total)}
+            <div class="muted" style="font-size:12.5px;margin-top:4px">${r.complete ? "Every level earned" : `${r.done} of ${r.total} lessons to Level ${r.at.level}`}</div>
           </div>
         </div>
+        ${nl ? `<a class="btn primary next-step" href="#lesson/${nl.id}"><span>${S.lessons[nl.id] ? "Continue" : "Next step"}: <b>${esc(nl.track.code)} ${nl.index + 1} · ${esc(nl.title)}</b></span><span aria-hidden="true">→</span></a>` : ""}
+        ${levelStrip()}
         <div class="stats">
           <div class="stat"><b>${streak()}</b><span>day streak</span></div>
           <div class="stat"><b>${xp()}</b><span>XP</span></div>
@@ -228,8 +310,10 @@
         </div>
       </section>
 
+      ${todayGoals()}
+
       <h2 class="sec">1 · Read</h2>
-      <section class="panel">
+      <section class="panel" id="today-read">
         ${planFinished() ? `<p style="margin:0">\u{1F389} You finished <b>${esc(plan().title)}</b>! Choose a new plan in <a href="#me">Me</a>.</p>` : `
         <div class="row between">
           <div>
@@ -267,10 +351,12 @@
     return `
       <h1 class="page">Your path</h1>
       <p class="lede">The ladder: Win → Consolidate → Disciple → Send. Finish each track to unlock the next and earn your next level.</p>
+      ${levelMap()}
+      <h2 class="sec">Every track and lesson</h2>
       ${C.LEVELS.map(lv => {
         const tracks = levelTracks(lv.level);
         const earned = levelDone(lv.level);
-        return `<section class="stage" style="color:${lv.color}">
+        return `<section class="stage" id="stage-${lv.level}" style="color:${lv.color}">
           <span class="stage-dot" style="background:${earned ? lv.color : "var(--panel)"}"></span>
           <div class="stage-head"><b>${lv.stage}</b><span style="color:var(--ink)">Level ${lv.level} · ${esc(lv.rank)}</span>${earned ? `<a class="pill ok" href="#cert/${lv.level}">Certificate</a>` : ""}</div>
           <div style="color:var(--ink)">${tracks.map(trackCard).join("")}</div>
@@ -705,6 +791,7 @@
     document.querySelectorAll(".tabbar a").forEach(a => { if (a.dataset.tab === active) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
     renderChip();
     if (tab === "journal" && arg === "new") { const el = $("#jS"); if (el) el.focus(); }
+    if (tab === "path" && arg) requestAnimationFrame(() => { const el = $("#stage-" + arg); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); });
   }
   window.addEventListener("hashchange", () => {
     // Fresh numbers each time a leader opens the dashboard.
@@ -746,7 +833,9 @@
 
     const act = t.dataset.act;
     const [tab, arg] = location.hash.replace(/^#/, "").split("/");
-    if (act === "read") {
+    if (act === "goto-read") {
+      const el = $("#today-read"); if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else if (act === "read") {
       if (planFinished()) return;
       S.reading.done[S.reading.day] = dateKey();
       S.reading.day++;

@@ -8,7 +8,9 @@
 -- (setup.sql is for the Node server version instead; you don't need both.)
 
 CREATE EXTENSION IF NOT EXISTS pg_cron;
-CREATE EXTENSION IF NOT EXISTS pg_net;
+-- pg_net goes in the "extensions" schema so it isn't exposed through the public API.
+-- (Its functions always live in the "net" schema, so the calls below don't change.)
+CREATE EXTENSION IF NOT EXISTS pg_net WITH SCHEMA extensions;
 
 /* ---------------- Tables ---------------- */
 -- One JSON document per member: lessons, journal, prayers, settings...

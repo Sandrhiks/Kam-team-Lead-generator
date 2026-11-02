@@ -100,6 +100,14 @@ async function tick(now = new Date()): Promise<number> {
 }
 
 /* ---------------- Requests ---------------- */
+// Compares secrets in constant time, so response timing can't leak the secret.
+function sameSecret(a: string, b: string): boolean {
+  const x = new TextEncoder().encode(a), y = new TextEncoder().encode(b);
+  let diff = x.length ^ y.length;
+  for (let i = 0; i < Math.max(x.length, y.length); i++) diff |= (x[i] ?? 0) ^ (y[i] ?? 0);
+  return diff === 0;
+}
+
 async function signedInUser(req: Request): Promise<string | null> {
   const token = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
   if (!token) return null;
@@ -117,7 +125,7 @@ async function handle(req: Request): Promise<Response> {
 
   if (body.action === "tick") {
     const [row] = await sql`SELECT value FROM public.kbs_meta WHERE key = 'cron_secret'`;
-    if (!row || req.headers.get("x-cron-secret") !== row.value) return reply(403, { ok: false, error: "Forbidden" });
+    if (!row || !sameSecret(req.headers.get("x-cron-secret") || "", row.value)) return reply(403, { ok: false, error: "Forbidden" });
     return reply(200, { ok: true, sent: await tick() });
   }
 

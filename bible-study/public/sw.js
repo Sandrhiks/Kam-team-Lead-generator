@@ -4,8 +4,8 @@
 // Node server) or in a folder (GitHub Pages: /<repo>/).
 "use strict";
 
-const CACHE = "kbs-v3";
-const SHELL = ["./", "app.js", "api.js", "config.js", "curriculum.js", "styles.css", "icon.svg", "kam-team-logo.png", "manifest.webmanifest"];
+const CACHE = "kbs-v4";
+const SHELL = ["./", "app.js", "api.js", "config.js", "curriculum.js", "styles.css", "icon.svg", "icon-192.png", "kam-team-logo.png", "manifest.webmanifest"];
 const SCOPE = new URL("./", self.location).pathname;
 // The Supabase client library, loaded from a CDN when the app uses Supabase.
 const LIBS = "https://cdn.jsdelivr.net/npm/@supabase/";
@@ -57,7 +57,7 @@ self.addEventListener("push", e => {
   try { msg = e.data ? e.data.json() : {}; } catch { msg = { body: e.data && e.data.text() }; }
   e.waitUntil(self.registration.showNotification(msg.title || "Kam Team Bible Study", {
     body: msg.body || "Time for today's study.",
-    icon: "icon.svg",
+    icon: "icon-192.png", // Android can't show SVG notification icons
     badge: "icon.svg",
     tag: msg.tag || "kbs",
     renotify: true,

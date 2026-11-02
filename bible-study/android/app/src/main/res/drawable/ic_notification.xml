@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Kam Team mark in white, for the status bar (Android tints it). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="2000" android:viewportHeight="2000">
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M613,849 L1000,431 L1388,849 L1263,965 L1000,683 L737,965 Z M613,1151 L737,1035 L1000,1318 L1263,1035 L1388,1151 L1000,1569 Z" />
+</vector>
